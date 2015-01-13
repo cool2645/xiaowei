@@ -1,0 +1,148 @@
+<extend name="Layout/page_detail" />
+<block name="content">
+	{:W('PageHeader/local_search',array('name'=>'职员查询','search'=>'N'))}	
+	<div class="row">
+		<div class="col-sm-4 sub_left_menu">
+			<div class="well">
+				<?php echo $menu ?>
+			</div>
+		</div>
+		<div class="col-sm-8" >
+			<div class="ul_table border-bottom user_list"  >
+				<ul>
+					<li class="thead">
+						<div class="col-sm-7">
+							<span class="text-center" style="width:25%;">员工编码</span>
+							<span class="text-center" style="width:25%;">姓名</span>
+							<span class="text-center" style="width:25%">职位</span>
+							<span class="text-center" style="width:25%">职责</span>
+						</div>
+						<div class="col-sm-5">
+							<span style="width:100%;">邮件</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div>
+				<div class="col-sm-4 text-center">
+					<img id="emp_pic" class="img-thumbnail"/>
+				</div>
+				<div class="col-sm-8 user_info">
+					<table class="table table-bordered">
+						<tr>
+							<th class="th" style="width:30%;">姓名</th>
+							<td style="width: 70%" class="text-center name info"></td>
+						</tr>
+						<tr>
+							<th class="th" style="width:30%;">办公电话</th>
+							<td style="width: 70%" class="text-center office_tel info"></td>
+						</tr>
+						<tr>
+							<th class="th" style="width:30%;">手机</th>
+							<td style="width: 70%" class="text-center mobile_tel info"></td>
+						</tr>
+						<tr>
+							<th class="th" style="width:30%;">邮箱</th>
+							<td style="width: 70%" class="text-center email info"></td>
+						</tr>
+						<tr>
+							<th class="th" style="width:30%;">业务</th>
+							<td style="width: 70%" class="text-center duty info"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="sample" class="display-none">
+		<li class="tbody">
+			<div class="col-sm-7">
+				<span style="width:25%;" class="text-center emp_no"></span>
+				<span style="width:25%;" class="text-center name"></span>
+				<span style="width: 25%" class="text-center position"></span>
+				<span style="width: 25%" class="text-center rank"></span>
+			</div>
+			<div class="col-sm-5">
+				<span style="width:100%;" class="email"></span>
+			</div>
+		</li>
+	</div>
+</block>
+<block name="js">
+	<script type="text/javascript">
+		function save() {
+			if (check_form("form_data")) {
+				sendForm("form_data", "{:U('save')}", "__CONTROLLER__");
+			}
+		}
+
+		function showdata(result) {
+			$(".user_list li.tbody").remove();
+			for (var s in result.data) {
+				$("#sample .emp_no").text(result.data[s].emp_no);
+				$("#sample .name").text(result.data[s].name);
+				$("#sample .position").text(result.data[s].position_name);
+				$("#sample .rank").text(result.data[s].rank_name);
+				$("#sample .email").text(result.data[s].email);
+
+				$("#sample li").attr("email", result.data[s].email);
+				$("#sample li").attr("duty", result.data[s].duty);
+				$("#sample li").attr("name", result.data[s].name);
+				$("#sample li").attr("office_tel", result.data[s].office_tel);
+				$("#sample li").attr("mobile_tel", result.data[s].mobile_tel);
+				$("#sample li").attr("pic", result.data[s].pic + '?t=' + Math.random());
+				html = $("#sample").html();
+
+				$(".user_list ul").append(html);
+
+				$("#sample li span").text("");
+			}
+			if ($(".user_list li.tbody").length > 0) {
+				$(".user_list li.tbody").get(0).click();
+			} else {
+				$(".user_info .info").text("");
+				$("#emp_pic").prop('src', "");
+			}
+		}
+
+		function local_search() {
+			sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
+				showdata(data);
+			});
+			return false;
+		}
+
+		function key_local_search() {
+			if (event.keyCode == 13) {
+				sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
+					showdata(data);
+				});				
+			}			 
+			return false;
+		}
+
+
+		$(document).ready(function() {
+			$(".sub_left_menu .tree_menu a").click(function() {
+				$(".sub_left_menu .tree_menu a").each(function() {
+					$(this).attr("class", "");
+				});
+				$(this).attr("class", "active");
+				sendAjax("{:U('read')}", "id=" + $(this).attr("node"), function(data) {
+					showdata(data);
+				});
+				return false;
+			});
+
+			$(document).on("click", ".user_list .tbody", function() {
+				$(".user_info .name").text($(this).attr("name"));
+				$(".user_info .office_tel").text($(this).attr("office_tel"));
+				$(".user_info .mobile_tel").text($(this).attr("mobile_tel"));
+				$(".user_info .email").text($(this).attr("email"));
+				$(".user_info .duty").text($(this).attr("duty"));
+				$("#emp_pic").prop("src", "{:get_save_url()}" + $(this).attr("pic"));
+			});
+		});
+
+	</script>
+</block>

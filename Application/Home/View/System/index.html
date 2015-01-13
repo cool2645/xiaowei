@@ -1,0 +1,50 @@
+<extend name="Layout/page_detail" />
+<block name="content">
+<script type="text/javascript"></script>
+<form method="post" action="" id="form_search" name="form_search">
+	{:W('PageHeader/simple',array('name'=>'系统信息','search'=>'N'))}
+
+</form>
+<div class="row" >
+	<div class="pull-right">
+		<a onclick="save()" class="btn btn-sm btn-primary">保存</a>
+	</div>
+</div>
+<form id="form_data" name="form_data"method="post" action="">
+	<div class="row ">
+		<div class="row form-horizontal">
+			<div class="form-group col-xs-12">
+				<label class="col-sm-2 control-label">域名\主机名：</label>
+				<div class="col-sm-10 "><p class="form-control-static">{$SERVER_NAME}</p>
+				</div>
+			</div>
+			<div class="form-horizontal">
+				<div class="form-group col-xs-12">
+					<label class="col-sm-2 control-label">授权状态*：</label>
+					<div class="col-sm-10 ">
+						<p class="form-control-static">{$SERVER_NAME}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+</form></block>
+<block name="js">
+<script type="text/JavaScript">
+function $(id) { return document.getElementById(id); }
+
+function get_ip() {
+  var XMLHttp, r;
+  XMLHttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+  XMLHttp.onreadystatechange = function() {
+    if (XMLHttp.readyState == 4)
+    {
+      r = XMLHttp.responseText;
+      if (r == 'false') $('ip_r').innerHTML = '获取外网 IP 失败!';
+      else $('ip_r').innerHTML = '此服务器互联网 IP<br /><a href="http://'+r+'" style="color: #999999;">'+r+'</a>';
+    }
+  }
+  XMLHttp.open("GET", "?act=getip", true);
+  XMLHttp.send();
+}
+</script>
+</block>

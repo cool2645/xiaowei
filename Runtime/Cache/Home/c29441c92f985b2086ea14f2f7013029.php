@@ -1,0 +1,3 @@
+<?php if (!defined('THINK_PATH')) exit(); if(!empty($file_list)): if(is_array($file_list)): $i = 0; $__LIST__ = $file_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$file): $mod = ($i % 2 );++$i;?><p class="form-control-static">
+			<a class="link down" target="_blank" href="<?php echo U('down?attach_id='.think_encrypt($file['id']));?>"><?php echo ($file["name"]); ?></a>
+		</p><?php endforeach; endif; else: echo "" ;endif; endif; ?>

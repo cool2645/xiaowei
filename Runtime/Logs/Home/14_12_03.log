@@ -1,0 +1,1023 @@
+[ 2014-12-03T09:13:00+08:00 ] 127.0.0.1 /index.php?m=&c=Info&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000036s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000217s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001141s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001365s ]
+INFO: [ action_begin ] --START--
+NOTIC: [8] Undefined index: fid D:\workspace\xiaowei\Application\Common\Behavior\AuthCheckBehavior.class.php 第 72 行.
+NOTIC: [8] Undefined index: id D:\workspace\xiaowei\Application\Common\Behavior\AuthCheckBehavior.class.php 第 74 行.
+NOTIC: [8] Undefined index: sub_action_auth D:\workspace\xiaowei\Application\Common\Behavior\AuthCheckBehavior.class.php 第 75 行.
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0057s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0043s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.025970s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.026183s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0018s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0043s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0046s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0048s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0054s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=88 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0051s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0052s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0061s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0042s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0053s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0044s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_config` [ RunTime:0.0056s ]
+SQL: SELECT `readed_info` FROM `think_user_config` WHERE `id` = '1' LIMIT 1   [ RunTime:0.0007s ]
+NOTIC: [8] Undefined variable: id D:\workspace\xiaowei\Application\Home\Controller\InfoController.class.php 第 33 行.
+NOTIC: [2048] Declaration of Home\Model\InfoModel::_before_update() should be compatible with Think\Model::_before_update(&$data, $options) D:\workspace\xiaowei\Application\Home\Model\InfoModel.class.php 第 114 行.
+SQL: SHOW COLUMNS FROM `think_info` [ RunTime:0.0061s ]
+SQL: SHOW COLUMNS FROM `think_info_scope` [ RunTime:0.0050s ]
+SQL: SELECT info_id id,`info_id` FROM `think_info_scope` WHERE ( user_id=1 )  [ RunTime:0.0006s ]
+SQL: SELECT `id`,`id` FROM `think_system_folder` WHERE ( folder='InfoFolder' )  [ RunTime:0.0005s ]
+NOTIC: [8] Undefined index:  D:\workspace\xiaowei\ThinkPHP\Library\Think\Model.class.php 第 946 行.
+NOTIC: [8] Undefined index:  D:\workspace\xiaowei\ThinkPHP\Library\Think\Model.class.php 第 946 行.
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0060s ]
+SQL: SELECT `admin`,`write`,`read` FROM `think_system_folder` WHERE ( id=66 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `admin`,`write`,`read` FROM `think_system_folder` WHERE ( id=67 ) LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_info` [ RunTime:0.0054s ]
+SQL: SELECT COUNT(*) AS tp_count FROM think_info Info  JOIN think_system_folder SystemFolder ON Info.folder=SystemFolder.id WHERE (  Info.is_public=1 or Info.dept_id=1 or Info.id in (109) ) AND Info.is_del = '0' AND Info.folder IN (66,67) LIMIT 1   [ RunTime:0.0009s ]
+SQL: SELECT `list_rows` FROM `think_user_config` WHERE `id` = '1' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT Info.id AS id,Info.doc_no AS doc_no,Info.name AS name,Info.content AS content,Info.folder AS folder,Info.is_sign AS is_sign,Info.is_public AS is_public,Info.scope_user_id AS scope_user_id,Info.scope_user_name AS scope_user_name,Info.add_file AS add_file,Info.user_id AS user_id,Info.user_name AS user_name,Info.dept_id AS dept_id,Info.dept_name AS dept_name,Info.create_time AS create_time,Info.update_time AS update_time,Info.is_del AS is_del,SystemFolder.name AS folder_name FROM think_info Info  JOIN think_system_folder SystemFolder ON Info.folder=SystemFolder.id WHERE (  Info.is_public=1 or Info.dept_id=1 or Info.id in (109) ) AND Info.is_del = '0' AND Info.folder IN (66,67) LIMIT 0,5   [ RunTime:0.0008s ]
+NOTIC: [4096] Object of class Home\Model\InfoViewModel could not be converted to string D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 527 行.
+NOTIC: [2] strpos() expects parameter 1 to be string, object given D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 577 行.
+NOTIC: [2] strpos() expects parameter 1 to be string, object given D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 582 行.
+NOTIC: [2] explode() expects parameter 2 to be string, object given D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 587 行.
+NOTIC: [2] Invalid argument supplied for foreach() D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 593 行.
+NOTIC: [2] strpos() expects parameter 1 to be string, object given D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 532 行.
+NOTIC: D方法实例化没找到模型类Home\ModelModel
+NOTIC: [2] basename() expects parameter 1 to be string, object given D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 542 行.
+NOTIC: [4096] Object of class Home\Model\InfoViewModel could not be converted to string D:\workspace\xiaowei\ThinkPHP\Common\functions.php 第 544 行.
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000036s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.146577s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0018s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0043s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=88 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0008s ]
+NOTIC: [8] Undefined variable: exportPage D:\workspace\xiaowei\Application\Home\ORG\Util\Page.class.php 第 180 行.
+NOTIC: [8] Undefined variable: order D:\workspace\xiaowei\Application\Home\Controller\HomeController.class.php 第 450 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000247s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000435s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000036s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.225001s ]
+NOTIC: [8] Undefined index: icon D:\workspace\xiaowei\Application\Home\Widget\SidebarWidget.class.php 第 45 行.
+NOTIC: [8] Undefined index: icon D:\workspace\xiaowei\Application\Home\Widget\SidebarWidget.class.php 第 45 行.
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000035s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.227869s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000103s ]
+INFO: [ template_filter ] --END-- [ RunTime:-0.017117s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.003365s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003554s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000775s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000954s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005951s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003554s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000042s ]
+INFO: [ view_filter ] --END-- [ RunTime:-0.001601s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001168s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001383s ]
+
+[ 2014-12-03T09:13:04+08:00 ] 127.0.0.1 /index.php?m=&c=WorkLog&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000040s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000230s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000998s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001202s ]
+NOTIC: [2048] Declaration of Home\Controller\WorkLogController::edit() should be compatible with Home\Controller\HomeController::edit($id) D:\workspace\xiaowei\Application\Home\Controller\WorkLogController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\WorkLogController::_insert() should be compatible with Home\Controller\HomeController::_insert($name = 'WorkLog') D:\workspace\xiaowei\Application\Home\Controller\WorkLogController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0059s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0045s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.026849s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.027010s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0017s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0045s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0048s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0011s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0055s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0043s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=217 ) LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0055s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0061s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0054s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0005s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0044s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0055s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0061s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_dept` [ RunTime:0.0048s ]
+SQL: SHOW COLUMNS FROM `think_dept` [ RunTime:0.0050s ]
+SQL: SELECT * FROM `think_dept` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id`,`pid`,`name` FROM `think_dept` WHERE ( is_del=0 ) ORDER BY sort asc  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_user` [ RunTime:0.0050s ]
+SQL: SELECT `id`,`name` FROM `think_user` WHERE `dept_id` IN ('5','6','24','23','8','25','26','7','21','3','2')  [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `think_work_log` [ RunTime:0.0059s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_work_log` WHERE `dept_id` IN ('5','6','24','23','8','25','26','7','21','3','2','1') AND `is_del` = '0' LIMIT 1   [ RunTime:0.0007s ]
+NOTIC: [8] Undefined variable: vo_list D:\workspace\xiaowei\Application\Home\Controller\HomeController.class.php 第 453 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000267s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000458s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000038s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.165189s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000063s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.167136s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000101s ]
+INFO: [ template_filter ] --END-- [ RunTime:-0.018033s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.003587s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003783s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000854s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001034s ]
+NOTIC: [2] Missing argument 2 for fill_option(), called in D:\workspace\xiaowei\Runtime\Cache\Home\2c17ec28ca813181d664dc5eb5a779c1.php on line 151 and defined D:\workspace\xiaowei\Application\Common\Common\function.php 第 667 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: page D:\workspace\xiaowei\Runtime\Cache\Home\2c17ec28ca813181d664dc5eb5a779c1.php 第 229 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006624s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003783s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000042s ]
+INFO: [ view_filter ] --END-- [ RunTime:-0.001967s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001265s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001470s ]
+
+[ 2014-12-03T09:13:07+08:00 ] 127.0.0.1 /index.php?m=&c=WorkLog&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000036s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000214s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000999s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001210s ]
+NOTIC: [2048] Declaration of Home\Controller\WorkLogController::edit() should be compatible with Home\Controller\HomeController::edit($id) D:\workspace\xiaowei\Application\Home\Controller\WorkLogController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\WorkLogController::_insert() should be compatible with Home\Controller\HomeController::_insert($name = 'WorkLog') D:\workspace\xiaowei\Application\Home\Controller\WorkLogController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0058s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0043s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.025422s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.025722s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0017s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0042s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0056s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0051s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0047s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=217 ) LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0045s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0051s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0042s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0059s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0052s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0064s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_dept` [ RunTime:0.0051s ]
+SQL: SHOW COLUMNS FROM `think_dept` [ RunTime:0.0064s ]
+SQL: SELECT * FROM `think_dept` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id`,`pid`,`name` FROM `think_dept` WHERE ( is_del=0 ) ORDER BY sort asc  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_user` [ RunTime:0.0059s ]
+SQL: SELECT `id`,`name` FROM `think_user` WHERE `dept_id` IN ('5','6','24','23','8','25','26','7','21','3','2')  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_work_log` [ RunTime:0.0069s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_work_log` WHERE `dept_id` IN ('5','6','24','23','8','25','26','7','21','3','2','1') AND `is_del` = '0' LIMIT 1   [ RunTime:0.0007s ]
+NOTIC: [8] Undefined variable: vo_list D:\workspace\xiaowei\Application\Home\Controller\HomeController.class.php 第 453 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000261s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000545s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000036s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.166553s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000034s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.168647s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000102s ]
+INFO: [ template_filter ] --END-- [ RunTime:-0.016527s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.003601s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003789s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000791s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000967s ]
+NOTIC: [2] Missing argument 2 for fill_option(), called in D:\workspace\xiaowei\Runtime\Cache\Home\2c17ec28ca813181d664dc5eb5a779c1.php on line 151 and defined D:\workspace\xiaowei\Application\Common\Common\function.php 第 667 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: data D:\workspace\xiaowei\Application\Common\Common\function.php 第 680 行.
+NOTIC: [8] Undefined variable: page D:\workspace\xiaowei\Runtime\Cache\Home\2c17ec28ca813181d664dc5eb5a779c1.php 第 229 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006566s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003789s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000042s ]
+INFO: [ view_filter ] --END-- [ RunTime:-0.001960s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001056s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001444s ]
+
+[ 2014-12-03T09:13:10+08:00 ] 127.0.0.1 /index.php?m=&c=Finance&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000035s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000213s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000962s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001158s ]
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0043s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0044s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.024317s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.024501s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0018s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0049s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0054s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0052s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0055s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=217 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0049s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0058s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0056s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0007s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0045s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0044s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0051s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0005s ]
+ERR: SQLSTATE[42S02]: Base table or view not found: 1146 La table 'demo.think_finance' n'existe pas
+
+[ 2014-12-03T09:13:22+08:00 ] 127.0.0.1 /index.php?m=&c=Staff&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000038s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000219s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000784s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000992s ]
+NOTIC: [2048] Declaration of Home\Controller\StaffController::read() should be compatible with Home\Controller\HomeController::read($id) D:\workspace\xiaowei\Application\Home\Controller\StaffController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0055s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0042s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.025729s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.025900s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0017s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0042s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0056s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0066s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0054s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0010s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=157 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0053s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0053s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0048s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0068s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0063s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0051s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_dept` [ RunTime:0.0052s ]
+SQL: SELECT `id`,`pid`,`name` FROM `think_dept` WHERE ( is_del=0 ) ORDER BY sort asc  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000282s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000457s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000036s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.139623s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000034s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.141452s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000101s ]
+INFO: [ template_filter ] --END-- [ RunTime:-0.015863s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.003472s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003668s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000616s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000806s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005150s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003668s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000041s ]
+INFO: [ view_filter ] --END-- [ RunTime:-0.000831s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001026s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001225s ]
+
+[ 2014-12-03T09:13:24+08:00 ] 127.0.0.1 /index.php?m=&c=Staff&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000038s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000234s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000728s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000923s ]
+NOTIC: [2048] Declaration of Home\Controller\StaffController::read() should be compatible with Home\Controller\HomeController::read($id) D:\workspace\xiaowei\Application\Home\Controller\StaffController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0055s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0042s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.023801s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.023983s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0019s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0041s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0053s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0057s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0050s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=157 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0057s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0060s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0041s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0048s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0056s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0060s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_dept` [ RunTime:0.0051s ]
+SQL: SELECT `id`,`pid`,`name` FROM `think_dept` WHERE ( is_del=0 ) ORDER BY sort asc  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000287s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000464s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000038s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.135193s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000034s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.137384s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000096s ]
+INFO: [ template_filter ] --END-- [ RunTime:-0.015300s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.003105s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003300s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000771s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000953s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.004944s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.003300s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000041s ]
+INFO: [ view_filter ] --END-- [ RunTime:-0.000845s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001068s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001270s ]
+
+[ 2014-12-03T09:13:25+08:00 ] 127.0.0.1 /index.php?m=&c=Customer&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000035s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000241s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000665s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000877s ]
+NOTIC: [2048] Declaration of Home\Controller\CustomerController::_insert() should be compatible with Home\Controller\HomeController::_insert($name = 'Customer') D:\workspace\xiaowei\Application\Home\Controller\CustomerController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\CustomerController::_update() should be compatible with Home\Controller\HomeController::_update($name = 'Customer') D:\workspace\xiaowei\Application\Home\Controller\CustomerController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0051s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0041s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.022810s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.023004s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0018s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0045s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0044s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0058s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0050s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=157 ) LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0047s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0056s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0068s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0044s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0043s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0050s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_customer` [ RunTime:0.0064s ]
+SQL: SELECT * FROM `think_customer` WHERE `is_del` = 0  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_system_tag` [ RunTime:0.0053s ]
+SQL: SHOW COLUMNS FROM `think_system_tag_data` [ RunTime:0.0040s ]
+SQL: SELECT `row_id`,`tag_id` FROM `think_system_tag_data` join think_system_tag tag on tag_id=tag.id  WHERE ( tag.controller='Customer' )  [ RunTime:0.0006s ]
+NOTIC: [8] Undefined offset: 18 D:\workspace\xiaowei\Application\Home\Controller\CustomerController.class.php 第 45 行.
+SQL: SELECT `id`,`name` FROM `think_system_tag` WHERE `controller` = 'Customer' ORDER BY sort asc  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000304s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000517s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000042s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.157465s ]
+NOTIC: [8] Undefined offset: 30 D:\workspace\xiaowei\Runtime\Cache\Home\b375405256d4481b50aaa344e65c47be.php 第 211 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.038096s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.038278s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000932s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001178s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001023s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001246s ]
+
+[ 2014-12-03T09:13:26+08:00 ] 127.0.0.1 /index.php?m=&c=Supplier&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000038s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000245s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000682s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000879s ]
+NOTIC: [2048] Declaration of Home\Controller\SupplierController::read() should be compatible with Home\Controller\HomeController::read($id) D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\SupplierController::_insert() should be compatible with Home\Controller\HomeController::_insert($name = 'Supplier') D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\SupplierController::_update() should be compatible with Home\Controller\HomeController::_update($name = 'Supplier') D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0048s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0041s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.022492s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.022662s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0017s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0041s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0045s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0011s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0064s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0060s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=157 ) LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0058s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0058s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0051s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0051s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0048s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0053s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_supplier` [ RunTime:0.0052s ]
+SQL: SELECT * FROM `think_supplier` WHERE `is_del` = 0  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_tag` [ RunTime:0.0045s ]
+SQL: SHOW COLUMNS FROM `think_system_tag_data` [ RunTime:0.0045s ]
+SQL: SELECT `row_id`,`tag_id` FROM `think_system_tag_data` join think_system_tag tag on tag_id=tag.id  WHERE ( tag.controller='Supplier' )  [ RunTime:0.0008s ]
+NOTIC: [8] Undefined offset: 18 D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 38 行.
+SQL: SELECT `id`,`name` FROM `think_system_tag` WHERE `controller` = 'Supplier' ORDER BY sort asc  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000358s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000550s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000037s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.156817s ]
+NOTIC: [8] Undefined offset: 23 D:\workspace\xiaowei\Runtime\Cache\Home\135763522188db2e640d85166a2d47c5.php 第 211 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.037657s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.037843s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000727s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000928s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001222s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001495s ]
+
+[ 2014-12-03T09:13:27+08:00 ] 127.0.0.1 /index.php?m=&c=Customer&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000039s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000224s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000763s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000961s ]
+NOTIC: [2048] Declaration of Home\Controller\CustomerController::_insert() should be compatible with Home\Controller\HomeController::_insert($name = 'Customer') D:\workspace\xiaowei\Application\Home\Controller\CustomerController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\CustomerController::_update() should be compatible with Home\Controller\HomeController::_update($name = 'Customer') D:\workspace\xiaowei\Application\Home\Controller\CustomerController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0054s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0041s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.023272s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.023443s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0019s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0042s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0059s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0057s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0057s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=157 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0058s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0058s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0062s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0006s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0044s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0053s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0059s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_customer` [ RunTime:0.0051s ]
+SQL: SELECT * FROM `think_customer` WHERE `is_del` = 0  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_system_tag` [ RunTime:0.0044s ]
+SQL: SHOW COLUMNS FROM `think_system_tag_data` [ RunTime:0.0052s ]
+SQL: SELECT `row_id`,`tag_id` FROM `think_system_tag_data` join think_system_tag tag on tag_id=tag.id  WHERE ( tag.controller='Customer' )  [ RunTime:0.0007s ]
+NOTIC: [8] Undefined offset: 18 D:\workspace\xiaowei\Application\Home\Controller\CustomerController.class.php 第 45 行.
+SQL: SELECT `id`,`name` FROM `think_system_tag` WHERE `controller` = 'Customer' ORDER BY sort asc  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000326s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000511s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000036s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.159958s ]
+NOTIC: [8] Undefined offset: 30 D:\workspace\xiaowei\Runtime\Cache\Home\b375405256d4481b50aaa344e65c47be.php 第 211 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.037694s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.037929s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000818s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000996s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000969s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001189s ]
+
+[ 2014-12-03T09:13:29+08:00 ] 127.0.0.1 /index.php?m=&c=Supplier&a=index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000041s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000222s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000683s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000874s ]
+NOTIC: [2048] Declaration of Home\Controller\SupplierController::read() should be compatible with Home\Controller\HomeController::read($id) D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\SupplierController::_insert() should be compatible with Home\Controller\HomeController::_insert($name = 'Supplier') D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 16 行.
+NOTIC: [2048] Declaration of Home\Controller\SupplierController::_update() should be compatible with Home\Controller\HomeController::_update($name = 'Supplier') D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 16 行.
+INFO: [ action_begin ] --START--
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0042s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0045s ]
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.021930s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.022091s ]
+SQL: 		SELECT distinct c.id, c.pid, c.name, c.url,c.icon		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		AND c.pid = 0 		ORDER BY c.sort asc [ RunTime:0.0017s ]
+SQL: 		SELECT c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon 		FROM think_role_user AS a, think_role_node b, think_node AS c 		WHERE a.role_id = b.role_id and c.is_del=0 		AND a.user_id =1		AND c.is_del =0 		AND c.id = b.node_id 		group by c.id		ORDER BY c.sort  [ RunTime:0.0044s ]
+SQL: SHOW COLUMNS FROM `think_system_folder` [ RunTime:0.0060s ]
+SQL: 		select a.sort,concat('sfid',a.id) as id,a.name,a.folder,a.sort,CONCAT('sfid',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_system_folder AS a		WHERE  is_del=0 		ORDER BY a.folder,a.sort asc [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `think_node` [ RunTime:0.0054s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'DocFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ForumFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'InfoFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NewsFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'NoticeFolder' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'ProductFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'XmkFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_user_folder` [ RunTime:0.0053s ]
+SQL: select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url		FROM think_user_folder AS a		WHERE  is_del=0 and user_id=1		ORDER BY a.folder,a.sort  [ RunTime:0.0007s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `id` FROM `think_node` WHERE `sub_folder` = 'MailFolder' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `name` FROM `think_node` WHERE ( id=157 ) LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0061s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_mail` [ RunTime:0.0048s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` = 1 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_mail` WHERE `user_id` = 1 AND `is_del` = '0' AND `folder` > 6 AND `read` = '0' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_flow_log` [ RunTime:0.0058s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND ( result is null )  [ RunTime:0.0008s ]
+SQL: SELECT `flow_id` FROM `think_flow_log` WHERE `emp_no` = 'admin' AND `step` = 100 AND `is_read` = 1  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `think_todo` [ RunTime:0.0051s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_todo` WHERE `user_id` = 1 AND `status` IN ('1','2') LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_schedule` [ RunTime:0.0065s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_schedule` WHERE `user_id` = 1 AND `start_date` <= '2014-12-03' AND `end_date` >= '2014-12-03' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_message` [ RunTime:0.0054s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_message` WHERE `owner_id` = 1 AND `receiver_id` = 1 AND `is_read` = '0' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `think_supplier` [ RunTime:0.0051s ]
+SQL: SELECT * FROM `think_supplier` WHERE `is_del` = 0  [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `think_system_tag` [ RunTime:0.0056s ]
+SQL: SHOW COLUMNS FROM `think_system_tag_data` [ RunTime:0.0043s ]
+SQL: SELECT `row_id`,`tag_id` FROM `think_system_tag_data` join think_system_tag tag on tag_id=tag.id  WHERE ( tag.controller='Supplier' )  [ RunTime:0.0007s ]
+NOTIC: [8] Undefined offset: 18 D:\workspace\xiaowei\Application\Home\Controller\SupplierController.class.php 第 38 行.
+SQL: SELECT `id`,`name` FROM `think_system_tag` WHERE `controller` = 'Supplier' ORDER BY sort asc  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000333s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000525s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0007s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.000035s ]
+INFO: [ action_begin ] --END-- [ RunTime:-0.159197s ]
+NOTIC: [8] Undefined offset: 23 D:\workspace\xiaowei\Runtime\Cache\Home\135763522188db2e640d85166a2d47c5.php 第 211 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.037542s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.037729s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000758s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000933s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001022s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001232s ]
+
+[ 2014-12-03T17:46:44+08:00 ] 127.0.0.1 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000038s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000250s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001136s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001346s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.002167s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.002378s ]
+
+[ 2014-12-03T17:46:44+08:00 ] 127.0.0.1 /index.php?m=&c=public&a=login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000036s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000220s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001133s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001348s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.001767s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.002159s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000203s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000412s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0069s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0007s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0008s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0005s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.045954s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.046139s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000874s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001049s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001101s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001392s ]
+
+[ 2014-12-03T17:46:46+08:00 ] 127.0.0.1 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000039s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000227s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001024s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001230s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.002455s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.002675s ]
+
+[ 2014-12-03T17:46:46+08:00 ] 127.0.0.1 /index.php?m=&c=public&a=login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000036s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000216s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001102s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001339s ]
+INFO: [ action_begin ] --START--
+INFO: Run Common\Behavior\AuthCheckBehavior [ RunTime:0.002042s ]
+INFO: [ action_begin ] --END-- [ RunTime:0.002245s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000200s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000386s ]
+SQL: SHOW COLUMNS FROM `think_system_config` [ RunTime:0.0069s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0006s ]
+SQL: SELECT `val` FROM `think_system_config` WHERE `code` = 'SYSTEM_NAME' LIMIT 1   [ RunTime:0.0007s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.045115s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.045286s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000858s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001083s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001198s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001377s ]
+

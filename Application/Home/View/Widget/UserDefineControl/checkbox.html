@@ -1,0 +1,17 @@
+<eq name="readonly" value="true">
+	<div class="form-inline">
+		<foreach name="control_data" item="control_vo">
+			<label>
+				<input disabled="disabled" name="udf_field_{$id}[]" class="ace" type="checkbox" value="{$key}" <in name="key" value="$val">checked</in>>
+				<span class="lbl">{$control_vo}</span> </label>
+		</foreach>
+	</div>
+	<else/>
+	<div class="form-inline">
+		<foreach name="control_data" item="control_vo">
+			<label>
+				<input name="udf_field_{$id}[]" class="ace" type="checkbox" value="{$key}" <in name="key" value="$val">checked</in>>
+				<span class="lbl">{$control_vo}</span> </label>
+		</foreach>
+	</div>
+</eq>
