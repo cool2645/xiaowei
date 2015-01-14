@@ -34,9 +34,6 @@ class DutyController extends HomeController {
 
 	public function user() {
 		$keyword=I('keyword');
-		if (!empty($keyword)) {
-			$keyword = $keyword
-		}
 
 		$user_list = D("User") -> get_user_list($keyword);
 		$this -> assign("user_list", $user_list);
