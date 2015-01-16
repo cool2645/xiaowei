@@ -50,7 +50,7 @@
 								<eq name="vo.receiver_id" value="$owner_id">
 									<a href="{:U('read','reply_id='.$vo['sender_id'])}">共{$vo.count}条对话</a>
 									<a onclick="reply_message({$vo.sender_id})">回复</a>
-									<a onclick="del_message{$vo.sender_id}">删除</a>
+									<a onclick="del_message({$vo.sender_id})">删除</a>
 								</eq></span>
 						</p>
 					</div>

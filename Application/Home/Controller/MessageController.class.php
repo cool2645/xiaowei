@@ -1,30 +1,37 @@
 <?php
+
 namespace Home\Controller;
 
 class MessageController extends HomeController {
 	protected $config = array('app_type' => 'personal');
 	//过滤查询字段
-	function _filter(&$map){
+	function _filter(&$map) {
 		$map['is_del'] = array('eq', '0');
 		$map['owner_id'] = get_user_id();
-		$keyword=I('keyword');
-		if (!empty($keyword)) {
-			$map['content'] = array('like', "%" . I('keyword') . "%");
+		if (!empty($_REQUEST['keyword'])) {
+			$map['content'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 	}
 
 	function add() {
 		$plugin['editor'] = true;
 		$plugin['uploader'] = true;
-		$this -> assign("plugin", $plugin);	
+		$this -> assign("plugin", $plugin);
+		$toid=$_REQUEST['toid'];
+		$toname=$_REQUEST['toname'];
+		if($toid!='' and $toname!=''){
+			$this -> assign("to",1);
+			$this -> assign("toid",$toid);
+			$this -> assign("toname",$toname);
+		}
+		
 		$this -> display();
 	}
 
-	public function index(){
+	public function index() {
 		//列表过滤器，生成查询Map对象
 		$model = D("Message");
-		$keyword=I('keyword');
-		if (empty($keyword)){
+		if (empty($_POST['keyword'])) {
 			$list = $model -> get_list();
 			$this -> assign('list', $list);
 		} else {
@@ -35,37 +42,36 @@ class MessageController extends HomeController {
 				$this -> _list($model, $map);
 			}
 		}
-		$this->assign('owner_id',get_user_id());
-		$this->assign('auth',$this->config['auth']);
+		$this -> assign('owner_id', get_user_id());
 		$this -> display();
 	}
 
-	function _insert(){
-		$data['content']=$_POST['content'];
-		$data['add_file']=$_POST['add_file'];
-		$data['sender_id']=get_user_id();
-		$data['sender_name']=get_user_name();
-		$data['create_time']=time();
-		
+	function _insert() {
+		$data['content'] = $_POST['content'];
+		$data['add_file'] = $_POST['add_file'];
+		$data['sender_id'] = get_user_id();
+		$data['sender_name'] = get_user_name();
+		$data['create_time'] = time();
+
 		$model = D('Message');
 
-		$arr_recever = array_filter(explode(";",$_POST['to']));
- 
+		$arr_recever = array_filter(explode(";", $_POST['to']));
+
 		foreach ($arr_recever as $val) {
-			$tmp=explode("|",$val);
-			$data['receiver_id']=$tmp[1];
-			$data['receiver_name']=$tmp[0];			
-			$data['owner_id']=get_user_id();
+			$tmp = explode("|", $val);
+			$data['receiver_id'] = $tmp[1];
+			$data['receiver_name'] = $tmp[0];
+			$data['owner_id'] = get_user_id();
 
 			$list = $model -> add($data);
 
-			$data['owner_id']=$tmp[1];
+			$data['owner_id'] = $tmp[1];
 			$list = $model -> add($data);
-			$this -> _pushReturn("", "您有新的消息, 请注意查收", 1,$tmp[1]);	
+			send_push("", "您有新的消息, 请注意查收", 1, $tmp[1]);
 		}
 		//保存当前数据对象
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl',get_return_url());
+			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('发送成功!');
 		} else {
 			//失败提示
@@ -73,10 +79,10 @@ class MessageController extends HomeController {
 		}
 	}
 
-	public function read(){
+	public function read() {
 		$plugin['editor'] = true;
 		$plugin['uploader'] = true;
-		$this -> assign("plugin", $plugin);	
+		$this -> assign("plugin", $plugin);
 
 		$receiver_id = $_REQUEST['reply_id'];
 		$sender_id = get_user_id();
@@ -84,46 +90,108 @@ class MessageController extends HomeController {
 		$where['owner_id'] = get_user_id();
 		$where['_string'] = "(sender_id='$sender_id' and receiver_id='$receiver_id') or (receiver_id='$sender_id' and sender_id='$receiver_id')";
 		$model -> where($where) -> setField('is_read', '1');
+
 		$list = $model -> where($where) -> order('create_time desc') -> select();
 		$this -> assign('list', $list);
-		
-		if(is_array($list)){
-			$vo=$list[0];
-			if($vo['sender_id']==get_user_id()){
-				$reply_id=$vo['receiver_id'];
-				$reply_name=$vo['receiver_name'];
+
+		if (is_array($list)) {
+			$vo = $list[0];
+			if ($vo['sender_id'] == get_user_id()) {
+				$reply_id = $vo['receiver_id'];
+				$reply_name = $vo['receiver_name'];
 			}
-			if($vo['receiver_id']==get_user_id()){
-				$reply_id=$vo['sender_id'];
-				$reply_name=$vo['sender_name'];
+			if ($vo['receiver_id'] == get_user_id()) {
+				$reply_id = $vo['sender_id'];
+				$reply_name = $vo['sender_name'];
 			}
-			$this-> assign('reply_id',$reply_id);
-			$this-> assign('reply_name',$reply_name);
+			$this -> assign('reply_id', $reply_id);
+			$this -> assign('reply_name', $reply_name);
 		}
 		$this -> display();
 	}
 
-	function reply(){
+	public function reply() {
 
-		$data['content']=$_POST['content'];
-		$data['add_file']=$_POST['add_file'];
-		$data['sender_id']=get_user_id();
-		$data['sender_name']=get_user_name();
-		$data['create_time']=time();
-		$data['receiver_id']=$_POST['receiver_id'];
-		$data['receiver_name']=$_POST['receiver_name'];
-		$data['owner_id']=get_user_id();
+		if (IS_POST){
+			$data['content'] = $_POST['content'];
+			$data['add_file'] = $_POST['add_file'];
+			$data['sender_id'] = get_user_id();
+			$data['sender_name'] = get_user_name();
+			$data['create_time'] = time();
+			$data['receiver_id'] = $_POST['receiver_id'];
+			$data['receiver_name'] = $_POST['receiver_name'];
+			$data['owner_id'] = get_user_id();
 
-		$model = D('Message');		
+			$model = D('Message');
+			$list = $model -> add($data);
+
+			$data['owner_id'] = $_POST['receiver_id'];
+			$list = $model -> add($data);
+			send_push("", "您有新的消息, 请注意查收", 1, $_POST['receiver_id']);
+
+			//保存当前数据对象
+			if ($list !== false) {//保存成功
+				$this -> assign('jumpUrl', get_return_url());
+				$this -> success('发送成功!');
+				die;
+			} else {
+				//失败提示
+				$this -> error('发送失败!');
+			}
+		}
+
+		$plugin['editor'] = true;
+		$plugin['uploader'] = true;
+		$this -> assign("plugin", $plugin);
+		
+		$receiver_id = I('reply_id');
+		$sender_id = get_user_id();
+		
+		$model = M("Message");
+		$where['owner_id'] = get_user_id();
+		$where['_string'] = "(sender_id='$sender_id' and receiver_id='$receiver_id') or (receiver_id='$sender_id' and sender_id='$receiver_id')";
+		$model -> where($where) -> setField('is_read', '1');
+
+		$list = $model -> where($where) -> order('create_time desc') -> select();
+		$this -> assign('list', $list);
+
+		if (is_array($list)) {
+			$vo = $list[0];
+			if ($vo['sender_id'] == get_user_id()) {
+				$reply_id = $vo['receiver_id'];
+				$reply_name = $vo['receiver_name'];
+			}
+			if ($vo['receiver_id'] == get_user_id()) {
+				$reply_id = $vo['sender_id'];
+				$reply_name = $vo['sender_name'];
+			}
+			$this -> assign('reply_id', $reply_id);
+			$this -> assign('reply_name', $reply_name);
+		}
+		$this -> display();
+	}
+
+	function reply_2() {
+
+		$data['content'] = $_POST['content'];
+		$data['add_file'] = $_POST['add_file'];
+		$data['sender_id'] = get_user_id();
+		$data['sender_name'] = get_user_name();
+		$data['create_time'] = time();
+		$data['receiver_id'] = $_POST['receiver_id'];
+		$data['receiver_name'] = $_POST['receiver_name'];
+		$data['owner_id'] = get_user_id();
+
+		$model = D('Message');
 		$list = $model -> add($data);
 
-		$data['owner_id']=$_POST['receiver_id'];
+		$data['owner_id'] = $_POST['receiver_id'];
 		$list = $model -> add($data);
-		$this -> _pushReturn("", "您有新的消息, 请注意查收", 1,$_POST['receiver_id']);	
+		$this -> _pushReturn("", "您有新的消息, 请注意查收", 1, $_POST['receiver_id']);
 
 		//保存当前数据对象
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl',get_return_url());
+			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('发送成功!');
 		} else {
 			//失败提示
@@ -131,15 +199,20 @@ class MessageController extends HomeController {
 		}
 	}
 
-	function forward(){
-		$id = I('id');
+	function forward() {
+
+		$plugin['editor'] = true;
+		$plugin['uploader'] = true;
+		$this -> assign("plugin", $plugin);
+
+		$id = $_REQUEST['id'];
 		$model = M("Message");
-		$where['owner_id']=array('eq',get_user_id());
-		$where['id']=array('eq',$id);
-		
-		$list=$model ->where($where)->find();
+		$where['owner_id'] = array('eq', get_user_id());
+		$where['id'] = array('eq', $id);
+
+		$list = $model -> where($where) -> find();
 		if ($list !== false) {//保存成功
-			$this -> assign('vo',$list);
+			$this -> assign('vo', $list);
 			$this -> display();
 		} else {
 			//失败提示
@@ -147,14 +220,14 @@ class MessageController extends HomeController {
 		}
 	}
 
-	function upload(){
-		$this->_upload();
+	function upload() {
+		$this -> _upload();
 	}
 
 	public function del() {
-		$type=I('type');;
-		$where['owner_id'] = array("eq",get_user_id());
-		switch($type){
+		$type = $_REQUEST['type'];
+		$where['owner_id'] = array("eq", get_user_id());
+		switch($type) {
 			case 'all' :
 				break;
 			case 'dialogue' :
@@ -164,15 +237,15 @@ class MessageController extends HomeController {
 				break;
 			case 'message' :
 				$message_id = $_REQUEST['message_id'];
-				$where['id'] = array("eq",$message_id);
+				$where['id'] = array("eq", $message_id);
 				break;
 			default :
-				$this -> ajaxReturn('', "删除失败",0);
+				$this -> ajaxReturn('', "删除失败", 0);
 				break;
 		}
-		$model=D("Message");
-		$list=$model->where($where)->delete();
-	
+		$model = D("Message");
+		$list = $model -> where($where) -> delete();
+
 		if ($list !== false) {//保存成功
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('删除成功!');
@@ -181,7 +254,9 @@ class MessageController extends HomeController {
 			//失败提示
 		}
 	}
+
 	function down() {
 		$this -> _down();
 	}
+
 }

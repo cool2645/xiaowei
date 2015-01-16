@@ -1,6 +1,5 @@
 <extend name="Layout/page_popup" />
 <block name="content">
-
 	<div class="panel panel-default ">
 		<div class="panel-heading clearfix">
 			<div class="pull-left">
@@ -89,14 +88,6 @@
 		// 显示AJAX 读取的数据
 		function showdata(result) {
 			$("#addr_list").html("");
-			if ( type = $("input[name='type']:checked").val() == "company") {
-				var id = "dept_" + $("#company a.active").attr("node");
-				var dept_name = $("#company a.active span").text();
-				var email = "dept@group";
-				var name = dept_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(id, name);
-				$("#addr_list").html(html_string);
-			}
 			for (s in result.data) {
 				var id = result.data[s].id;
 				var position_name = result.data[s].position_name;
@@ -108,7 +99,6 @@
 				$("#addr_list").append(html_string);
 			}
 		}
-
 
 		$(document).ready(function() {
 			$("#rb_{$type}").prop('checked', true);

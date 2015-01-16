@@ -225,7 +225,7 @@ class  FlowModel extends CommonModel {
 			}
 
 			$user_id = M("User") -> where("emp_no=$emp_no") -> getField("id");
-			$this -> _pushReturn($new, "您有一个流程被退回", 1, $user_id);
+			send_push($new, "您有一个流程被退回", 1, $user_id);
 
 			$model -> create($data);
 			$model -> add();
@@ -254,7 +254,7 @@ class  FlowModel extends CommonModel {
 			$model -> where("id=$flow_id") -> setField('step', 40);
 
 			$user_id = $model -> where("id=$flow_id") -> getField('user_id');
-			$this -> _pushReturn($new, "您有一个流程通过审核", 1, $user_id);
+			send_push($new, "您有一个流程通过审核", 1, $user_id);
 
 			$this -> send_to_refer($flow_id);
 

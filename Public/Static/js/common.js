@@ -125,7 +125,7 @@ function ui_error(msg) {
 }
 
 /*联系人显示格式转换*/
-function conv_address_item(id, name) {
+function conv_address_item(id,name) {
 	html = '<nobr><label>';
 	html += '		<input class="ace" type="checkbox" name="addr_id" value="' + id + '"/>';
 	html += '		<span class="lbl">' + name + '</span></label></nobr>';
