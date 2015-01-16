@@ -79,7 +79,7 @@
 								<span class="col-6 text-center ">{$vo.user_name}</span>
 								<span class="col-6 text-center ">{$vo.dept_name}</span>
 								<span class="col-9 text-center">{$vo.create_time|to_date='Y-m-d'}</span>
-								<span class="col-6 text-center ">签收情况</span>
+								<span class="col-6 text-center "><a onclick="sign_report({$vo.id})">签收情况</a></span>
 							</div>
 							<div class="auto autocut">
 								<a href="{:U('read','id='.$vo['id'])}"> {$vo.name}
@@ -102,5 +102,8 @@
 		$(document).ready(function() {
 			set_return_url();
 		});
+		function sign_report($id) {
+			winopen(fix_url("{:U('sign_report')}?id=" + $id), 740, 500);
+		}
 	</script>
 </block>
