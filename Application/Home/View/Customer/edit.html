@@ -1,6 +1,6 @@
 <extend name="Layout/page_detail" />
 <block name="content">
-	{:W('PageHeader/simple',array('name'=>array('编辑客户：',$vo['name']),'search'=>'N'))}
+	{:W('PageHeader/simple',array('编辑客户：'.$vo['name']))}
 
 	<form method='post' id="form_data" class="well form-horizontal">
 		<input type="hidden" name="opmode" value="edit">
