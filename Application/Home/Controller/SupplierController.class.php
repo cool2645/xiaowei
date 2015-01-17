@@ -174,7 +174,7 @@ class SupplierController extends HomeController {
 	}
 
 	function tag_manage() {
-		$this -> _tag_manage("分组管理");
+		$this -> _tag_manage("分组管理",false);
 	}
 
 	function set_tag() {

@@ -1365,4 +1365,68 @@ function get_emp_pic($id) {
 	}
 	return $data;
 }
+
+
+function task_status($status) {
+	if ($status == 0) {
+		return "等待接受";
+	}
+	if ($status == 1) {
+		return "已接受";
+	}
+	if ($status == 2) {
+		return "进行中";
+	}
+	if ($status == 3) {
+		return "已完成";
+	}
+	if ($status == 4) {
+		return "已转交";
+	}
+	if ($status == 5) {
+		return "不接受";
+	}
+}
+
+function task_log_status($status) {
+	if ($status == 0) {
+		return "等待接受";
+	}
+	if ($status == 1) {
+		return "已接受";
+	}
+	if ($status == 2) {
+		return "进行中";
+	}
+	if ($status == 3) {
+		return "已完成";
+	}
+	if ($status == 4) {
+		return "已转交";
+	}
+	if ($status == 5) {
+		return "不接受";
+	}
+}
+
+function finish_rate($rate) {
+	if ($rate == 0) {
+		return "任务未开始执行";
+	}
+	if ($rate > 0 and $rate < 100) {
+		return "任务已完成$rate%";
+	}
+	if ($rate == 100) {
+		return "任务已完成";
+	}
+}
+
+function is_submit($val) {
+	if ($val == 0) {
+		return "临时保管";
+	}
+	if ($val == 1) {
+		return "已提交";
+	}
+}
 ?>

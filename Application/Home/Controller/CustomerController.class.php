@@ -207,7 +207,7 @@ class CustomerController extends HomeController {
 	}
 	
 	function tag_manage() {
-		$this -> _tag_manage("分组管理");
+		$this -> _tag_manage("分组管理",false);
 	}
 
 	protected function _insert(){		

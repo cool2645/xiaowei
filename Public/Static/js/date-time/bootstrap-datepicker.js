@@ -594,7 +594,7 @@
 				top += height;
 			else
 				top -= calendarHeight + parseInt(this.picker.css('padding-top'));
-
+						
 			this.picker.css({
 				top: top,
 				left: left,

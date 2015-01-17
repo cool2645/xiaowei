@@ -136,7 +136,7 @@ class  RoleModel extends CommonModel {
 			$role_list = explode(",", $role_list);
 			$role_list = array_filter($role_list);
 		}
-		$role_list = implode(",", $role_list);		
+		$role_list = implode(",", $role_list);
 		$rs = $this -> db -> query('select distinct duty_id from ' . $this -> tablePrefix . 'role_duty as a where a.role_id in(' . $role_list . ')');
 		return $rs;
 	}
@@ -190,6 +190,77 @@ class  RoleModel extends CommonModel {
 		$sql .= ' SELECT a.id, b.id FROM ' . $this -> tablePrefix . 'role a, ' . $this -> tablePrefix . 'duty b WHERE ' . $where;
 		$result = $this -> execute($sql);
 		return result;
+	}
+
+	function get_auth($module_name) {
+
+		$access_list = D("Node") -> access_list();
+		$access_list = array_filter($access_list, array($this, 'filter_module'));
+		$access_list = rotate($access_list);
+
+		$module_list = $access_list['url'];
+		$module_list = array_map(array($this, "get_module"), $module_list);
+		$module_list = str_replace("_", "", $module_list);
+
+		$access_list_admin = array_filter(array_combine($module_list, $access_list['admin']));
+		$access_list_write = array_filter(array_combine($module_list, $access_list['write']));
+		$access_list_read = array_filter(array_combine($module_list, $access_list['read']));
+
+		$module_name = strtolower($module_name);
+		$auth['admin'] = array_key_exists($module_name, $access_list_admin) || array_key_exists("##" . $module_name, $access_list_admin);
+
+		$auth['write'] = array_key_exists($module_name, $access_list_write) || array_key_exists("##" . $module_name, $access_list_write);
+
+		$auth['read'] = array_key_exists($module_name, $access_list_read) || array_key_exists("##" . $module_name, $access_list_read);
+
+		if ($auth['admin'] == true) {
+			$auth['write'] = true;
+		}
+		if ($auth['write'] == true) {
+			$auth['read'] = true;
+		}
+		return $auth;
+	}
+
+	function get_module($str) {
+		$arr_str = explode("/", $str);
+		return $arr_str[0];
+	}
+
+	function filter_module($str) {
+		if (strpos($str['url'], '##') !== false) {
+			return true;
+		}
+		if (empty($str['admin']) && empty($str['write']) && empty($str['read'])) {
+			return false;
+		}
+		if (strpos($str['url'], 'index')) {
+			return true;
+		}
+		return false;
+	}
+
+	function check_duty($duty_no, $user_id = null) {
+		if (empty($user_id)) {
+			$user_id = get_user_id();
+		}
+
+		$role_list = $this -> get_role_list($user_id);
+		$role_list = rotate($role_list);
+		$role_list = $role_list['role_id'];
+
+		$duty_list = $this -> get_duty_list($role_list);
+		$duty_list = rotate($duty_list);
+		$duty_list = $duty_list['duty_id'];
+
+		$where_duty_id['duty_no'] = array('eq', $duty_no);
+		$show_log_duty_id = M("Duty") -> where($where_duty_id) -> getField('id');
+
+		if (in_array($show_log_duty_id, $duty_list)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

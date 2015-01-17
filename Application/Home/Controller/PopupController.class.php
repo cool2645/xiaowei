@@ -211,6 +211,10 @@ class PopupController extends HomeController {
 		return;
 	}
 
+	function task(){
+		$this->actor();
+	}
+	
 	function confirm() {
 
 		$plugin['jquery-ui'] = true;
