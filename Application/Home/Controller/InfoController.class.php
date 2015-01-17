@@ -335,18 +335,20 @@ class InfoController extends HomeController {
 		$user_id = get_user_id();
 		$folder_list = D("SystemFolder") -> get_authed_folder($user_id);
 
-		$map['folder'] = array("in", $folder_list);
-		$map['create_time'] = array("egt", time() - 3600 * 24 * 30);
+		$where_readed['folder'] = array("in", $folder_list);
+		$where_readed['create_time'] = array("egt", time() - 3600 * 24 * 30);
 
 		$readed_list = array_filter(explode(",", get_user_config("readed_info") . "," . $id));
 
-		$map['id'] = array('in', $readed_list);
+		$where_readed['id'] = array('in', $readed_list);
+		
+		$readed_info = M("Info") -> where($where_readed) -> getField("id",true);
+		$readed_info = implode(",",$readed_info);
 
-		$readed_info = M("Info") -> where($map) -> getField("id,name");
-		$readed_info = implode(",", array_keys($readed_info));
-
-		$where['id'] = array('eq', $user_id);
-		M("UserConfig") -> where($where) -> setField('readed_info', $readed_info);
+		$where_config['id'] = array('eq', $user_id);
+		if(!empty($readed_info)){
+			M("UserConfig") -> where($where_config) -> setField('readed_info', $readed_info);
+		}		
 	}
 
 }

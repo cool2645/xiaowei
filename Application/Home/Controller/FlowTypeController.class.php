@@ -103,7 +103,8 @@ class FlowTypeController extends HomeController {
 
 	function edit() {
 		$plugin['editor']=true;
-		$this->assign("widget",$plugin);			
+		$this->assign("plugin",$plugin);		
+			
 		$this -> assign("user_id",get_user_id());
 		$model = D("FlowTypeView");
 		$id = $_REQUEST['id'];
