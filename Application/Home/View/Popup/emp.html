@@ -232,6 +232,7 @@
 
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
+				$(this).prop('checked',false);
 				$text = $(this).parent().find("a").text();
 				$val = $(this).val();
 				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {

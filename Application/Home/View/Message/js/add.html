@@ -9,9 +9,8 @@
 		/* 查找联系人input 功能*/
 		$(document).on("click", ".inputbox .search li", function() {
 			name = $(this).text().replace(/<.*>/, '');
-			email = $(this).find("a").attr("title");
-			id = $(this).find("a").attr("data");
-			html = conv_inputbox_item(email, name, email, id);
+			data = $(this).find("a").attr("data");
+			html = conv_inputbox_item(name,data);
 
 			inputbox = $(this).parents(".inputbox");
 			inputbox.find("span.address_list").append(html);
@@ -40,9 +39,8 @@
 				case 13:
 					if ($(this).parents(".inputbox").find(".search ul").html() != "") {
 						name = $(".search li.active").text().replace(/<.*>/, '');
-						email = $(".search li.active a").attr("title");
-						id = $(".search li.active a").attr("data");
-						html = conv_inputbox_item(id, name, id, id);
+						data = $(".search li.active a").attr("data");
+						html = conv_inputbox_item(name, data);
 						$(this).parents(".inputbox").find("span.address_list").append(html);
 						$(this).parents(".inputbox").find(".search ul").html("");
 
@@ -52,7 +50,7 @@
 						email = $(this).val();
 						if (validate(email, 'email')) {
 							name = email;
-							html = conv_inputbox_item(email, name, email, email);
+							html = conv_inputbox_item(name,email);
 							$(this).parents(".inputbox").find("span.address_list").append(html);
 							$(this).val("");
 						} else {

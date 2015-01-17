@@ -6,9 +6,8 @@ function winprint() {
 	window.print();
 }
 
-function freshVerify()
-{
-    $('#verifyImg').attr("src",$('#verifyImg').attr("src").split("?")[0]+"?"+Math.random());
+function freshVerify() {
+	$('#verifyImg').attr("src", $('#verifyImg').attr("src").split("?")[0] + "?" + Math.random());
 }
 
 function click_top_menu(node) {
@@ -46,7 +45,7 @@ function click_home_list(obj_node) {
 function fill_time(id) {
 	for (var i = 5; i < 22; i++) {
 		val = ("0" + i);
-		val = val.substring(val.length - 2)
+		val = val.substring(val.length - 2);
 		$("#" + id).append("<option value='" + val + ":00'>" + val + ":00</option>");
 		$("#" + id).append("<option value='" + val + ":30'>" + val + ":30</option>");
 	}
@@ -125,20 +124,16 @@ function ui_error(msg) {
 }
 
 /*联系人显示格式转换*/
-function conv_address_item(id,name) {
+function conv_address_item(name, data) {
 	html = '<nobr><label>';
-	html += '		<input class="ace" type="checkbox" name="addr_id" value="' + id + '"/>';
+	html += '		<input class="ace" type="checkbox" name="addr_id" value="' + data + '"/>';
 	html += '		<span class="lbl">' + name + '</span></label></nobr>';
 	return html;
 }
 
-function conv_inputbox_item(id, name, title, data) {
-	if (data !== undefined) {
-		html = "<span data=\"" + data + "\" id=\"" + id + "\">";
-	} else {
-		html = "<span id=\"" + id + "\">";
-	}
-	html += "<nobr><b  title=\"" + title + "\">" + name + "</b>";
+function conv_inputbox_item(name, data) {
+	html = "<span data=\"" + data + "\" id=\"" + data + "\">";
+	html += "<nobr><b  title=\"" + name + "\">" + name + "</b>";
 	html += "<a class=\"del\" title=\"删除\"><i class=\"fa fa-times\"></i></a></nobr></span>";
 	return html;
 }
@@ -170,7 +165,7 @@ function show_content() {
 		iframe.height = height;
 		$(this).height(height + 35);
 		$(iframe).height(height + 35);
-	})
+	});
 }
 
 function toggle_adv_search() {
@@ -260,7 +255,7 @@ var ul_table = {
 
 		ul_table.display_bar(count);
 	}
-}
+};
 
 var Inputbox = {
 	//displays a toolbar according to the number of selected messages
@@ -314,7 +309,7 @@ var Inputbox = {
 		});
 		ul_table.display_bar(count);
 	}
-}
+};
 
 /*赋值*/
 
@@ -368,7 +363,7 @@ function set_return_url(url, level) {
 
 /*返回到上一页*/
 function go_return_url(level) {
-	
+
 	if (level != undefined) {
 		return_url = get_cookie('return_url_' + level);
 		window.open(return_url, "_self");
@@ -382,15 +377,15 @@ function go_return_url(level) {
 /*打开弹出窗口*/
 function winopen(url, w, h) {
 	url = fix_url(url);
-	$("html,body").css("overflow","hidden");
+	$("html,body").css("overflow", "hidden");
 	$("div.shade").show();
 	var _body = $("body").eq(0);
-	if ($("#dialog").length == 0){
+	if ($("#dialog").length == 0) {
 		if (!is_mobile()) {
 			_body.append("<div id=\"dialog\" ><iframe class=\"myFrame\" src='" + url + "' style='width:" + w + "px;height:100%' scrolling='auto' ></iframe></div>");
 			$("#dialog").css({
 				"width" : w,
-				"height" : h,				
+				"height" : h,
 				"position" : "fixed",
 				"z-index" : "2000",
 				"top" : ($(window).height() / 2 - h / 2),
@@ -400,13 +395,13 @@ function winopen(url, w, h) {
 		} else {
 			$("div.shade").css("width", _body.width());
 			_body.append("<div id=\"dialog\" ><iframe class=\"myFrame\" src='" + url + "' style='width:100%;height:100%' scrolling='auto' ></iframe></div>");
-			$("#dialog").css({				
+			$("#dialog").css({
 				"width" : _body.width(),
 				"height" : h,
 				"position" : "fixed",
 				"z-index" : "2000",
-				"top":0,
-				"left":0,
+				"top" : 0,
+				"left" : 0,
 				"background-color" : "#ffffff"
 			});
 		}
@@ -414,31 +409,6 @@ function winopen(url, w, h) {
 		$("#dialog").show();
 	}
 }
-
-var toScrollFrame = function(iFrame, mask) {
-	if (!navigator.userAgent.match(/iPad|iPhone/i))
-		return false;
-	//do nothing if not iOS devie
-
-	var mouseY = 0;
-	var mouseX = 0;
-	jQuery(iFrame).ready(function() {
-		jQuery(iFrame).contents()[0].body.addEventListener('touchstart', function(e) {
-			mouseY = e.targetTouches[0].pageY;
-			mouseX = e.targetTouches[0].pageX;
-		});
-
-		jQuery(iFrame).contents()[0].body.addEventListener('touchmove', function(e) {
-			e.preventDefault();
-
-			var box = jQuery(mask);
-			box.scrollLeft(box.scrollLeft() + mouseX - e.targetTouches[0].pageX);
-			box.scrollTop(box.scrollTop() + mouseY - e.targetTouches[0].pageY);
-		});
-	});
-
-	return true;
-};
 
 /*联系人显示格式转换*/
 function contact_conv(val) {
@@ -450,7 +420,7 @@ function contact_conv(val) {
 			id = arr_temp[key].split("|")[1];
 			name = arr_temp[key].split("|")[0];
 			title = arr_temp[key].split("|")[0];
-			html += conv_inputbox_item(id, name, title, data)
+			html += conv_inputbox_item(name,data);
 			//html +=  '<span data="' + arr_temp[key].split("|")[1] + '" onmousedown="return false"><nobr>' + arr_temp[key].split("|")[0] + '<a class=\"del\" title=\"删除\"><i class=\"fa fa-times\"></i></a></nobr></span>';
 		}
 	}
@@ -486,7 +456,7 @@ function check_form(form_id) {
 				return check_flag;
 			}
 		}
-	})
+	});
 	return check_flag;
 }
 
@@ -498,29 +468,29 @@ function validate(data, datatype) {
 		data2 = tmp[1];
 	}
 	switch (datatype) {
-		case "require":
-			if (data == "") {
-				return false;
-			} else {
-				return true;
-			}
-			break;
-		case "email":
-			var reg = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
-			return reg.test(data);
-			break;
-		case "number":
-			var reg = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
-			return reg.test(data);
-			break;
-		case "html":
-			var reg = /<...>/;
-			return reg.test(data);
-			break;
-		case "eqt":
-			data2 = $("#" + data2).val();
-			return data >= data2
-			break;
+	case "require":
+		if (data == "") {
+			return false;
+		} else {
+			return true;
+		}
+		break;
+	case "email":
+		var reg = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+		return reg.test(data);
+		break;
+	case "number":
+		var reg = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
+		return reg.test(data);
+		break;
+	case "html":
+		var reg = /<...>/;
+		return reg.test(data);
+		break;
+	case "eqt":
+		data2 = $("#" + data2).val();
+		return data >= data2;
+		break;
 	}
 }
 
@@ -583,7 +553,7 @@ function click_nav_menu(obj_node) {
 
 /*设置 cookie*/
 function set_cookie(key, value, exp, path, domain, secure) {
-	key=cookie_prefix+key;
+	key = cookie_prefix + key;
 	path = "/";
 	var cookie_string = key + "=" + escape(value);
 	if (exp) {
@@ -600,7 +570,7 @@ function set_cookie(key, value, exp, path, domain, secure) {
 
 /*读取 cookie*/
 function get_cookie(cookie_name) {
-	cookie_name=cookie_prefix+cookie_name;
+	cookie_name = cookie_prefix + cookie_name;
 	var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
 	if (results)
 		return (unescape(results[2]));
@@ -610,7 +580,7 @@ function get_cookie(cookie_name) {
 
 /*删除 cookie*/
 function del_cookie(cookie_name) {
-	cookie_name=cookie_prefix+cookie_name;
+	cookie_name = cookie_prefix + cookie_name;
 	var cookie_date = new Date();
 	//current date & time
 	cookie_date.setTime(cookie_date.getTime() - 1);

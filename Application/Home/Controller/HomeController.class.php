@@ -357,6 +357,7 @@ class HomeController extends Controller {
 			$return = $info['file'];
 			$return['sid'] = think_encrypt($info['file']['id']);
 			$return['status'] = 1;
+			$return['error'] = 0;
 		} else {
 			$return['status'] = 0;
 			$return['info'] = $File -> getError();

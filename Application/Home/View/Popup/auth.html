@@ -82,8 +82,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-			$("#rc select option").each(function(i) {
-				email = ($(this).html().split(";")[1].split("&")[0]);
+			$("#rc select option").each(function(i) {				
 				emp_no = $(this).val();
 				name = jQuery.trim($(this).text()).replace(/<.*>/, '');
 				html = conv_inputbox_item(name, emp_no);
@@ -111,21 +110,19 @@
 		function showdata(result) {
 			$("#addr_list").html("");
 			if ( type = $("input[name='type']:checked").val() == "company") {
-				var id = "dept_" + $("#company a.active").attr("node");
+				var dept_id = "dept_" + $("#company a.active").attr("node");
 				var dept_name = $("#company a.active span").text();
-				var email = "dept@group";
-				var name = dept_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(id, name);
+				var name = dept_name + "&lt;dept@group&gt;";
+				var html_string = conv_address_item(name,dept_id);
 				$("#addr_list").html(html_string);
 			}
 			for (s in result.data) {
 				var id = result.data[s].id;
-				var position_name = result.data[s].position_name;
-				var emp_no = result.data[s].emp_no;
-				var email = result.data[s].email;
+				var emp_no = result.data[s].emp_no;	
+				var position_name = result.data[s].position_name;							
 				var name = result.data[s].name;
-				var name = name + "/" + position_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(emp_no, name);
+				var name = name + "/" + position_name;
+				var html_string = conv_address_item(name,emp_no);
 				$("#addr_list").append(html_string);
 			}
 		}
@@ -179,80 +176,13 @@
 			$("#bcc select").on("dblclick", function() {
 				$(this).find("option:selected").remove();
 				$("#bcc_count").text("(" + $("#bcc select option").length + ")");
-			});
-
-			$("#addr_list").on("mouseover", function() {
-				$("#addr_list label").draggable({
-					appendTo : "body",
-					helper : "clone"
-				});
-			});
-
-			$("#rc select").droppable({
-				activeClass : "ui-state-default",
-				hoverClass : "ui-state-hover",
-				accept : ":not(.ui-sortable-helper)",
-				drop : function(event, ui) {
-					$text = ui.draggable.text();
-					$val = ui.draggable.find("input").val();
-					if ($("#rc select option[value='" + $val + "']").val() == undefined) {
-						$("<option></option>").val($val).text($text).appendTo(this);
-						$("#rc_count").text("(" + $("#rc select option").length + ")");
-					};
-				},
-			}).sortable({
-				items : "option:not(.placeholder)",
-				sort : function() {
-					// gets added unintentionally by droppable interacting with sortable
-					// using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
-					$(this).removeClass("ui-state-default");
-				}
-			});
-
-			$("#cc select").droppable({
-				activeClass : "ui-state-default",
-				hoverClass : "ui-state-hover",
-				accept : ":not(.ui-sortable-helper)",
-				drop : function(event, ui) {
-					$text = ui.draggable.text();
-					$val = ui.draggable.find("input").val();
-					if ($("#cc select option[value='" + $val + "']").val() == undefined) {
-						$("<option></option>").val($val).text($text).appendTo(this);
-						$("#cc_count").text("(" + $("#cc select option").length + ")");
-					};
-				},
-			}).sortable({
-				items : "li:not(.placeholder)",
-				sort : function() {
-					// gets added unintentionally by droppable interacting with sortable
-					// using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
-					$(this).removeClass("ui-state-default");
-				}
-			});
-
-			$("#bcc select").droppable({
-				activeClass : "ui-state-default",
-				hoverClass : "ui-state-hover",
-				accept : ":not(.ui-sortable-helper)",
-				drop : function(event, ui) {
-					$text = ui.draggable.text();
-					$val = ui.draggable.find("input").val();
-					if ($("#bcc select option[value='" + $val + "']").val() == undefined) {
-						$("<option></option>").val($val).text($text).appendTo(this);
-						$("#bcc_count").text("(" + $("#bcc select option").length + ")");
-					};
-				},
-			}).sortable({
-				items : "li:not(.placeholder)",
-				sort : function() {
-					$(this).removeClass("ui-state-default");
-				}
-			});
+			});			
 		});
 		//最终确认
 
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
+				$(this).prop('checked',false);
 				$text = $(this).parents("label").find("span").text();
 				$val = $(this).val();
 				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
@@ -261,7 +191,6 @@
 				};
 			});
 		}
-
 		//-->
 	</script>
 </block>
