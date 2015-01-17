@@ -255,7 +255,7 @@ class InfoController extends HomeController {
 		$this -> assign('vo', $vo);
 
 		$where_scope['info_id'] = array('eq', $id);
-		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id',ture);
+		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id',true);
 		if (!empty($scope_user)) {
 
 		}
@@ -307,7 +307,7 @@ class InfoController extends HomeController {
 
 		$user_id = get_user_id();
 		$where_scope['user_id'] = array('eq', $user_id);
-		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id id',true);
+		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id',true);
 		$scope_list = implode(",", $scope_list);
 
 		if (!empty($scope_list)) {
