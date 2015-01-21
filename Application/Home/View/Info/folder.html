@@ -52,7 +52,7 @@
 			<div class="panel-body">
 				<div class="pull-left">
 					<if condition="$auth['admin']">
-						<a class="btn btn-sm btn-danger" onclick="mark('del');">删除</a>
+						<a class="btn btn-sm btn-danger" onclick="del();">删除</a>
 						<div class="btn-group" id="move_to">
 							<a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#" > 转移到 <span class="fa fa-caret-down"></span> </a>
 							<ul class="dropdown-menu">
@@ -142,7 +142,6 @@
 				location.reload();
 			});
 		}
-
 
 		$(document).ready(function() {
 			set_return_url();

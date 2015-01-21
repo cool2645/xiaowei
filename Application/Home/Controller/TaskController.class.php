@@ -29,8 +29,8 @@ class TaskController extends HomeController {
 
 	public function folder() {
 		D("Role") -> get_auth('Task');
-		$widget['date'] = true;
-		$this -> assign("widget", $widget);
+		$plugin['date'] = true;
+		$this -> assign("plugin", $plugin);
 		$this -> assign('auth', $this -> config['auth']);
 		$this -> assign('user_id', get_user_id());
 
@@ -275,7 +275,7 @@ class TaskController extends HomeController {
 			}
 			$model -> transactor = get_user_id();
 			$model -> transactor_name = get_user_name();
-			$model -> finish_time = toDate(time());
+			$model -> finish_time = to_date(time());
 			$list = $model -> save();
 			if ($list !== false) {
 				$this -> success('提交成功');
@@ -367,7 +367,7 @@ class TaskController extends HomeController {
 		$info = M("Task") -> where("id=$task_id") -> find();
 		$data['name'] = $info['name'];
 		$data['content'] = $info['content'];
-		$data['start_time'] = toDate(time());
+		$data['start_time'] = to_date(time());
 		$data['end_time'] = $info['expected_time'];
 		$data['user_id'] = get_user_id();
 		$data['user_name'] = get_user_name();

@@ -28,8 +28,7 @@
         'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
     ), //下载模型上传配置（文件上传类配置）
     		
-		'VAR_PAGE'	=>'p',
-			
+		'VAR_PAGE'	=>'p',			
 		'TMPL_CACHE_ON' => false,
 		'TOKEN_ON'=>false, 
 		'TMPL_STRIP_SPACE'=>false,

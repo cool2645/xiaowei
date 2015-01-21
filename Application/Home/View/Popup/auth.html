@@ -90,15 +90,13 @@
 			});
 
 			$("#cc select option").each(function(i) {
-				email = ($(this).html().split(";")[1].split("&")[0]);
 				emp_no = $(this).val();
 				name = jQuery.trim($(this).text()).replace(/<.*>/, '');
 				html = conv_inputbox_item(name, emp_no);
 				$("#write_list .address_list", parent.document).append(html);
 			});
 
-			$("#bcc select option").each(function(i) {
-				email = ($(this).html().split(";")[1].split("&")[0]);
+			$("#bcc select option").each(function(i) {				
 				emp_no = $(this).val();
 				name = jQuery.trim($(this).text()).replace(/<.*>/, '');
 				html = conv_inputbox_item(name, emp_no);

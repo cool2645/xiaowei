@@ -21,7 +21,7 @@
 			<label class="col-xs-4 control-label" >开始:</label>
 			<div class="col-xs-8">
 				<p class="form-control-static">
-					{$vo.start_date}&nbsp;{$vo.start_time|fix_time}
+					{$vo.start_time|substr=0,16}
 				</p>
 			</div>
 		</div>
@@ -29,7 +29,7 @@
 			<label class="col-xs-4 control-label" for="name">结束:</label>
 			<div class="col-xs-8">
 				<p class="form-control-static">
-					{$vo.end_date}&nbsp;{$vo.end_time|fix_time}
+					{$vo.end_time|substr=0,16}
 				</p>
 			</div>
 		</div>

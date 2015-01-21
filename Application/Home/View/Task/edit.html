@@ -1,6 +1,6 @@
 <extend name="Layout/page_detail" />
 <block name="content">
-	{:W('PageHeader',array('name'=>'修改任务','search'=>'N'))}
+	{:W('PageHeader/simple',array('name'=>'修改任务','search'=>'N'))}
 
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"   class="well form-horizontal">
 		<input type="hidden" id="id" name="id" value="{$vo.id}">

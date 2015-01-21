@@ -33,8 +33,7 @@ return array(
     /* 认证相关 */
     'USER_AUTH_KEY'	=>'auth_id',
 	'USER_AUTH_GATEWAY'=>'public/login',
-	
-	'TMPL_NO_HAVE_AUTH'=>APP_PATH.'/Tpl/Public/no_have_auth.html',
+	'TMPL_NO_HAVE_AUTH'=>APP_PATH.MODULE_NAME.'/View/Public/no_have_auth.html',	
     /* 系统数据加密设置 */
     'DATA_AUTH_KEY' => '1*NX+Jds|p!IFqltgD)"?4;ic<{,wuya239Ax^]-', //默认数据加密KEY        
 );

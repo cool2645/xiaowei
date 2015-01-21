@@ -94,7 +94,7 @@ class  FlowModel extends CommonModel {
 			$str_confirm = $this -> _conv_auditor($data['confirm']);
 			$str_consult = $this -> _conv_auditor($data['consult']);
 			$str_refer = $this -> _conv_auditor($data['refer']);
-
+						
 			$model -> where($where) -> setField('confirm', $str_confirm);
 			$model -> where($where) -> setField('consult', $str_consult);
 			$model -> where($where) -> setField('refer', $str_refer);
@@ -140,7 +140,7 @@ class  FlowModel extends CommonModel {
 
 	function _conv_auditor($val) {
 		$arr_auditor = array_filter(explode("|", $val));
-		$str_auditor;
+		$str_auditor = '';
 
 		foreach ($arr_auditor as $auditor) {
 			if (strpos($auditor, "dgp") !== false) {
@@ -215,7 +215,7 @@ class  FlowModel extends CommonModel {
 		if (!empty($emp_no)) {
 			$data['flow_id'] = $flow_id;
 			$data['emp_no'] = $emp_no;
-			
+
 			$model = D("FlowLog");
 			$where['flow_id'] = $flow_id;
 			$where['emp_no'] = $emp_no;
@@ -262,13 +262,8 @@ class  FlowModel extends CommonModel {
 
 			$data['flow_id'] = $flow_id;
 			$data['step'] = $step;
-
-			if (!empty($emp_no)) {
-				$data['emp_no'] = $emp_no;
-			} else {
-				$data['emp_no'] = $this -> duty_emp_no($flow_id, $step);
-			}
-
+			$data['emp_no'] = $this -> duty_emp_no($flow_id, $step);
+			
 			if (strpos($data['emp_no'], ",") !== false) {
 				$emp_list = explode(",", $data['emp_no']);
 				foreach ($emp_list as $emp) {
@@ -286,11 +281,12 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_confirm($flow_id) {
-
 		$confirm = M("Flow") -> where("id=$flow_id") -> getField("confirm");
+		if (empty($consult)) {
+			return true;
+		}
 		$last_confirm = array_filter(explode("|", $confirm));
 		$last_confirm_emp_no = end($last_confirm);
-
 		if (strpos($last_confirm_emp_no, get_emp_no()) !== false) {
 			return true;
 		}
@@ -331,20 +327,23 @@ class  FlowModel extends CommonModel {
 		$model = M("Flow");
 
 		$list = $model -> where("id=$flow_id") -> getField('refer');
-		$list = str_replace("|", ",", $list);
-		$emp_list = array_filter(explode(",", $list));
 
-		$data['flow_id'] = $flow_id;
-		$data['result'] = 1;
+		if (!empty($list)) {
+			$list = str_replace("|", ",", $list);
+			$emp_list = array_filter(explode(",", $list));
 
-		foreach ($emp_list as $val) {
-			$data['emp_no'] = $val;
-			$data['step'] = 100;
-			$data['create_time'] = time();
-			D("FlowLog") -> add($data);
+			$data['flow_id'] = $flow_id;
+			$data['result'] = 1;
 
-			$user_id = M("User") -> where("emp_no=$val") -> getField("id");
-			send_push($new, "收到新的流程", 1, $user_id);
+			foreach ($emp_list as $val) {
+				$data['emp_no'] = $val;
+				$data['step'] = 100;
+				$data['create_time'] = time();
+				D("FlowLog") -> add($data);
+
+				$user_id = M("User") -> where("emp_no=$val") -> getField("id");
+				send_push($new, "收到新的流程", 1, $user_id);
+			}
 		}
 	}
 }

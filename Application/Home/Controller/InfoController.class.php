@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class InfoController extends HomeController {
 
-	protected $config = array('app_type' => 'folder', 'action_auth' => array('my_sign' => 'read', 'my_info' => 'read', 'sign_info' => 'read', 'folder' => 'read', 'sign' => 'read', 'mark' => 'admin', 'upload' => 'write','sign_report'=>'write'));
+	protected $config = array('app_type' => 'folder', 'action_auth' => array('my_sign' => 'read', 'my_info' => 'read', 'sign_info' => 'read', 'folder' => 'read', 'sign' => 'read', 'mark' => 'admin', 'upload' => 'write', 'sign_report' => 'write'));
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -110,6 +110,25 @@ class InfoController extends HomeController {
 		$this -> display();
 	}
 
+	public function del($id) {
+		$this -> _del($id);
+	}
+
+	public function move_to($id, $val) {		
+		$where['id'] = array('in',$id);
+		$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
+		if (count($folder) == 1) {
+			$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
+			if ($auth['admin'] == true) {
+				$field = 'folder';
+				$this -> _set_field($id, $field, $val);
+			}
+			$this -> ajaxReturn('', "操作成功", 1);
+		} else {
+			$this -> ajaxReturn('', "操作成功", 1);
+		}
+	}
+
 	public function mark() {
 		$action = I('action');
 		$id = I('id');
@@ -135,7 +154,7 @@ class InfoController extends HomeController {
 			case 'move_folder' :
 				$target_folder = I('val');
 				$where['id'] = array('in', $id);
-				$folder = M("Notice") -> distinct(true) -> where($where) -> field("folder") -> select();
+				$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
 				if (count($folder) == 1) {
 					$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
 					if ($auth['admin'] == true) {
@@ -195,7 +214,7 @@ class InfoController extends HomeController {
 		$this -> display();
 	}
 
-	 function sign_report($id) {
+	function sign_report($id) {
 
 		$row_info = M("Info") -> find($id);
 		//dump($row_info);
@@ -255,11 +274,11 @@ class InfoController extends HomeController {
 		$this -> assign('vo', $vo);
 
 		$where_scope['info_id'] = array('eq', $id);
-		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id',true);
+		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id', true);
 		if (!empty($scope_user)) {
 
 		}
-		$user_id=get_user_id();
+		$user_id = get_user_id();
 		if (in_array($user_id, $scope_user)) {
 			if ($vo['is_sign']) {
 				$sign_info = D("InfoSign") -> get_info($id);
@@ -307,7 +326,7 @@ class InfoController extends HomeController {
 
 		$user_id = get_user_id();
 		$where_scope['user_id'] = array('eq', $user_id);
-		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id',true);
+		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id', true);
 		$scope_list = implode(",", $scope_list);
 
 		if (!empty($scope_list)) {
@@ -341,14 +360,14 @@ class InfoController extends HomeController {
 		$readed_list = array_filter(explode(",", get_user_config("readed_info") . "," . $id));
 
 		$where_readed['id'] = array('in', $readed_list);
-		
-		$readed_info = M("Info") -> where($where_readed) -> getField("id",true);
-		$readed_info = implode(",",$readed_info);
+
+		$readed_info = M("Info") -> where($where_readed) -> getField("id", true);
+		$readed_info = implode(",", $readed_info);
 
 		$where_config['id'] = array('eq', $user_id);
-		if(!empty($readed_info)){
+		if (!empty($readed_info)) {
 			M("UserConfig") -> where($where_config) -> setField('readed_info', $readed_info);
-		}		
+		}
 	}
 
 }

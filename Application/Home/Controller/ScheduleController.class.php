@@ -64,8 +64,8 @@ class ScheduleController extends HomeController {
 		}
 		
 		if (empty($_POST["be_start_date"])&&empty($_POST["en_start_date"])) {
-			$start_date = toDate(mktime(0, 0, 0, date("m"), 1, date("Y")), 'Y-m-d');
-			$end_date = toDate(mktime(0, 0, 0, date("m") + 1, 0, date("Y")), 'Y-m-d');			
+			$start_date = to_date(mktime(0, 0, 0, date("m"), 1, date("Y")), 'Y-m-d');
+			$end_date = to_date(mktime(0, 0, 0, date("m") + 1, 0, date("Y")), 'Y-m-d');			
 			$map['start_date'] = array(array("egt", $start_date),array("elt",$end_date));					
 		} else {
 			$start_date = $_POST["be_start_date"];
@@ -109,10 +109,7 @@ class ScheduleController extends HomeController {
 		$model = M('Schedule');
 		$where['user_id'] = get_user_id();
 		$where['id'] = $id;
-		$vo = $model -> where($where) -> find();
-
-		$vo['start_time'] = fix_time($vo['start_time']);
-		$vo['end_time'] = fix_time($vo['end_time']);
+		$vo = $model -> where($where) -> find();			
 
 		$this -> assign('vo', $vo);
 		$this -> display();
@@ -139,8 +136,8 @@ class ScheduleController extends HomeController {
 
 		$where['user_id'] = $user_id;
 		$where['is_del']=array('eq',0);
-		$where['start_date'] = array( array('egt', $start_date), array('elt', $end_date));
-		$list = M("Schedule") -> where($where) -> order('start_date,priority desc') -> select();
+		$where['start_time'] = array( array('egt', $start_date), array('elt', $end_date));
+		$list = M("Schedule") -> where($where) -> order('start_time,priority desc') -> select();
 		exit(json_encode($list));
 	}
 

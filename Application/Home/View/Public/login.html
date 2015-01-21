@@ -50,7 +50,7 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-9">
-							<input type="button" value="登录" onclick="login();" class="btn btn-sm btn-primary col-10">						
+							<input type="button" value="登录" onclick="login();" class="btn btn-sm btn-primary col-10">
 						</div>
 					</div>
 				</form>
@@ -65,7 +65,9 @@
 				</p>
 			</div>
 		</div>
-		<div class="row">
+		<!-- 如想删除版权链接请购买商业授权 谢谢支持  -->
+		<div class="row text-right">
+			技术支持：<a href="http://www.smeoa.com">小微OA</a>
 		</div>
 	</div>
 </block>
@@ -79,9 +81,7 @@
 
 		$(document).ready(function() {
 			var $dom = "#password";
-			<notempty name="is_verify_code">
-				$dom="#verify";
-			</notempty >
+			<notempty name="is_verify_code">$dom="#verify";</notempty>
 			$($dom).keydown(function(event) {
 				if (event.keyCode == 13) {
 					if (check_form("form_login")) {

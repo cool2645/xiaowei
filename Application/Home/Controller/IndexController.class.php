@@ -31,7 +31,6 @@ class IndexController extends HomeController {
 		$this -> _flow_list();
 		$this -> _schedule_list();
  
-
 		$this -> display();
 	}
 
@@ -104,8 +103,8 @@ class IndexController extends HomeController {
 		//获取最新邮件
 		$start_date = date("Y-m-d");
 		$where['user_id'] = $user_id;
-		$where['start_date'] = array('egt', $start_date);
-		$schedule_list = M("Schedule") -> where($where) -> order('start_date,priority desc') -> limit(10) -> select();
+		$where['start_time'] = array('egt', $start_date);
+		$schedule_list = M("Schedule") -> where($where) -> order('start_time,priority desc') -> limit(10) -> select();
 		$this -> assign("schedule_list", $schedule_list);
 
 		$model = M("Todo");
