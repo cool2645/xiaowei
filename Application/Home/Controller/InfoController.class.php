@@ -61,7 +61,7 @@ class InfoController extends HomeController {
 
 		$model = D("InfoView");
 		if (!empty($model)) {
-			$this -> _list($model, $map);
+			$this -> _list($model, $map, 'id desc');
 		}
 
 		$this -> display();
@@ -101,11 +101,13 @@ class InfoController extends HomeController {
 		$where['user_id'] = array('eq', $user_id);
 		$sign_list = M("InfoSign") -> where($where) -> getField('info_id id,info_id');
 
-		$map['id'] = array('in', $sign_list);
+		if ($sign_list) {
+			$map['id'] = array('in', $sign_list);
 
-		$model = D("InfoView");
-		if (!empty($model)) {
-			$this -> _list($model, $map);
+			$model = D("InfoView");
+			if (!empty($model)) {
+				$this -> _list($model, $map);
+			}
 		}
 		$this -> display();
 	}
@@ -308,6 +310,7 @@ class InfoController extends HomeController {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 		$this -> assign('auth', $this -> config['auth']);
+
 		$this -> assign('fid', $fid);
 
 		$arr_read = array_filter(explode(",", get_user_config("readed_info")));

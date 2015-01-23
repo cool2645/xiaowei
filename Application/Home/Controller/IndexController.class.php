@@ -30,6 +30,7 @@ class IndexController extends HomeController {
 		$this -> _mail_list();
 		$this -> _flow_list();
 		$this -> _schedule_list();
+		$this -> _info_list();
  
 		$this -> display();
 	}
@@ -85,16 +86,32 @@ class IndexController extends HomeController {
 		$this -> assign("submit_flow_list", $submit_flow_list);
 	}
 
-	protected function _doc_list() {
+	protected function _info_list() {
 		$user_id = get_user_id();
-		$model = D('Doc');
+
+		$dept_id = get_dept_id();
+		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
+
+		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id id,info_id');
+		$info_list = implode(",", $info_list);
+
+		if (!empty($info_list)) {
+			$map['_string'] .= "or Info.id in ($info_list)";
+		}
+
+		$folder_list = D("SystemFolder") -> get_authed_folder($user_id);
+		if ($folder_list) {
+			$map['folder'] = array("in", $folder_list);
+		} else {
+			$map['_string'] = '1=2';
+		}
+		$map['is_del']=array('eq',1);
+			
+		$model = D("InfoView");
 		//获取最新邮件
 
-		$where['is_del'] = array('eq', '0');
-		$folder_list = D("SystemFolder") -> get_authed_folder(get_user_id(), "DocFolder");
-		$where['folder'] = array("in", $folder_list);
-		$doc_list = $model -> where($where) -> field("id,name,create_time") -> order("create_time desc") -> limit(10) -> select();
-		$this -> assign("doc_list", $doc_list);
+		$info_list = $model -> where($where) -> field("id,name,create_time") -> order("create_time desc") -> limit(10) -> select();
+		$this -> assign("info_list", $info_list);
 	}
 
 	protected function _schedule_list() {
