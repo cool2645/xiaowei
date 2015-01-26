@@ -1,6 +1,6 @@
 <extend name="Layout/page_detail" />
 <block name="content">
-	{:W('PageHeader/simple',array('name'=>'编辑公告','search'=>'N'))}
+	{:W('PageHeader/simple',array('name'=>'编辑:'.$vo['name'],'search'=>'N'))}
 
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"  class="well form-horizontal">
 		<input type="hidden" id="scope_user_id" name="scope_user_id" value="{$vo.scope_user_id}">
@@ -59,7 +59,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">附件：</label>
 			<div class="col-sm-10">
-				{:W('FileUpload/edit',array('add_file'=>$vo['add_file'],'mode'=>'edit'))}
+								{:W('FileUpload/edit',array('add_file'=>$vo['add_file']))}
 			</div>
 		</div>
 		<div class="action form-actions">

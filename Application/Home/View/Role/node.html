@@ -79,6 +79,10 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
+			if($("#role_id").val()==''){
+				ui_error("请选择权限组");
+				return false;
+			};
 			$("#node_list").val('');
 			$(".wrap .tree_menu input[name='node_id']:checked").each(function() {
 				$("#node_list").val($("#node_list").val() + $(this).val() + ",");

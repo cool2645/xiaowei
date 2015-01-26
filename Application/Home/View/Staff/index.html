@@ -1,6 +1,6 @@
 <extend name="Layout/page_detail" />
 <block name="content">
-	{:W('PageHeader/local_search',array('name'=>'职员查询','search'=>'N'))}	
+	{:W('PageHeader/local_search',array('name'=>'职员查询','search'=>'N'))}
 	<div class="row">
 		<div class="col-sm-4 sub_left_menu">
 			<div class="well">
@@ -105,7 +105,10 @@
 			}
 		}
 
-		function local_search() {
+		function btn_local_search() {
+			$(".sub_left_menu .tree_menu a").each(function() {
+				$(this).attr("class", "");
+			});
 			sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
 				showdata(data);
 			});
@@ -113,11 +116,14 @@
 		}
 
 		function key_local_search() {
+			$(".sub_left_menu .tree_menu a").each(function() {
+				$(this).attr("class", "");
+			});
 			if (event.keyCode == 13) {
 				sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
 					showdata(data);
-				});				
-			}			 
+				});
+			}
 			return false;
 		}
 

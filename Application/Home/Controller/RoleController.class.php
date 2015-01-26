@@ -91,14 +91,20 @@ class RoleController extends HomeController {
 		$model = M("RoleNode");
 		$where['role_id'] = $role_id;
 
-		$where['node_id'] = array('in', $admin_list);
-		$model -> where($where) -> setField('admin', 1);
+		if (!empty($admin_list)) {
+			$where['node_id'] = array('in', $admin_list);
+			$model -> where($where) -> setField('admin', 1);
+		}
 
-		$where['node_id'] = array('in', $write_list);
-		$model -> where($where) -> setField('write', 1);
+		if (!empty($write_list)) {
+			$where['node_id'] = array('in', $write_list);
+			$model -> where($where) -> setField('write', 1);
+		}
 
-		$where['node_id'] = array('in', $read_list);
-		$model -> where($where) -> setField('read', 1);
+		if (!empty($read_list)) {
+			$where['node_id'] = array('in', $read_list);
+			$model -> where($where) -> setField('read', 1);
+		}
 
 		if ($result === false) {
 			$this -> error('操作失败！');
@@ -137,7 +143,7 @@ class RoleController extends HomeController {
 	}
 
 	public function user() {
-		$keyword=I('keyword');
+		$keyword = I('keyword');
 		$user_list = D("User") -> get_user_list($keyword);
 		$this -> assign("user_list", $user_list);
 

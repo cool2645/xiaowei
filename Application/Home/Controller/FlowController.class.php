@@ -19,7 +19,7 @@ class FlowController extends HomeController {
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
 		$keyword = I('keyword');
-		if (!empty($keyword)){			
+		if (!empty($keyword)) {
 			$map['name'] = array('like', "%" . $keyword . "%");
 		}
 	}
@@ -38,13 +38,13 @@ class FlowController extends HomeController {
 		$duty_list = D("Role") -> get_duty_list($role_list);
 		$duty_list = rotate($duty_list);
 		$duty_list = $duty_list['duty_id'];
-		
-		if(!empty($duty_list)){
-			$where['request_duty'] = array('in', $duty_list);	
-		}else{
-			$where['_string']='1=2';
+
+		if (!empty($duty_list)) {
+			$where['request_duty'] = array('in', $duty_list);
+		} else {
+			$where['_string'] = '1=2';
 		}
-		
+
 		$list = $model -> where($where) -> order('sort') -> select();
 		$this -> assign("list", $list);
 		$this -> _assign_tag_list();
@@ -79,7 +79,7 @@ class FlowController extends HomeController {
 			case 'submit' :
 				$this -> assign("folder_name", '提交');
 				$map['user_id'] = array('eq', $user_id);
-				$map['step'] = array( array('gt', 10),array('eq', 0), 'or');
+				$map['step'] = array( array('gt', 10), array('eq', 0), 'or');
 
 				break;
 
@@ -110,7 +110,7 @@ class FlowController extends HomeController {
 					$map['_string'] = '1=2';
 				}
 				break;
-				
+
 			case 'report' :
 				$this -> assign("folder_name", '统计报告');
 				$role_list = D("Role") -> get_role_list($user_id);
@@ -132,7 +132,6 @@ class FlowController extends HomeController {
 	}
 
 	function folder() {
-
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
@@ -148,9 +147,7 @@ class FlowController extends HomeController {
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($map);
 		}
-
-		$folder = I('fid');
-
+		$folder = I("fid");
 		$this -> assign("folder", $folder);
 
 		if (empty($folder)) {
@@ -163,7 +160,7 @@ class FlowController extends HomeController {
 		if (I('mode') == 'export') {
 			$this -> _folder_export($model, $map);
 		} else {
-			$this -> _list($model, $map,'id desc');
+			$this -> _list($model, $map, 'id desc');
 		}
 		$this -> display();
 	}
@@ -206,7 +203,7 @@ class FlowController extends HomeController {
 			$dept_name = $val["dept_name"];
 			//不美分
 			$create_time = $val["create_time"];
-			$create_time = toDate($val["create_time"], 'Y-m-d H:i:s');
+			$create_time = to_date($val["create_time"], 'Y-m-d H:i:s');
 			//创建时间
 			$step = show_step_type($val["step"]);
 			//
@@ -246,20 +243,21 @@ class FlowController extends HomeController {
 	}
 
 	function add() {
-		
+
 		$plugin['date'] = true;
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$type_id = I('type');;
+		$type_id = I('type');
+		;
 		$model = M("FlowType");
 		$flow_type = $model -> find($type_id);
 		$this -> assign("flow_type", $flow_type);
 
 		$model_flow_field = D("UdfField");
 		$field_list = $model_flow_field -> get_field_list($type_id);
-		$this -> assign("field_list", $field_list);		
+		$this -> assign("field_list", $field_list);
 		$this -> display();
 	}
 
@@ -267,7 +265,8 @@ class FlowController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		$folder = I('fid');
+		$folder = I('request.fid');
+
 		$this -> assign("folder", $folder);
 		if (empty($folder)) {
 			$this -> error("系统错误");
@@ -275,7 +274,7 @@ class FlowController extends HomeController {
 		$this -> _flow_auth_filter($folder, $map);
 
 		$model = D("Flow");
-		$id = I('id');
+		$id = I('request.id');
 		$where['id'] = array('eq', $id);
 		$where['_logic'] = 'and';
 		$map['_complex'] = $where;
@@ -293,7 +292,7 @@ class FlowController extends HomeController {
 		$field_list = $model_flow_field -> get_data_list($id);
 		//dump($field_list);
 		$this -> assign("field_list", $field_list);
- 		
+
 		$model = M("FlowType");
 		$flow_type = $model -> find($flow_type_id);
 		$this -> assign("flow_type", $flow_type);
@@ -356,17 +355,16 @@ class FlowController extends HomeController {
 			$this -> error("系统错误");
 		}
 		$this -> assign('vo', $vo);
-		
+
 		$model_flow_field = D("UdfField");
 		$field_list = $model_flow_field -> get_data_list($id);
 		$this -> assign("field_list", $field_list);
-		
-	
+
 		$model = M("FlowType");
 		$type = $vo['type'];
 		$flow_type = $model -> find($type);
 		$this -> assign("flow_type", $flow_type);
-		
+
 		$model = M("FlowLog");
 		$where['flow_id'] = $id;
 		$where['_string'] = "result is not null";
@@ -378,23 +376,47 @@ class FlowController extends HomeController {
 		$where['emp_no'] = get_emp_no();
 		$where['_string'] = "result is null";
 		$confirm = $model -> where($where) -> select();
-		
+
 		$this -> assign("confirm", $confirm[0]);
 		$this -> display();
 	}
 
+	/** 插入新新数据  **/
+	protected function _insert($name = CONTROLLER_NAME) {
+
+		$model = D($name);
+		if (false === $model -> create()) {
+			$this -> error($model -> getError());
+		}
+		$str_confirm = D("Flow") -> _conv_auditor($model -> confirm);
+		$str_consult = D("Flow") -> _conv_auditor($model -> consult);
+		$str_auditor = $str_confirm . $str_consult;
+		if (empty($str_auditor)) {
+			$this -> error('没有找到任何审核人');
+		}
+		/*保存当前数据对象 */
+		$list = $model -> add();
+
+		if ($list !== false) {//保存成功
+			$flow_filed = D("UdfField") -> set_field($list);
+			$this -> assign('jumpUrl', get_return_url());
+			$this -> success('新增成功!');
+		} else {
+			$this -> error('新增失败!');
+			//失败提示
+		}
+	}
+
 	/* 更新数据  */
-	protected function _update() {
-		$name = CONTROLLER_NAME;
+	protected function _update($name = CONTROLLER_NAME) {
 		$model = D($name);
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
 		$flow_id = $model -> id;
 		$list = $model -> save();
-
-		$model_flow_filed = D("FlowField") -> set_field($flow_id);
 		if (false !== $list) {
+			$flow_filed = D("UdfField") -> set_field($flow_id);
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
 			//成功提示
@@ -404,8 +426,7 @@ class FlowController extends HomeController {
 		}
 	}
 
-	public function mark() {
-		$action = I('action');;
+	public function mark($action) {
 		switch ($action) {
 			case 'approve' :
 				$model = D("FlowLog");
@@ -449,9 +470,10 @@ class FlowController extends HomeController {
 				$step = $model -> step;
 				//保存当前数据对象
 				$list = $model -> save();
-				$emp_no=I('emp_no');;
+				$emp_no = I('emp_no');
+				;
 				if ($list !== false) {//保存成功
-					D("Flow") -> next_step($flow_id,$step,$emp_no);
+					D("Flow") -> next_step($flow_id, $step, $emp_no);
 					$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
 					$this -> success('操作成功!');
 				} else {
@@ -484,7 +506,7 @@ class FlowController extends HomeController {
 					D("Flow") -> where("id=$flow_id") -> setField('step', 0);
 
 					$user_id = M("Flow") -> where("id=$flow_id") -> getField('user_id');
-					send_push($new,"您有一个流程被否决",1, $user_id);
+					send_push($new, "您有一个流程被否决", 1, $user_id);
 
 					$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
 					$this -> success('操作成功!');
@@ -499,7 +521,6 @@ class FlowController extends HomeController {
 	}
 
 	public function approve() {
-
 		$model = D("FlowLog");
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
@@ -573,9 +594,10 @@ class FlowController extends HomeController {
 		$tag_list = $model -> get_tag_list('id,name', 'FlowType');
 		$this -> assign("tag_list", $tag_list);
 	}
-	
-	public function field_manage($row_type){
-		$this->assign("folder_name","自定义字段管理");
-		$this->_field_manage($row_type);
+
+	public function field_manage($row_type) {
+		$this -> assign("folder_name", "自定义字段管理");
+		$this -> _field_manage($row_type);
 	}
+
 }

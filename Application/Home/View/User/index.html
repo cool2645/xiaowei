@@ -197,6 +197,10 @@
 		}
 
 		function select_avatar() {
+			if ($("#id").val().length < 1) {
+				ui_error("请选择用户");
+				return false;
+			}
 			winopen("{:U('popup/avatar')}?id=" + $("#id").val(), 730, 500);
 		}
 

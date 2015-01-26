@@ -89,7 +89,7 @@
 				var dept_name = $("#company a.active span").text();
 				var email = "dept@group";
 				var name = dept_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(id, name);
+				var html_string = conv_address_item(name,id);
 				$("#addr_list").html(html_string);
 			}
 			for (s in result.data) {
@@ -99,7 +99,7 @@
 				var email = result.data[s].email;
 				var name = result.data[s].name;
 				var name = name + "/" + position_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(emp_no, name);
+				var html_string = conv_address_item(name,emp_no);
 				$("#addr_list").append(html_string);
 			}
 		}
@@ -176,6 +176,7 @@
 
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
+				$(this).prop('checked',false);
 				$text = $(this).parents("label").find("span").text();
 				$val = $(this).val();
 				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {

@@ -100,7 +100,7 @@
 						<div class="widget-body">
 							<div class="ul_table widget-main">
 								<ul>
-									<volist name="new_notice_list" id="vo">
+									<volist name="info_list" id="vo">
 										<li>
 											<span class="pull-right hidden-phone">{$vo.start_date}</span>
 											<span  class="auto autocut"><a url="{:U('notice/read','id='.$vo['id'])}" node="83" return_url="{:U('notice/index')}" onclick="click_home_list(this)">{$vo.name}</a> </span>

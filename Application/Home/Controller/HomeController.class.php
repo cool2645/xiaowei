@@ -81,11 +81,11 @@ class HomeController extends Controller {
 		$system_folder_menu = D("SystemFolder") -> get_folder_menu();
 		$user_folder_menu = D("UserFolder") -> get_folder_menu();
 		$menu = array_merge($menu, $system_folder_menu, $user_folder_menu);
-		
-		$menu=sort_by($menu,'sort');
-		
+
+		$menu = sort_by($menu, 'sort');
+
 		$tree = list_to_tree($menu);
-		
+
 		//dump($tree);
 		if (!empty($top_menu)) {
 			$top_menu_name = $model -> where("id=$top_menu") -> getField('name');
@@ -99,36 +99,36 @@ class HomeController extends Controller {
 		}
 	}
 
-	protected function _assign_badge_count(){			
-		$node_list=M("Node")->getField('id,badge_function');		
-		$node_list=array_filter($node_list);
-		
-		foreach ($node_list as $key => $val){			
-			if(function_exists($val)&&($val!='badge_sum')){				
-				$badge_count[$key]=$val();	
+	protected function _assign_badge_count() {
+		$node_list = M("Node") -> getField('id,badge_function');
+		$node_list = array_filter($node_list);
+
+		foreach ($node_list as $key => $val) {
+			if (function_exists($val) && ($val != 'badge_sum')) {
+				$badge_count[$key] = $val();
 			}
 		};
-		
-		$menu = D("Node") -> access_list();		
-		
-		foreach ($node_list as $key => $val){			
-			if($val=='badge_sum'){
-				$child_menu = list_to_tree($menu,$key);
-				$child_menu=tree_to_list($child_menu);
-				
-				$child_menu_id=rotate($child_menu);
-				$child_menu_id=$child_menu_id['id'];
-				
-				$count=0;
-				foreach ($child_menu_id as $k1 => $v1) {					
-					$count+=$badge_count[$v1];
+
+		$menu = D("Node") -> access_list();
+
+		foreach ($node_list as $key => $val) {
+			if ($val == 'badge_sum') {
+				$child_menu = list_to_tree($menu, $key);
+				$child_menu = tree_to_list($child_menu);
+
+				$child_menu_id = rotate($child_menu);
+				$child_menu_id = $child_menu_id['id'];
+
+				$count = 0;
+				foreach ($child_menu_id as $k1 => $v1) {
+					$count += $badge_count[$v1];
 				}
-				$badge_sum[$key]=$count;							
+				$badge_sum[$key] = $count;
 			}
 		};
-		if(!empty($badge_count)){
-			$this->assign('badge_count',$badge_count+$badge_sum);
-		}		
+		if (!empty($badge_count)) {
+			$this -> assign('badge_count', $badge_count + $badge_sum);
+		}
 	}
 
 	/**列表页面 **/
@@ -147,7 +147,7 @@ class HomeController extends Controller {
 	}
 
 	/** 保存操作  **/
-	function save(){
+	function save() {
 		$this -> _save();
 	}
 
@@ -179,7 +179,7 @@ class HomeController extends Controller {
 				$return['info'] = "读取错误";
 				$this -> ajaxReturn($return);
 			}
-		}		
+		}
 		$this -> assign('vo', $vo);
 		$this -> display();
 	}
@@ -305,7 +305,7 @@ class HomeController extends Controller {
 
 	}
 
-	public function del_file($sid) {		
+	public function del_file($sid) {
 		$this -> _destory_file($sid);
 	}
 
@@ -353,10 +353,18 @@ class HomeController extends Controller {
 		$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
 
 		/* 记录附件信息 */
+		/* 记录附件信息 */
 		if ($info) {
-			$return = $info['file'];
+			if(!empty($info['file'])){
+				$return = $info['file'];	
+			}
+			if(!empty($info['imgFile'])){
+				$return = $info['imgFile'];	
+				$return['url'] = $return['path'];
+			}						
 			$return['sid'] = think_encrypt($info['file']['id']);
 			$return['status'] = 1;
+			$return['error'] = 0;
 		} else {
 			$return['status'] = 0;
 			$return['info'] = $File -> getError();
@@ -437,16 +445,12 @@ class HomeController extends Controller {
 		//排序字段 默认为主键名
 		if (isset($_REQUEST['_sort'])) {
 			$sort = $_REQUEST['_sort'];
+		}else{
+			if(empty($sort)){
+				$sort="id desc";
+			}
 		}
-
-		//排序方式默认按照倒序排列
-		//接受 sost参数 0 表示倒序 非0都 表示正序
-		if (isset($_REQUEST['_asc'])) {
-			$asc = $_REQUEST['_asc'];
-		}
-
 		//取得满足条件的记录数
-
 		$count_model = clone $model;
 		//取得满足条件的记录数
 
@@ -522,14 +526,15 @@ class HomeController extends Controller {
 		$this -> assign("tag_name", $tag_name);
 		$this -> assign("has_pid", $has_pid);
 		if ($this -> config['app_type'] == 'personal') {
-			R('UserTag/index');			
+			R('UserTag/index');
 		} else {
-			R('SystemTag/index');			
+			R('SystemTag/index');
 		}
 	}
-	
-	protected function _field_manage($row_type){		
-		R('UdfField/index',"row_type=$row_type");
+
+	protected function _field_manage($row_type) {
+		R('UdfField/index', "row_type=$row_type");
 	}
+
 }
 ?>

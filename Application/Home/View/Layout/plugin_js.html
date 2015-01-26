@@ -7,6 +7,8 @@
 <notempty name="plugin.date">
 	<script src="__STATIC__/js/date-time/bootstrap-datepicker.js"></script>
 	<script src="__STATIC__/js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+	<script src="__STATIC__/js/date-time/bootstrap-datetimepicker.js"></script>
+	<script src="__STATIC__/js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>	
 </notempty>
 
 <notempty name="plugin.uploader">
@@ -37,6 +39,18 @@
 					 forceParse: false,
 					 autoclose: true,
 				});
+				$(".input-date-time").datetimepicker({
+					format : "yyyy-mm-dd hh:ii",
+					language : "zh-CN",
+					weekStart : 1,
+					todayBtn : 1,
+					autoclose : 1,
+					todayHighlight : 1,
+					startView : 2,
+					forceParse : 0,
+					showMeridian : 1,
+					minuteStep:10
+				});				
 			</notempty>
 
 			<notempty name="plugin.editor">

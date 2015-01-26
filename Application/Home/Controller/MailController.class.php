@@ -198,7 +198,7 @@ class MailController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		$this -> assign("recent", $this -> _get_recent());
+		//$this -> assign("recent", $this -> _get_recent());
 		//添加最近联系人
 		$this -> display();
 	}
@@ -216,7 +216,7 @@ class MailController extends HomeController {
 		$cc = I('cc');
 		$bcc = I('bcc');
 
-		$this -> _set_recent($to . $cc . $bcc);
+		//$this -> _set_recent($to . $cc . $bcc);
 
 		import("@.ORG.Util.send");
 		//从PHPMailer目录导入class.send.php类文件

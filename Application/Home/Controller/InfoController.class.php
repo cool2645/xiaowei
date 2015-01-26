@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class InfoController extends HomeController {
 
-	protected $config = array('app_type' => 'folder', 'action_auth' => array('my_sign' => 'read','my_info' => 'read', 'sign_info' => 'read', 'folder' => 'read', 'sign' => 'read', 'mark' => 'admin', 'upload' => 'write'));
+	protected $config = array('app_type' => 'folder', 'action_auth' => array('my_sign' => 'read', 'my_info' => 'read', 'sign_info' => 'read', 'folder' => 'read', 'sign' => 'read', 'mark' => 'admin', 'upload' => 'write', 'sign_report' => 'write'));
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -61,7 +61,7 @@ class InfoController extends HomeController {
 
 		$model = D("InfoView");
 		if (!empty($model)) {
-			$this -> _list($model, $map);
+			$this -> _list($model, $map, 'id desc');
 		}
 
 		$this -> display();
@@ -98,14 +98,16 @@ class InfoController extends HomeController {
 		}
 
 		$user_id = get_user_id();
-		$where['user_id']=array('eq',$user_id);
-		$sign_list=M("InfoSign")->where($where)->getField('info_id id,info_id');
-		
-		$map['id'] = array('in', $sign_list);
+		$where['user_id'] = array('eq', $user_id);
+		$sign_list = M("InfoSign") -> where($where) -> getField('info_id id,info_id');
 
-		$model = D("InfoView");
-		if (!empty($model)) {
-			$this -> _list($model, $map);
+		if ($sign_list) {
+			$map['id'] = array('in', $sign_list);
+
+			$model = D("InfoView");
+			if (!empty($model)) {
+				$this -> _list($model, $map);
+			}
 		}
 		$this -> display();
 	}
@@ -195,6 +197,41 @@ class InfoController extends HomeController {
 		$this -> display();
 	}
 
+	function sign_report($id) {
+
+		$row_info = M("Info") -> find($id);
+		//dump($row_info);
+		$this -> assign('row_info', $row_info);
+
+		//签收人员
+		$signed_user = M("InfoSign") -> where("info_id=$id") -> getField('user_id id,user_id');
+
+		//发布范围
+		$actor_user = M("InfoScope") -> where("info_id=$id") -> getField('user_id id,user_id');
+
+		//未签收人员
+		if (!empty($signed_user)) {
+			$un_sign_user = array_diff($actor_user, $signed_user);
+		} else {
+			$un_sign_user = $actor_user;
+		}
+
+		$model = D("UserView");
+		if (!empty($signed_user)) {
+			$where_signed['id'] = array('in', $signed_user);
+			$signed_user_info = $model -> where($where_signed) -> select();
+			$this -> assign('signed_user_info', $signed_user_info);
+		}
+
+		if (!empty($un_sign_user)) {
+			$where_un_sign['id'] = array('in', $un_sign_user);
+			$un_sign_user_info = $model -> where($where_un_sign) -> select();
+			$this -> assign('un_sign_user_info', $un_sign_user_info);
+		}
+
+		$this -> display();
+	}
+
 	function add() {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
@@ -216,18 +253,19 @@ class InfoController extends HomeController {
 
 	public function read($id) {
 		$model = M('Info');
-
 		$vo = $model -> find($id);
 		$this -> assign('vo', $vo);
 
 		$where_scope['info_id'] = array('eq', $id);
-		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id id,user_id');
-		if(!empty($scope_user)){
-			
+		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id', true);
+		if (!empty($scope_user)) {
+
 		}
-		if (in_array($user_id, $scope_user)) {			
+		$user_id = get_user_id();
+		$this->assign('user_id',$user_id);
+		if (in_array($user_id, $scope_user)) {
 			if ($vo['is_sign']) {
-				$sign_info = D("InfoSign") -> get_info($id);				
+				$sign_info = D("InfoSign") -> get_info($id);
 				$this -> assign('sign_info', $sign_info);
 				$this -> assign('is_sign', 1);
 			} else {
@@ -254,6 +292,7 @@ class InfoController extends HomeController {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 		$this -> assign('auth', $this -> config['auth']);
+
 		$this -> assign('fid', $fid);
 
 		$arr_read = array_filter(explode(",", get_user_config("readed_info")));
@@ -272,7 +311,7 @@ class InfoController extends HomeController {
 
 		$user_id = get_user_id();
 		$where_scope['user_id'] = array('eq', $user_id);
-		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id id,info_id');
+		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id', true);
 		$scope_list = implode(",", $scope_list);
 
 		if (!empty($scope_list)) {
@@ -300,18 +339,20 @@ class InfoController extends HomeController {
 		$user_id = get_user_id();
 		$folder_list = D("SystemFolder") -> get_authed_folder($user_id);
 
-		$map['folder'] = array("in", $folder_list);
-		$map['create_time'] = array("egt", time() - 3600 * 24 * 30);
+		$where_readed['folder'] = array("in", $folder_list);
+		$where_readed['create_time'] = array("egt", time() - 3600 * 24 * 30);
 
 		$readed_list = array_filter(explode(",", get_user_config("readed_info") . "," . $id));
 
-		$map['id'] = array('in', $readed_list);
+		$where_readed['id'] = array('in', $readed_list);
 
-		$readed_info = M("Info") -> where($map) -> getField("id,name");
-		$readed_info = implode(",", array_keys($readed_info));
+		$readed_info = M("Info") -> where($where_readed) -> getField("id", true);
+		$readed_info = implode(",", $readed_info);
 
-		$where['id'] = array('eq', $user_id);
-		M("UserConfig") -> where($where) -> setField('readed_info', $readed_info);
+		$where_config['id'] = array('eq', $user_id);
+		if (!empty($readed_info)) {
+			M("UserConfig") -> where($where_config) -> setField('readed_info', $readed_info);
+		}
 	}
 
 }

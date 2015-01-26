@@ -19,8 +19,9 @@ class SystemConfigController extends HomeController {
 	protected $config=array('app_type'=>'master');
 	
 	function _search_filter(&$map) {
-		if (!empty(I('keyword'))) {
-			$map['val|name|code'] = array('like', "%" . I('keyword') . "%");
+		$keyword=I('keyword');
+		if (!empty($keyword)){
+			$map['val|name|code'] = array('like', "%" . $keyword . "%");
 		}
 	}
 	

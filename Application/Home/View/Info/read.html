@@ -6,12 +6,12 @@
 		<div class="panel-body">
 			<div class="pull-left">
 				<a onclick="go_return_url();" class="btn btn-sm btn-primary">返回</a>
-				<if condition="$auth['admin']">
+				<if condition="$auth['admin'] ">
 					<a onclick="del();" class="btn btn-sm btn-danger">删除</a>
 				</if>
 			</div>
 			<div class="pull-right">
-				<if condition="is_sign eq 1">
+				<if condition="$is_sign eq 1">
 					<empty name="sign_info">
 						<a onclick="sign()" class="btn btn-sm btn-primary">请签收</a>
 						<else/>
@@ -19,7 +19,7 @@
 					</empty>
 				</if>
 				<a onclick="winprint()" class="btn btn-sm btn-primary">打印</a>
-				<if condition="$auth['write']">
+				<if condition="$auth['write'] and ($vo.user_id eq $user_id)">
 					<a onclick="edit();" class="btn btn-sm btn-primary">修改</a>
 				</if>
 			</div>
@@ -55,7 +55,7 @@
 		</div>
 
 		<div class="form-group col-sm-6">
-			<label class="col-sm-4 control-label" >管理者：</label>
+			<label class="col-sm-4 control-label" >管理员：</label>
 			<div class="col-sm-8">
 				<p class="form-control-static">
 					{$admin|show_contact}

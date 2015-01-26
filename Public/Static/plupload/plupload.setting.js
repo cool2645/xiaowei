@@ -20,7 +20,7 @@ var uploader = new plupload.Uploader({
 					file.status=plupload.DONE;
 					count=uploader.files.length;
 					uploader.files[count]=file;
-				})
+				});
 			}
 		},
 
@@ -48,17 +48,17 @@ var uploader = new plupload.Uploader({
 			var myObject = eval('(' + data.response + ')');			
 			if(myObject.status){
 				if($("#add_file").length!=0){
-					$("#add_file").val($("#add_file").val()+myObject.sid+";")
+					$("#add_file").val($("#add_file").val()+myObject.sid+";");
 				}
 				$("#"+file.id).attr("add_file",myObject.sid);
 				$new_upload=$("#file_list").attr("new_upload");
 				$("#file_list").attr("new_upload",$new_upload+myObject.sid+";");
 				if($("#save_name").length!=0){
-					$("#save_name").val($("#save_name").val()+myObject.savename+";")
+					$("#save_name").val($("#save_name").val()+myObject.savename+";");
 				}
 				$("#"+file.id).find("a.del").show();
 			}else{
-				ui_alert(myObject.message,function(){
+				ui_alert(myObject.info,function(){
 					$("#"+file.id).remove();
 				});
 			}
@@ -78,7 +78,7 @@ window.onbeforeunload = function (e){
 		// For Safari 
 	   window.onunload = function(){
 			sendAjax(del_url, 'sid=' + $(this).attr("id"));
-		}
+		};
 		return '上传的附件将被删除，确定退出吗？'; 
 	}
 }; 
@@ -100,5 +100,5 @@ $(document).on("click", "#uploader a.del", function(){
 			uploader.removeFile(file);
 			$obj.remove();
 		}
-	})
+	});
 });

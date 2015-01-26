@@ -42,7 +42,6 @@ class  UdfFieldModel extends CommonModel {
 		$model=M("UdfFieldData");
 		$model->where($where)->delete();
 		
-			
 		$udf_field = array_filter(array_keys($_REQUEST),"filter_udf_field");
 		foreach ($udf_field as $field){
 			$tmp=array_filter(explode("_",$field));			
@@ -55,7 +54,7 @@ class  UdfFieldModel extends CommonModel {
 			$data['field_id']=$tmp[2];	
 			$data['val']=$val;
 			$data['controller']=$controller;	
-			$model->add($data);
+			$result=$model->add($data);
 		}
 		if ($result === false) {
 			return false;

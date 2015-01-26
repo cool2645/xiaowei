@@ -68,9 +68,9 @@ class AuthCheckBehavior extends Behavior {
 				if (!empty($params['sub_action_auth'])) {
 					$action_auth = array_merge($action_auth, $params['sub_action_auth']);
 				}
-
+				
 				$fid = $_REQUEST['fid'];
-
+				
 				$id = $_REQUEST['id'];
 				$sub_action_auth = $params['sub_action_auth'];
 				if (!empty($sub_action_auth)) {
@@ -82,11 +82,10 @@ class AuthCheckBehavior extends Behavior {
 						}
 					};
 				}
-
+					
 				if (isset($fid)) {
 					$folder_id = $fid;
 					$auth = D("SystemFolder") -> get_folder_auth($folder_id);
-					//dump($auth);
 					break;
 				}
 

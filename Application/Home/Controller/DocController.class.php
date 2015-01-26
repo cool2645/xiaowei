@@ -19,14 +19,14 @@ class DocController extends HomeController {
 	//过滤查询字段
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
-		$keyword=I('keyword');
+		$keyword = I('keyword');
 		if (!empty($keyword) && empty($map['64'])) {
 			$map['name'] = array('like', "%" . $keyword . "%");
 		}
 	}
 
 	public function index() {
-		
+
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
@@ -36,12 +36,12 @@ class DocController extends HomeController {
 		}
 
 		$folder_list = D("SystemFolder") -> get_authed_folder(get_user_id());
-		if(!empty($folder_list)){
-			$map['folder'] = array("in", $folder_list);	
-		}else{
-			$map['_string']='1=2';
+		if (!empty($folder_list)) {
+			$map['folder'] = array("in", $folder_list);
+		} else {
+			$map['_string'] = '1=2';
 		}
-		
+
 		$model = D("DocView");
 
 		if (!empty($model)) {
@@ -54,7 +54,7 @@ class DocController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		
+
 		$model = M("Doc");
 		$folder_id = $model -> where("id=$id") -> getField('folder');
 		$this -> assign("auth", D("SystemFolder") -> get_folder_auth($folder_id));
@@ -94,20 +94,20 @@ class DocController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		
+
 		$type = D("SystemFolder") -> where("id=$fid") -> getField("folder");
 		$this -> assign('folder', $fid);
 		$this -> display();
 	}
 
-	public function read($id){		
+	public function read($id) {
 		$model = M("Doc");
 		$folder_id = $model -> where("id=$id") -> getField('folder');
 		$this -> assign("auth", D("SystemFolder") -> get_folder_auth($folder_id));
 		$this -> _edit($id);
 	}
 
-	public function mark($id,$action){		
+	public function mark($id, $action) {
 		if (!empty($id)) {
 			switch ($action) {
 				case 'del' :
@@ -119,16 +119,19 @@ class DocController extends HomeController {
 							$field = 'is_del';
 							$result = $this -> _set_field($id, $field, 1);
 							if ($result) {
-								$this -> ajaxReturn('', "删除成功", 1);
+								$return['info'] = "删除成功";
+								$return['status'] = 1;
+								$this -> ajaxReturn($return);
 							} else {
-								$this -> ajaxReturn('', "删除失败", 0);
+								$return['info'] = "删除失败";
+								$return['status'] = 0;
+								$this -> ajaxReturn($return);
 							}
 						}
 					} else {
 						$this -> ajaxReturn('', "删除失败", 0);
 					}
 					break;
-
 				case 'move_folder' :
 					$target_folder = I('val');
 					$where['id'] = array('in', $id);
@@ -157,4 +160,5 @@ class DocController extends HomeController {
 	function down() {
 		$this -> _down();
 	}
+
 }

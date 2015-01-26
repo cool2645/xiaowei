@@ -50,7 +50,7 @@ class FlowTypeController extends HomeController {
 	}
 
 	function mark() {
-   		$action = I('action');;
+   		$action = I('get.action');;
 		$id = I('id');
 		$val = I('val');
 		if (!empty($id)) {
@@ -103,7 +103,8 @@ class FlowTypeController extends HomeController {
 
 	function edit() {
 		$plugin['editor']=true;
-		$this->assign("widget",$plugin);			
+		$this->assign("plugin",$plugin);		
+			
 		$this -> assign("user_id",get_user_id());
 		$model = D("FlowTypeView");
 		$id = $_REQUEST['id'];
