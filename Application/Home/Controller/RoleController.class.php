@@ -166,7 +166,8 @@ class RoleController extends HomeController {
 	public function get_duty_list() {
 		$role_id = $_POST["role_id"];
 		$model = D("Role");
-		$data = $model -> get_duty_list($role_id);
+		$data['data'] = $model -> get_duty_list($role_id);
+		$data['status']=1;
 		if ($data !== false) {// 读取成功
 			$this -> ajaxReturn($data, "", 1);
 		}
