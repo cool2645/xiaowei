@@ -45,6 +45,7 @@ class FileModel extends Model{
         /* 上传文件 */
         $setting['callback'] = array($this, 'isFile');
 		$setting['removeTrash'] = array($this, 'removeTrash');
+		$setting['savePath']=strtolower(CONTROLLER_NAME)."/";
         $Upload = new Upload($setting, $driver, $config);
         $info   = $Upload->upload($files);
 
