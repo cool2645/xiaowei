@@ -16,6 +16,13 @@ namespace Home\Controller;
 class DutyController extends HomeController {
 	protected $config = array('app_type' => 'master');
 
+	public function index() {
+
+		$list = M("Duty") -> order('sort asc') -> select();
+		$this -> assign('list', $list);
+		$this -> display();
+	}	
+	
 	public function _search_filter(&$map) {
 		$pid=I('pid');
 		if (!empty($pid)) {

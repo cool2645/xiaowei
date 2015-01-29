@@ -129,7 +129,9 @@ class DocController extends HomeController {
 							}
 						}
 					} else {
-						$this -> ajaxReturn('', "删除失败", 0);
+						$return['info'] = "删除失败";
+						$return['status'] = 0;
+						$this -> ajaxReturn($return);
 					}
 					break;
 				case 'move_folder' :
@@ -142,9 +144,13 @@ class DocController extends HomeController {
 							$field = 'folder';
 							$this -> _set_field($id, $field, $target_folder);
 						}
-						$this -> ajaxReturn('', "操作成功", 1);
+						$return['info'] = "操作成功";
+						$return['status'] = 1;
+						$this -> ajaxReturn($return);
 					} else {
-						$this -> ajaxReturn('', "操作成功", 1);
+						$return['info'] = "操作成功";
+						$return['status'] = 1;
+						$this -> ajaxReturn($return);
 					}
 					break;
 				default :

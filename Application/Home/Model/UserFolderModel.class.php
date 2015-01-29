@@ -32,7 +32,7 @@ class  UserFolderModel extends CommonModel {
 	
 	public function get_folder_menu(){
 		$user_id=get_user_id();
-		$sql="select a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid-',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url";
+		$sql="select 'badge_count_user_folder' badge_function,a.id fid,a.sort,concat('ufid_',a.id) as id,a.name,a.folder,concat('ufid_',a.pid) as pid,concat(replace(a.folder,'Folder','/folder/?fid='),a.id) as url";
 		$sql.="		FROM {$this->trueTableName} AS a";
 		$sql.="		WHERE  is_del=0 and user_id={$user_id}";
 		$sql.="		ORDER BY a.folder,a.sort ";

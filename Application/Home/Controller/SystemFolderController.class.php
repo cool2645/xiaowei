@@ -1,21 +1,21 @@
 <?php
 /*---------------------------------------------------------------------------
-  小微OA系统 - 让工作更轻松快乐 
+ 小微OA系统 - 让工作更轻松快乐
 
-  Copyright (c) 2013 http://www.smeoa.com All rights reserved.                                             
+ Copyright (c) 2013 http://www.smeoa.com All rights reserved.
 
-  Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )  
+ Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 
-  Author:  jinzhu.yin<smeoa@qq.com>                         
+ Author:  jinzhu.yin<smeoa@qq.com>
 
-  Support: https://git.oschina.net/smeoa/smeoa               
+ Support: https://git.oschina.net/smeoa/smeoa
  -------------------------------------------------------------------------*/
 
 namespace Home\Controller;
 
 class SystemFolderController extends HomeController {
 	protected $config = array('app_type' => 'asst');
-	
+
 	//过滤查询字段
 	function _search_filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
@@ -23,10 +23,10 @@ class SystemFolderController extends HomeController {
 	}
 
 	function index() {
-		$this->_index();
+		$this -> _index();
 	}
 
-	protected function _index(){
+	protected function _index() {
 		$node = M("SystemFolder");
 		$menu = array();
 		$where['folder'] = CONTROLLER_NAME;
@@ -37,10 +37,10 @@ class SystemFolderController extends HomeController {
 		$model = M("SystemFolder");
 		$list = $model -> where($where) -> getField('id,name');
 		$this -> assign('folder_list', $list);
-		$this -> assign('js_file',"SystemFolder:js/index");
+		$this -> assign('js_file', "SystemFolder:js/index");
 		$this -> display("SystemFolder:index");
 	}
-	
+
 	protected function _insert() {
 		$model = D("SystemFolder");
 		if (false === $model -> create()) {
@@ -80,25 +80,27 @@ class SystemFolderController extends HomeController {
 		$id = I('id');
 		$data = $model -> getById($id);
 		if ($data !== false) {// 读取成功
-			$return['data']=$data;
+			$return['data'] = $data;
 			$this -> ajaxReturn($return);
 		}
 	}
 
 	function del() {
 		$id = I('id');
-		$model = M("SystemFolder");		
+		$model = M("SystemFolder");
 		$data = $model -> getById($id);
-		$fid=$data['id'];
-		$folder=$data['folder'];
-		$count=M(str_replace("Folder","",$folder))->where("folder=$fid")->count();
-					
-		if ($count>0) {// 读取成功
-			$this -> ajaxReturn("", "只能删除空文件夹",1);
-		}else{
-			$result=$model->where("id=$id")->delete();
-			if($result){
-				$this -> ajaxReturn("", "删除文件夹成功",1);
+		$fid = $data['id'];
+		$folder = $data['folder'];
+		$count = M(str_replace("Folder", "", $folder)) -> where("folder=$fid") -> count();
+
+		if ($count > 0) {// 读取成功
+			$this -> ajaxReturn("", "只能删除空文件夹", 1);
+		} else {
+			$result = $model -> where("id=$id") -> delete();
+			if ($result) {
+				$return['info'] = '删除文件夹成功';
+				$return['status'] = 1;
+				$this -> ajaxReturn($return);
 			}
 		}
 	}

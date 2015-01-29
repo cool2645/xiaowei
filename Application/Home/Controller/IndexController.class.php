@@ -92,25 +92,25 @@ class IndexController extends HomeController {
 		$dept_id = get_dept_id();
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
-		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id id,info_id');
+		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id',true);
 		$info_list = implode(",", $info_list);
 
 		if (!empty($info_list)) {
 			$map['_string'] .= "or Info.id in ($info_list)";
 		}
 
-		$folder_list = D("SystemFolder") -> get_authed_folder($user_id);
+		$folder_list = D("SystemFolder") -> get_authed_folder($user_id,"InfoFolder");
 		if ($folder_list) {
 			$map['folder'] = array("in", $folder_list);
 		} else {
 			$map['_string'] = '1=2';
 		}
-		$map['is_del']=array('eq',1);
+		$map['is_del']=array('eq',0);
 			
 		$model = D("InfoView");
 		//获取最新邮件
 
-		$info_list = $model -> where($where) -> field("id,name,create_time") -> order("create_time desc") -> limit(10) -> select();
+		$info_list = $model -> where($map) -> field("id,name,create_time,folder_name") -> order("create_time desc") -> limit(10) -> select();
 		$this -> assign("info_list", $info_list);
 	}
 

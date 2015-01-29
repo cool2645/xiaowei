@@ -1,16 +1,15 @@
 <?php
 /*---------------------------------------------------------------------------
-  小微OA系统 - 让工作更轻松快乐 
+ 小微OA系统 - 让工作更轻松快乐
 
-  Copyright (c) 2013 http://www.smeoa.com All rights reserved.                                             
+ Copyright (c) 2013 http://www.smeoa.com All rights reserved.
 
-  Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )  
+ Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 
-  Author:  jinzhu.yin<smeoa@qq.com>                         
+ Author:  jinzhu.yin<smeoa@qq.com>
 
-  Support: https://git.oschina.net/smeoa/smeoa               
+ Support: https://git.oschina.net/smeoa/smeoa
  -------------------------------------------------------------------------*/
-
 
 namespace Home\Controller;
 
@@ -21,7 +20,7 @@ class UserFolderController extends HomeController {
 	}
 
 	protected function _index() {
-				
+
 		$node = M("UserFolder");
 		$menu = array();
 		$where['user_id'] = get_user_id();
@@ -79,7 +78,7 @@ class UserFolderController extends HomeController {
 		if ($data !== false) {// 读取成功
 			$user_id = get_user_id();
 			if ($data['user_id'] == $user_id) {
-				$data['data']=$data;
+				$data['data'] = $data;
 				$this -> ajaxReturn($data);
 			}
 			$this -> ajaxReturn("", "", 0);
@@ -88,22 +87,26 @@ class UserFolderController extends HomeController {
 
 	function del() {
 		$id = I('id');
-		$model = M("UserFolder");		
+		$model = M("UserFolder");
 		$data = $model -> getById($id);
-		$fid=$data['id'];
-		$folder=$data['folder'];
-		$count=M(str_replace("Folder","",$folder))->where("folder=$fid")->count();
-					
-		if ($count>0) {// 读取成功
-			$this -> ajaxReturn("", "只能删除空文件夹",1);
-		}else{
-			$result=$model->where("id=$id")->delete();
-			if($result){
-				$this -> ajaxReturn("", "删除文件夹成功",1);
+		$fid = $data['id'];
+		$folder = $data['folder'];
+		$count = M(str_replace("Folder", "", $folder)) -> where("folder=$fid") -> count();
+
+		if ($count > 0) {// 读取成功
+			$return['info'] = '只能删除空文件夹';
+			$return['status'] = 1;
+			$this -> ajaxReturn($return);
+		} else {
+			$result = $model -> where("id=$id") -> delete();
+			if ($result) {
+				$return['info'] = '删除文件夹成功';
+				$return['status'] = 1;
+				$this -> ajaxReturn($return);
 			}
 		}
 	}
-	
+
 	function winpop() {
 		$node = M("UserFolder");
 		$menu = array();

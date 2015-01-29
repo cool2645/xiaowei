@@ -31,21 +31,23 @@ class InfoController extends HomeController {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$arr_read = array_filter(explode(",", get_user_config("readed_info") . "," . $id));
+		$readed_info = get_user_config("readed_info");
+		$arr_read = array_filter(explode(",", $readed_info . "," . $id));
 
 		$this -> assign("readed_id", $arr_read);
-
-		$user_id = get_user_id();
 
 		$map = $this -> _search();
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($map);
 		}
 
+		$user_id = get_user_id();
 		$dept_id = get_dept_id();
+
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
-		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id id,info_id');
+		$where_scope['user_id'] = $user_id;
+		$info_list = M("InfoScope") -> where($where_scope) -> getField('info_id', true);
 		$info_list = implode(",", $info_list);
 
 		if (!empty($info_list)) {
@@ -99,7 +101,7 @@ class InfoController extends HomeController {
 
 		$user_id = get_user_id();
 		$where['user_id'] = array('eq', $user_id);
-		$sign_list = M("InfoSign") -> where($where) -> getField('info_id id,info_id');
+		$sign_list = M("InfoSign") -> where($where) -> getField('info_id',true);
 
 		if ($sign_list) {
 			$map['id'] = array('in', $sign_list);
@@ -110,6 +112,29 @@ class InfoController extends HomeController {
 			}
 		}
 		$this -> display();
+	}
+
+	public function del($id) {
+		$this -> _del($id);
+	}
+
+	public function move_to($id, $val) {
+		$where['id'] = array('in', $id);
+		$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
+		if (count($folder) == 1) {
+			$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
+			if ($auth['admin'] == true) {
+				$field = 'folder';
+				$this -> _set_field($id, $field, $val);
+			}
+			$return['info'] = '操作成功';
+			$return['status'] = 1;
+			$this -> ajaxReturn($return);
+		} else {
+			$return['info'] = '操作成功';
+			$return['status'] = 1;
+			$this -> ajaxReturn($return);
+		}
 	}
 
 	public function mark() {
@@ -137,7 +162,7 @@ class InfoController extends HomeController {
 			case 'move_folder' :
 				$target_folder = I('val');
 				$where['id'] = array('in', $id);
-				$folder = M("Notice") -> distinct(true) -> where($where) -> field("folder") -> select();
+				$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
 				if (count($folder) == 1) {
 					$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
 					if ($auth['admin'] == true) {
@@ -174,6 +199,7 @@ class InfoController extends HomeController {
 		$data['sign_time'] = time();
 		$result = $Form -> add($data);
 		if ($result) {
+			$this->_readed($id);
 			$return['status'] = 1;
 			$return['info'] = "签收成功";
 			$this -> ajaxReturn($return);
@@ -204,10 +230,10 @@ class InfoController extends HomeController {
 		$this -> assign('row_info', $row_info);
 
 		//签收人员
-		$signed_user = M("InfoSign") -> where("info_id=$id") -> getField('user_id id,user_id');
+		$signed_user = M("InfoSign") -> where("info_id=$id") -> getField('user_id',true);
 
 		//发布范围
-		$actor_user = M("InfoScope") -> where("info_id=$id") -> getField('user_id id,user_id');
+		$actor_user = M("InfoScope") -> where("info_id=$id") -> getField('user_id',true);
 
 		//未签收人员
 		if (!empty($signed_user)) {
@@ -262,7 +288,7 @@ class InfoController extends HomeController {
 
 		}
 		$user_id = get_user_id();
-		$this->assign('user_id',$user_id);
+		$this -> assign('user_id', $user_id);
 		if (in_array($user_id, $scope_user)) {
 			if ($vo['is_sign']) {
 				$sign_info = D("InfoSign") -> get_info($id);
@@ -295,8 +321,8 @@ class InfoController extends HomeController {
 
 		$this -> assign('fid', $fid);
 
-		$arr_read = array_filter(explode(",", get_user_config("readed_info")));
-		$this -> assign("readed_id", $arr_read);
+		$unread_info = $this->_unread_info();
+		$this -> assign("unread_info", $unread_info);
 
 		$model = D("InfoView");
 		$map = $this -> _search();
@@ -333,6 +359,35 @@ class InfoController extends HomeController {
 
 	public function down() {
 		$this -> _down();
+	}
+
+	private function _unread_info() {
+
+		$map['is_del'] = array('eq', '0');
+		$map['create_time'] = array("egt", time() - 3600 * 24 * 30);
+
+		$user_id = get_user_id();
+		$where_scope['user_id'] = array('eq', $user_id);
+		$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id', TRUE);
+
+		if (!empty($scope_list)) {
+			$map['id'] = array('in', $scope_list);
+		} else {
+			$map['_string'] = " 1=2";
+		}
+
+		$model = D("InfoView");
+		$info_list = $model -> where($map) -> getField('id', true);
+
+		$readed_info = M("UserConfig") -> where("id=$user_id") -> getField('readed_info');
+		$readed_info = array_filter(explode(',', $readed_info));
+
+		if (!empty($info_list)) {
+			$un_read_doc = array_diff($info_list, $readed_info);
+		} else {
+			$un_read_doc = array();
+		}
+		return $un_read_doc;
 	}
 
 	private function _readed($id) {

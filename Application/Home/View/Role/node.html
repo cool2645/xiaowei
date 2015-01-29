@@ -1,12 +1,19 @@
 <extend name="Layout/page_detail" />
 <block name="content">
+	<style>
+		.wrap.tree_menu{
+			height:500px;
+			overflow-y: scroll;
+		}
+	</style>
 	{:W('PageHeader/simple',array('name'=>'权限组管理','search'=>'N'))}
 	<form id="form_search" name="form_search" method="post" action="">
 		<div class="operate panel panel-default">
 			<div class="panel-body">
 				<div class="pull-left">
 					<select name="eq_pid" id="eq_pid" class="form-control col-10" onchange="submit_search();">
-						{:fill_option($groupList)}
+						<option value="#">全部</option>
+						{:fill_option($group_list)}
 					</select>
 				</div>
 				<div class="pull-right">
@@ -31,6 +38,9 @@
 					</volist>
 				</tbody>
 			</table>
+			<div class="pagination">
+				{$page}
+			</div>
 		</div>
 		<div class="col-sm-8 wrap">
 			<form id="form_data" method="post" action="">
@@ -79,7 +89,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-			if($("#role_id").val()==''){
+			if ($("#role_id").val() == '') {
 				ui_error("请选择权限组");
 				return false;
 			};

@@ -14,7 +14,6 @@
 namespace Home\Controller;
 use Think\Controller;
 
-
 class PushController extends Controller {
 
 	protected $config=array('app_type'=>'asst');
@@ -33,7 +32,7 @@ class PushController extends Controller {
 		while (true){
 			$where = array();		
 			$where['user_id'] = $user_id;
-			$where['time'] = array('elt', time() - 1);
+			$where['create_time'] = array('elt', time() - 1);
 			$model = M("Push");
 			$data = $model -> where($where) -> find();
 
@@ -51,7 +50,8 @@ class PushController extends Controller {
 	}
 
 	function server2() {
-		$user_id = $user_id = get_user_id();
+		$user_id = get_user_id();
+		
 		session_write_close();
 		for ($i = 0, $timeout = 10; $i < $timeout; $i++){
 			if (connection_status() != 0) {
@@ -59,20 +59,23 @@ class PushController extends Controller {
 			}
 			$where = array();
 			$where['user_id'] = $user_id;
-			$where['time'] = array('elt', time() - 1);
+			$where['create_time'] = array('elt', time() - 1);
+			
 			$model = M("Push");
 			$data = $model -> where($where) -> find();
 			$where['id'] = $data['id'];
-			//dump($model);
+			
 			if ($data){
-				sleep(1);
-				$model -> where("id=" . $data['id']) -> delete();
-				$this -> ajaxReturn($data['data'], $data['info'], $data['status']);
+				sleep(1);				
+				$model -> where("id=" . $data['id']) -> delete();				
+				$this -> ajaxReturn($data);
 			} else {
-				sleep(2);
+				sleep(2);					
 			}
 		}
-		$this -> ajaxReturn(null, "no-data", 0);
+		$return['status']=0;
+		$return['info']='no-data';
+		$this -> ajaxReturn($return);
 	}
 
 	//获取当前状态

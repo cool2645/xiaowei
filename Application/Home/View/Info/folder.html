@@ -52,7 +52,7 @@
 			<div class="panel-body">
 				<div class="pull-left">
 					<if condition="$auth['admin']">
-						<a class="btn btn-sm btn-danger" onclick="mark('del');">删除</a>
+						<a class="btn btn-sm btn-danger" onclick="del();">删除</a>
 						<div class="btn-group" id="move_to">
 							<a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#" > 转移到 <span class="fa fa-caret-down"></span> </a>
 							<ul class="dropdown-menu">
@@ -92,7 +92,7 @@
 					<else/>
 					<form method="post" action="" name="form_data" id="form_data">
 						<foreach name="list" item="vo">
-							<li class="tbody  <php> if((!in_array($vo['id'],$readed_id))&&($vo['create_time']>=time()-3600*30*24)) echo("bold")</php>" >
+							<li class="tbody  <php> if(in_array($vo['id'],$unread_info)) echo("bold")</php>" >
 								<div class="pull-left">
 									<label class="inline pull-left col-3">
 										<input class="ace" type="checkbox" name="id[]" value="{$vo.id}" />
@@ -142,7 +142,6 @@
 				location.reload();
 			});
 		}
-
 
 		$(document).ready(function() {
 			set_return_url();

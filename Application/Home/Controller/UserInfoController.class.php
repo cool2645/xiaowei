@@ -2,18 +2,18 @@
 namespace Home\Controller;
 
 class UserInfoController extends HomeController {
-	protected $config = array('app_type' => 'common', 'action_auth' => array('search' => 'admin', 'emp_info' => 'admin','my_info_pdf'=>'admin','my_info'=>'read','base'=>'read'));
+	protected $config = array('app_type' => 'common', 'action_auth' => array('search' => 'admin', 'emp_info' => 'admin', 'my_info_pdf' => 'admin', 'my_info' => 'read', 'base' => 'read'));
 
 	//过滤查询字段
 	function _filter(&$map) {
 		$map['is_del'] = array('eq', '0');
-		$keyword=I('keyword');
+		$keyword = I('keyword');
 		if (!empty($keyword) && empty($map['title'])) {
 			$map['title'] = array('like', "%" . $keyword . "%");
 		}
 	}
 
-	function my_info(){
+	function my_info() {
 		$where['is_check'] = array('eq', 1);
 		$where['is_del'] = array('eq', 0);
 		$base = M("UserInfoBase") -> where($where) -> order("create_time desc") -> find();
@@ -38,24 +38,24 @@ class UserInfoController extends HomeController {
 		}
 		$this -> display();
 	}
-	
-	function index(){
-		$map = $this -> _search("UserView",true);
+
+	function index() {
+		$map = $this -> _search("UserView", true);
 		if (method_exists($this, '_filter')) {
 			$this -> _filter($map);
-		}	
-		$sql = D("UserView") ->buildSql();
+		}
+		$sql = D("UserView") -> buildSql();
 		$model = new Model();
-		$model -> table($sql. "a");
+		$model -> table($sql . "a");
 		if (!empty($model)) {
 			$this -> _list($model, $map);
 		}
 		$this -> display();
 	}
 
-	function emp_info(){
-		$user_id=$_REQUEST['user_id'];
-		if(!empty($user_id)){
+	function emp_info() {
+		$user_id = $_REQUEST['user_id'];
+		if (!empty($user_id)) {
 			$where['user_id'] = $user_id;
 			$where['is_check'] = array('eq', 1);
 			$where['is_del'] = array('eq', 0);
@@ -82,7 +82,6 @@ class UserInfoController extends HomeController {
 		}
 		$this -> display();
 	}
-
 
 	function my_info_pdf() {
 		$where['is_check'] = array('eq', 1);
@@ -189,7 +188,7 @@ class UserInfoController extends HomeController {
 		$pdf -> Output('example_061.pdf', 'I');
 	}
 
-	public function import(){
+	public function import() {
 		$save_path = C('SAVE_PATH');
 		$opmode = $_POST["opmode"];
 		if ($opmode == "import") {
@@ -274,7 +273,7 @@ class UserInfoController extends HomeController {
 		$this -> _check_list("Base");
 	}
 
-	function _empty(){
+	function _empty() {
 		$arr_tab = array('tab1', 'tab2', 'tab3', 'tab4', 'tab5', 'tab6', 'tab7', 'tab8', 'tab9', 'tab10', 'tab11', 'tab12', 'tab13', 'tab14');
 		if (in_array(CONTROLLER_NAME, $arr_tab)) {
 			$model = ucfirst(CONTROLLER_NAME);
@@ -499,7 +498,8 @@ class UserInfoController extends HomeController {
 	}
 
 	public function mark() {
-		$action = I('action');;
+		$action = I('action');
+		;
 		$id = $_REQUEST['notice_id'];
 		switch ($action) {
 			case 'del' :
@@ -511,6 +511,7 @@ class UserInfoController extends HomeController {
 						$field = 'is_del';
 						$this -> set_field($id, $field, 1);
 					}
+					删除文件夹成功
 					$this -> ajaxReturn('', "删除成功", 1);
 				} else {
 					$this -> ajaxReturn('', "删除失败", 1);

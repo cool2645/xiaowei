@@ -1,5 +1,11 @@
 <extend name="Layout/page_detail" />
 <block name="content">
+	<style>
+		.sub_left_menu{
+			height:500px;
+			overflow-y: scroll;
+		}
+	</style>
 {:W('PageHeader/search',array('name'=>'权限分配','search'=>'S'))}
 <div class="operate panel panel-default">
 	<div class="panel-body">

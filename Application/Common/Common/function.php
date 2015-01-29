@@ -162,6 +162,7 @@ function badge_count_flow_receive() {
 function badge_count_todo() {
 	//获取待办事项
 	$where = array();
+	$user_id = get_user_id();
 	$where['user_id'] = $user_id;
 	$where['status'] = array("in", "1,2");
 	$new_todo_count = M("Todo") -> where($where) -> count();
@@ -170,6 +171,7 @@ function badge_count_todo() {
 
 function badge_count_schedule() {
 	$where = array();
+	$user_id = get_user_id();
 	$where['user_id'] = $user_id;
 	$where['start_date'] = array("elt", date("Y-m-d"));
 	$where['end_date'] = array("egt", date("Y-m-d"));
@@ -181,11 +183,59 @@ function badge_count_message() {
 	//获取最新消息
 	$model = M("Message");
 	$where = array();
+	$user_id = get_user_id();
 	$where['owner_id'] = $user_id;
 	$where['receiver_id'] = $user_id;
 	$where['is_read'] = array('eq', '0');
 	$new_message_count = M("Message") -> where($where) -> count();
 	return $new_message_count;
+}
+
+function badge_count_info($id) {
+
+	$model = D("InfoView");
+	$map['is_del'] = array('eq', '0');
+	$map['folder'] = array('eq', $id);
+	$map['create_time'] = array("egt", time() - 3600 * 24 * 30);
+
+	$user_id = get_user_id();
+	$where_scope['user_id'] = array('eq', $user_id);
+	$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id', TRUE);
+
+	if (!empty($scope_list)) {
+		$map['id'] = array('in',$scope_list);
+	} else {
+		$map['_string'] = " 1=2";
+	}
+
+	$model = D("InfoView");
+	$info_list = $model -> where($map) -> getField('id', true);
+	
+	$readed_info = M("UserConfig") -> where("id=$user_id") -> getField('readed_info');
+	$readed_info = array_filter(explode(',', $readed_info));
+
+	if (!empty($info_list)) {
+		$un_read_doc = array_diff($info_list, $readed_info);
+	} else {
+		$un_read_doc = array();
+	}
+	return count($un_read_doc);
+}
+
+function badge_count_system_folder($id) {
+	//获取最新消息
+	$where['id'] = array('eq', $id);
+	$folder_name = M("SystemFolder") -> where($where) -> getField('folder');
+	$count = 0;
+	switch ($folder_name) {
+		case 'InfoFolder' :
+			$count = badge_count_info($id);
+			break;
+
+		default :
+			break;
+	}
+	return $count;
 }
 
 function is_mobile($mobile) {
@@ -675,10 +725,10 @@ function fill_option($list, $data) {
 		if (is_array($val)) {
 			$id = $val['id'];
 			$name = $val['name'];
-			if ($id == $data) {
-				$selected = "selected";
-			} else {
+			if (empty($data)) {
 				$selected = "";
+			} else {
+				$selected = "selected";
 			}
 			$html = $html . "<option value='{$id}' $selected>{$name}</option>";
 		} else {
@@ -1365,7 +1415,6 @@ function get_emp_pic($id) {
 	}
 	return $data;
 }
-
 
 function task_status($status) {
 	if ($status == 0) {

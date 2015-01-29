@@ -22,7 +22,7 @@ class HomeController extends Controller {
 		if ($is_weixin) {
 			$code = $_REQUEST["code"];
 			if (!empty($code)) {
-				$this -> _welogin($code);
+				$this -> _weixin_login($code);
 			}
 		}
 		$auth_id = session(C('USER_AUTH_KEY'));
@@ -35,7 +35,7 @@ class HomeController extends Controller {
 		$this -> _assign_badge_count();
 	}
 
-	protected function _welogin($code) {
+	protected function _weixin_login($code) {
 		import("@.ORG.Util.ThinkWechat");
 		$weixin = new ThinkWechat();
 		$openid = $weixin -> openid($code);
@@ -81,12 +81,9 @@ class HomeController extends Controller {
 		$system_folder_menu = D("SystemFolder") -> get_folder_menu();
 		$user_folder_menu = D("UserFolder") -> get_folder_menu();
 		$menu = array_merge($menu, $system_folder_menu, $user_folder_menu);
-
 		$menu = sort_by($menu, 'sort');
-
 		$tree = list_to_tree($menu);
 
-		//dump($tree);
 		if (!empty($top_menu)) {
 			$top_menu_name = $model -> where("id=$top_menu") -> getField('name');
 			$this -> assign("top_menu_name", $top_menu_name);
@@ -100,34 +97,45 @@ class HomeController extends Controller {
 	}
 
 	protected function _assign_badge_count() {
-		$node_list = M("Node") -> getField('id,badge_function');
-		$node_list = array_filter($node_list);
+		$node_list = D("Node") -> access_list();
+		$system_folder_menu = D("SystemFolder") -> get_folder_menu();
+		$user_folder_menu = D("UserFolder") -> get_folder_menu();
+		$node_list = array_merge($node_list, $system_folder_menu, $user_folder_menu);
 
-		foreach ($node_list as $key => $val) {
-			if (function_exists($val) && ($val != 'badge_sum')) {
-				$badge_count[$key] = $val();
+		foreach ($node_list as $val) {
+			$badge_function = $val['badge_function'];
+			if (!empty($badge_function) and function_exists($badge_function) and ($badge_function != 'badge_sum')) {
+				if ($badge_function == 'badge_count_system_folder' or $badge_function == 'badge_count_user_folder') {
+					$badge_count[$val['id']] = $badge_function($val['fid']);
+				} else {
+					$badge_count[$val['id']] = $badge_function();
+				}
 			}
 		};
-
-		$menu = D("Node") -> access_list();
-
+			 
+		//$node_tree = list_to_tree($node_list);
 		foreach ($node_list as $key => $val) {
-			if ($val == 'badge_sum') {
-				$child_menu = list_to_tree($menu, $key);
+			if ($val['badge_function'] == 'badge_sum') {
+				$child_menu = list_to_tree($node_list, $val['id']);
 				$child_menu = tree_to_list($child_menu);
-
+				//dump($child_menu);
 				$child_menu_id = rotate($child_menu);
-				$child_menu_id = $child_menu_id['id'];
-
-				$count = 0;
-				foreach ($child_menu_id as $k1 => $v1) {
-					$count += $badge_count[$v1];
+				
+				if (isset($child_menu_id['id'])) {
+					$child_menu_id = $child_menu_id['id'];
+					$count = 0;
+					foreach ($child_menu_id as $k1 => $v1) {
+						if (!empty($badge_count[$v1])) {
+							$count += $badge_count[$v1];
+						}
+					}
 				}
-				$badge_sum[$key] = $count;
+				$badge_sum[$val['id']] = $count;
 			}
 		};
 		if (!empty($badge_count)) {
-			$this -> assign('badge_count', $badge_count + $badge_sum);
+			$total=$badge_count+$badge_sum;
+			$this -> assign('badge_count',$total);
 		}
 	}
 
@@ -321,7 +329,6 @@ class HomeController extends Controller {
 		}
 
 		$model = M("File");
-		$where['controller'] = CONTROLLER_NAME;
 		$admin = $this -> config['auth']['admin'];
 
 		if ($admin) {
@@ -355,13 +362,13 @@ class HomeController extends Controller {
 		/* 记录附件信息 */
 		/* 记录附件信息 */
 		if ($info) {
-			if(!empty($info['file'])){
-				$return = $info['file'];	
+			if (!empty($info['file'])) {
+				$return = $info['file'];
 			}
-			if(!empty($info['imgFile'])){
-				$return = $info['imgFile'];	
+			if (!empty($info['imgFile'])) {
+				$return = $info['imgFile'];
 				$return['url'] = $return['path'];
-			}						
+			}
 			$return['sid'] = think_encrypt($info['file']['id']);
 			$return['status'] = 1;
 			$return['error'] = 0;
@@ -445,9 +452,9 @@ class HomeController extends Controller {
 		//排序字段 默认为主键名
 		if (isset($_REQUEST['_sort'])) {
 			$sort = $_REQUEST['_sort'];
-		}else{
-			if(empty($sort)){
-				$sort="id desc";
+		} else {
+			if (empty($sort)) {
+				$sort = "id desc";
 			}
 		}
 		//取得满足条件的记录数
@@ -467,20 +474,17 @@ class HomeController extends Controller {
 			import("@.ORG.Util.Page");
 			$p = new \Page($count, $list_rows);
 			//分页查询数据
-			if ($sort) {
-				$vo_list = $model -> where($map) -> order($sort) -> limit($p -> firstRow . ',' . $p -> listRows) -> select();
-			} else {
-				$vo_list = $model -> where($map) -> limit($p -> firstRow . ',' . $p -> listRows) -> select();
-			}
+			$vo_list = $model -> where($map) -> order($sort) -> limit($p -> firstRow . ',' . $p -> listRows) -> select();
+
 			//echo $model->getlastSql();
 			$p -> parameter = $this -> _search($model);
 			//分页显示
 			$page = $p -> show();
-
-			$this -> assign('list', $vo_list);
-			$this -> assign('sort', $sort);
-			$this -> assign('order', $order);
-			$this -> assign("page", $page);
+			if ($vo_list) {
+				$this -> assign('list', $vo_list);
+				$this -> assign('sort', $sort);
+				$this -> assign("page", $page);
+			}
 		}
 		return $vo_list;
 	}

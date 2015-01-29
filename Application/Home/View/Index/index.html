@@ -67,7 +67,7 @@
 						<div class="widget-body">
 							<div class="widget-main">
 								<div class="tab-content">
-									<div id="calendar-schedule" class=" ul_table tab-pane in active">
+									<div id="calendar-schedule" class=" ul_table tab-pane ">
 										<ul>
 											<volist name="schedule_list" id="vo">
 												<li>
@@ -77,7 +77,7 @@
 											</volist>
 										</ul>
 									</div>
-									<div id="calendar-todo" class=" ul_table tab-pane">
+									<div id="calendar-todo" class=" ul_table active tab-pane">
 										<ul>
 											<volist name="todo_list" id="vo">
 												<li>
@@ -103,7 +103,7 @@
 									<volist name="info_list" id="vo">
 										<li>
 											<span class="pull-right hidden-phone">{$vo.start_date}</span>
-											<span  class="auto autocut"><a url="{:U('notice/read','id='.$vo['id'])}" node="83" return_url="{:U('notice/index')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
+											<span  class="auto autocut"><a url="{:U('info/read','id='.$vo['id'])}" node="88" return_url="{:U('info/index')}" onclick="click_home_list(this)">【{$vo.folder_name}】{$vo.name}</a> </span>
 										</li>
 									</volist>
 								</ul>

@@ -15,8 +15,7 @@ class SidebarWidget extends Controller {
 		return $this -> tree_nav($tree,$badge_count);
 	}
 
-	function tree_nav($tree,$badge_count,$level = 0) {
-		//dump($tree);		
+	function tree_nav($tree,$badge_count,$level = 0) {	
 		$level++;
 		$html = "";
 		if (is_array($tree)){			
@@ -53,7 +52,7 @@ class SidebarWidget extends Controller {
 						$html .= "<b class=\"arrow fa fa-angle-down\"></b>";
 						if(!empty($badge_count[$val['id']])){
 							$html.="<span class=\"badge badge-primary \">".$badge_count[$val['id']]."</span>";	
-						}						
+						}				
 						$html .= "</a>\r\n";
 						$html .= $this->tree_nav($val['_child'],$badge_count,$level);
 						$html = $html . "</li>\r\n";

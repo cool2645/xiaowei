@@ -88,12 +88,13 @@ class WorkLogController extends HomeController {
 		$this -> display();
 	}
 
-	public function edit() {
+	 function edit($id) {
 		$plugin['date'] = true;	
 		$plugin['uploader'] = true;	
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		$this->_edit();
+		
+		$this->_edit($id);
 	}
 
 	public function add() {

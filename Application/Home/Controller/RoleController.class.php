@@ -17,18 +17,29 @@ namespace Home\Controller;
 class RoleController extends HomeController {
 	protected $config = array('app_type' => 'master', 'action_auth' => array('node' => 'admin', 'get_node_list' => 'admin', 'user' => 'admin', 'duty' => 'admin', 'get_role_list' => 'admin', 'get_duty_list' => 'admin', ));
 
+	public function index() {
+
+		$list = M("Role") -> order('sort asc') -> select();
+		$this -> assign('list', $list);
+		$this -> display();
+	}
+
 	public function node() {
 		$node_model = M("Node");
 		if (!empty($_POST['eq_pid'])) {
 			$eq_pid = $_POST['eq_pid'];
 		} else {
-			$eq_pid = $node_model -> where('pid=0') -> order('sort asc') -> getField('id');
+			$eq_pid = "#";
 		}
 
 		//dump($node_model -> select());
 		$node_list = $node_model -> order('sort asc') -> select();
 
-		$node_list = tree_to_list(list_to_tree($node_list, $eq_pid));
+		if ($eq_pid != "#") {
+			$node_list = tree_to_list(list_to_tree($node_list, $eq_pid));
+		} else {
+			$node_list = tree_to_list(list_to_tree($node_list));
+		}
 
 		$node_list = rotate($node_list);
 		//dump($node_list);
@@ -44,11 +55,11 @@ class RoleController extends HomeController {
 		$this -> assign('node_list', $list);
 		//$this->assign('menu',sub_tree_menu($list));
 
-		$role = M("Role") -> order('sort asc') -> select();
-		$this -> assign('list', $role);
+		$role_list = M("Role") -> order('sort asc') -> select();
+		$this -> assign('list', $role_list);
 
-		$list = $node_model -> where('pid=0') -> order('sort asc') -> getField('id,name');
-		$this -> assign('groupList', $list);
+		$group_list = $node_model -> where('pid=0') -> order('sort asc') -> getField('id,name');
+		$this -> assign('group_list', $group_list);
 		$this -> display();
 	}
 
@@ -155,11 +166,11 @@ class RoleController extends HomeController {
 
 	public function duty() {
 		$duty = M("Duty");
-		$duty_list = $duty -> select();
+		$duty_list = $duty -> order('sort asc') -> select();
 		$this -> assign("duty_list", $duty_list);
 
-		$role = M("Role") -> select();
-		$this -> assign('list', $role);
+		$role_list = M("Role") -> order('sort asc') -> select();
+		$this -> assign('role_list', $role_list);
 		$this -> display();
 	}
 
@@ -167,8 +178,11 @@ class RoleController extends HomeController {
 		$role_id = $_POST["role_id"];
 		$model = D("Role");
 		$data = $model -> get_duty_list($role_id);
-		if ($data !== false) {// 读取成功
-			$this -> ajaxReturn($data, "", 1);
+		if ($data !== false) {
+			$return['status']=1;
+			$return['data']=$data;
+			// 读取成功
+			$this -> ajaxReturn($return);
 		}
 	}
 
