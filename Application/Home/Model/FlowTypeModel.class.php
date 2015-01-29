@@ -23,10 +23,5 @@ class  FlowTypeModel extends CommonModel {
 		array('doc_no_format','require','文档编码格式必须',1),		 
 		array('content','require','表单必须'),
 		);
-
-	function _after_insert($data,$options){
-		$tid=$data["tid"];
-		M("Forum")->where("id=$tid")->setInc("reply",1);
-	}
 }
 ?>

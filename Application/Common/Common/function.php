@@ -173,8 +173,9 @@ function badge_count_schedule() {
 	$where = array();
 	$user_id = get_user_id();
 	$where['user_id'] = $user_id;
-	$where['start_date'] = array("elt", date("Y-m-d"));
-	$where['end_date'] = array("egt", date("Y-m-d"));
+	$where['is_del'] = 0;
+	$where['start_time'] = array("elt", date("Y-m-d"));
+	$where['end_time'] = array("egt", date("Y-m-d"));
 	$new_schedule_count = M("Schedule") -> where($where) -> count();
 	return $new_schedule_count;
 }
