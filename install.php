@@ -173,15 +173,18 @@ if (isset($_POST["install"])) {
 							</div>
 						</div>
 						<div>
+							<label class="control-label col-md-4" for="name"> </label>
+							<div class="col-md-8">
+								<?php
+								if (is_writable($db_config_files) && (is_writable("install.php"))) {
+									echo "<button type=\"submit\" name=\"install\" class=\"btn btn-primary \">开始安装</button>";
+								} else {
 
-							<?php
-							if (is_writable($db_config_files) && (is_writable("install.php"))) {
-								echo "<button type=\"submit\" name=\"install\" class=\"btn btn-default\">下一步</button>";
-							} else {
-
-							}
-							?>
+								}
+								?>
+							</div>
 						</div>
+						<div class="clearfix"></div>
 					</form>
 				</div>
 			</div>
