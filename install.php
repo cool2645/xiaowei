@@ -1,20 +1,16 @@
 <?php
-	$db_config_files = "App/Conf/db.php";
-	
-if (isset($_POST["install"])){
+$db_config_files = "Application/Common/conf/db.php";
+
+if (isset($_POST["install"])) {
 	$db_host = $_POST["db_host"];
 	$db_user = $_POST["db_user"];
 	$db_pass = $_POST["db_pass"];
-	$db_dbname=$_POST["db_dbname"];
+	$db_dbname = $_POST["db_dbname"];
 	$db_tag = $_POST["db_tag"];
 
 	$config_str = "<?php\n";
 	$config_str .= "return array(\n";
-	if($_POST['mod_rewrite']){
-		$config_str .= "        'URL_MODEL'=>2, // 如果你的环境不支持PATHINFO 请设置为3,\n";
-	}else{
-		$config_str .= "        'URL_MODEL'=>0, // 如果你的环境不支持PATHINFO 请设置为3,\n";
-	}
+	$config_str .= "        'URL_MODEL'=>0, // 如果你的环境不支持PATHINFO 请设置为3,\n";
 	$config_str .= "        'DB_TYPE'=>'mysql',\n";
 	$config_str .= "        'DB_HOST'=>'" . $db_host . "',\n";
 	$config_str .= "        'DB_NAME'=>'" . $db_dbname . "',\n";
@@ -26,7 +22,7 @@ if (isset($_POST["install"])){
 
 	$ff = fopen($db_config_files, "w ");
 	fwrite($ff, $config_str);
-	
+
 	if (!@$link = mysql_connect($db_host, $db_user, $db_pass)) {//检查数据库连接情况
 		echo "<meta charset='utf-8' />";
 		echo "<script>\n
@@ -35,9 +31,9 @@ if (isset($_POST["install"])){
 					location.href='install.php';
 				}
 				</script>";
-		die;
+		die ;
 	} else {
-		if(!mysql_select_db($db_dbname)){
+		if (!mysql_select_db($db_dbname)) {
 			echo "<meta charset='utf-8' />";
 			echo "<script>\n
 						window.onload=function(){
@@ -45,8 +41,8 @@ if (isset($_POST["install"])){
 						location.href='install.php';
 					}
 					</script>";
-			die;
-		}else{
+			die ;
+		} else {
 			mysql_select_db($db_dbname);
 			mysql_query("set names 'utf8'");
 			$lines = file("Data/Sql/demo.sql");
@@ -74,7 +70,7 @@ if (isset($_POST["install"])){
 						location.href='index.php';
 					}
 					</script>";
-			die;
+			die ;
 		}
 	}
 }
@@ -87,8 +83,8 @@ if (isset($_POST["install"])){
 		<meta content='' name='description' />
 		<meta content='' name='author' />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="Public/css/bootstrap.min.css" rel="stylesheet" >
-		<link href="Public/css/style.css" rel="stylesheet">
+		<link href="Public/Static/css/bootstrap.min.css" rel="stylesheet" >
+		<link href="Public/Home/css/style.css" rel="stylesheet">
 	</head>
 	<body>
 		<div class="container">
@@ -98,11 +94,23 @@ if (isset($_POST["install"])){
 						<h1>小微OA系统 <small>让工作更轻松快乐</small></h1>
 					</div>
 					<form   method="POST" class="well form-horizontal">
+
+						<div class="form-group">
+							<label class="control-label col-md-4" for="name" >安装说明：</label>
+							<div class="col-md-8">
+								<p>
+									<h4 class="text-danger">1. 执行安装程序之前，手动创建数据库<h4>
+								</p>
+								<p>
+									<h4 class="text-danger">2. 安装成功以后，请手动删除 install.php <h4>
+								</p>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name" >安装文件可写：</label>
 							<div class="col-md-8">
-								<?php								
-								if (!is_writable("install.php")){
+								<?php
+								if (!is_writable("install.php")) {
 									echo "<button type='button' class='btn btn-danger form-con'>Fail</button><p>请检查install.php是否有修改权限</p>";
 								} else {
 									echo "<button type='button' class='btn btn-success form-con'>OK</button>";
@@ -113,7 +121,7 @@ if (isset($_POST["install"])){
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name" >配置文件可写：</label>
 							<div class="col-md-8">
-								<?php								
+								<?php
 								if (!is_writable($db_config_files)) {
 									echo "<button type='button' class='btn btn-danger form-con'>Fail</button><p>请检查App\Conf目录写入权限</p>";
 								} else {
@@ -125,26 +133,13 @@ if (isset($_POST["install"])){
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name" >IMAP扩展：</label>
 							<div class="col-md-8">
-								<?php								
-								if (!function_exists('imap_open')){
+								<?php
+								if (!function_exists('imap_open')) {
 									echo "<button type='button' class='btn btn-danger form-con'>Fail</button><p>无法正常收发邮件</p>";
 								} else {
 									echo "<button type='button' class='btn btn-success form-con'>OK</button>";
 								}
 								?>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-md-4" for="name" >Mod_rewrite扩展：</label>
-							<input type="hidden" name="mod_rewrite" id="mod_rewrite">
-							<div class="col-md-8">
-								<script src="Public/rewrite/checker"></script>
-								<script>if(modRewriteChecker){
-									document.getElementById("mod_rewrite").value="true";
-									document.write("<button type='button' class='btn btn-success form-con'>OK</button>");
-								}else{									
-									document.write("<button type='button' class='btn btn-warning form-con'>Warning</button><p>URL_MODEL将使用普通模式</p>");
-								}</script>
 							</div>
 						</div>
 						<div class="form-group">
@@ -178,16 +173,15 @@ if (isset($_POST["install"])){
 							</div>
 						</div>
 						<div>
-							<p><h4 class="text-danger">* 执行安装程序之前请手动创建数据库<h4></p>
-						
-							<?php								
-							if (is_writable($db_config_files)&&(is_writable("install.php"))) {
+
+							<?php
+							if (is_writable($db_config_files) && (is_writable("install.php"))) {
 								echo "<button type=\"submit\" name=\"install\" class=\"btn btn-default\">下一步</button>";
 							} else {
-									
+
 							}
 							?>
-							</div>
+						</div>
 					</form>
 				</div>
 			</div>
