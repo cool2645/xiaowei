@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class FinanceController extends HomeController {
-	protected $config = array('app_type' => 'common', 'action_auth' => array('add_income' => 'write', 'add_payment' => 'write', 'add_transfer' => 'write', 'save_transfer' => 'write', 'account_list' => 'admin', 'add_account' => 'admin', 'read_account' => 'write', 'save_account' => 'admin', 'edit_account' => 'admin', 'del_account' => 'admin'));
+	protected $config = array('app_type' => 'common','admin'=>'account_list,save_account,edit_account,del_account','write'=>'add_income,add_payment,add_transfer,save_transfer');
 
 	//过滤查询字段
 	function _search_filter(&$map) {

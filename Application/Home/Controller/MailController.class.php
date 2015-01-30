@@ -20,8 +20,8 @@ class MailController extends HomeController {
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
 		$map['user_id'] = array('eq', get_user_id());
-		$keyword=I('keyword');
-		if (!empty($keyword)){			
+		$keyword = I('keyword');
+		if (!empty($keyword)) {
 			$where['name'] = array('like', "%" . $keyword . "%");
 			$where['content'] = array('like', "%" . $keyword . "%");
 			$where['from'] = array('like', "%" . $keyword . "%");
@@ -121,7 +121,7 @@ class MailController extends HomeController {
 
 		$model = D('Mail');
 		if (!empty($model)) {
-			$this -> _list($model, $where,"create_time desc");
+			$this -> _list($model, $where, "create_time desc");
 		}
 		$this -> display();
 	}
@@ -134,7 +134,7 @@ class MailController extends HomeController {
 	// mailbox 5. 垃圾邮件	folder=5
 	// mailbox 6. 永久删除	is_del=1
 	//--------------------------------------------------------------------
-	public function mark($id,$action) {		
+	public function mark($id, $action) {
 		switch ($action) {
 			case 'del' :
 				$field = 'folder';
@@ -385,10 +385,8 @@ class MailController extends HomeController {
 	//--------------------------------------------------------------------
 	//   显示邮件内容
 	//--------------------------------------------------------------------
-	public function read() {
+	public function read($id) {
 		$this -> _assign_mail_folder_list();
-
-		$id = I('id');
 		$this -> _assign_next_link($id);
 
 		$where['id'] = array('eq', $id);
@@ -412,7 +410,8 @@ class MailController extends HomeController {
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$type = I('type'); ;
+		$type = I('type');
+		;
 		$this -> assign('type', $type);
 
 		if ($type == "reply") {
@@ -513,47 +512,35 @@ class MailController extends HomeController {
 	//   接收邮件附件
 	//--------------------------------------------------------------------
 	private function _receive_file($str, &$model) {
-		if (!empty($str)) {
-			$ar = array_filter(explode(",", $str));
+
+		$ar = array_filter(explode("?", $str));
+		$files = array();
+		if (!empty($ar)) {
 			foreach ($ar as $key => $value) {
-				$ar2 = explode("_", $value);
+				$ar2 = explode("|", $value);
 				$cid = $ar2[0];
-				if (true) {
-					//if(strlen($cid)>10){
-					$inline = $ar2[1];
-					$file_name = $ar2[2];
-					$File = M("File");
-					$File -> name = $file_name;
-					$File -> user_id = $model -> user_id;
-					$File -> size = filesize($this -> tmpPath . urlencode($value));
-					$File -> extension = get_ext($value);
-					$File -> create_time = time();
-					$sid = get_sid();
-					$File -> sid = $sid;
-					$File -> controller = CONTROLLER_NAME;
-					$dir = 'mail/' . get_emp_no() . "/" . date("Ym");
-					$File -> savename = $dir . '/' . uniqid() . '.' . $File -> extension;
-					$save_name = $File -> savename;
-					if (!is_dir(get_save_path() . $dir)) {
-						mkdir(get_save_path() . $dir, 0777, true);
-						chmod(get_save_path() . $dir, 0777);
-					}
-					if (!is_dir($this -> tmpPath . $dir)) {
-						mkdir($this -> tmpPath . $dir, 0777, true);
-						chmod($this -> tmpPath . $dir, 0777);
-					}
-					if (rename($this -> tmpPath . urlencode($value), get_save_path() . $save_name)) {
-						$file_id = $File -> add();
-						if ($inline == "INLINE") {
-							$model -> content = str_replace("cid:" . $cid, "/" . get_save_path() . $save_name, $model -> content);
-						} else {
-							$add_file = $add_file . ($sid) . ';';
-						}
+				$inline = $ar2[1];
+				$file_name = $ar2[2];
+				$tmp_name = $ar2[3];
+
+				$files[$key]['name'] = $file_name;
+				$files[$key]['tmp_name'] = $tmp_name;
+				$files[$key]['size'] = filesize($tmp_name);
+
+				if (!empty($files)) {
+					$File = D('File');
+					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+					$info = $File -> upload($files, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
+
+					if ($inline == "INLINE") {
+						$model -> content = str_replace("cid:" . $cid,$info[0]['path'], $model -> content);
+					} else {						
+						$add_file = $add_file . think_encrypt($info[0]['id']). ';';
 					}
 				}
 			}
-			return $add_file;
 		}
+		return $add_file;
 	}
 
 	private function _organize(&$model) {

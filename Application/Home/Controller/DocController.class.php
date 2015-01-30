@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class DocController extends HomeController {
-	protected $config = array('app_type' => 'folder', 'action_auth' => array('mark' => 'admin'));
+	protected $config = array('app_type' => 'folder','admin'=>'mark');
 
 	//过滤查询字段
 	function _search_filter(&$map) {

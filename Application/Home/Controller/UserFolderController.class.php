@@ -71,9 +71,8 @@ class UserFolderController extends HomeController {
 		}
 	}
 
-	function read() {
+	function read($id) {
 		$model = M("UserFolder");
-		$id = I('id');
 		$data = $model -> getById($id);
 		if ($data !== false) {// 读取成功
 			$user_id = get_user_id();

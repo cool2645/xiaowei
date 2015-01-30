@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class SupplierController extends HomeController {
 	//过滤查询字段
-	protected $config = array('app_type' => 'common', 'action_auth' => array('set_tag' => 'admin', 'tag_manage' => 'admin'));
+	protected $config = array('app_type' => 'common','admin'=>'set_tag,tag_manage');
 
 	function _search_filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
@@ -165,9 +165,8 @@ class SupplierController extends HomeController {
 		}
 	}
 
-	function read() {
+	function read($id) {
 		$model = M('Supplier');
-		$id = $_REQUEST[$model -> getPk()];
 		$vo = $model -> getById($id);
 		$this -> assign('vo', $vo);
 		$this -> display();

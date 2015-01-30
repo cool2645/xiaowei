@@ -85,7 +85,9 @@ function ui_alert(msg, callback) {
 				label : "确定",
 				className : "btn-primary",
 				callback : function() {
-					callback();
+					if(callback!=undefined){
+						callback();
+					}					
 				}
 			}
 		}

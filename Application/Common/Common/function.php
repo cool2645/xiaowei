@@ -392,8 +392,8 @@ function decrypt($data, $key = '') {
 }
 
 function upload_filter($val) {
-	$allow_type = array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'dwg', 'rar', 'zip', '7z', 'pdf', 'txt', 'rtf', 'jpg', 'jpeg', 'png', 'tip', 'psd');
-	if (in_array($val, $allow_type)) {
+	$allow_ext=explode(",",C('UPLOAD_FILE_EXT'));
+	if (in_array($val, $allow_ext)) {
 		return true;
 	} else {
 		return false;

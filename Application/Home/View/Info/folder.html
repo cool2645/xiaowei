@@ -128,20 +128,27 @@
 		function del() {
 			ui_confirm('确定要删除吗?', function() {
 				var vars = $("#form_data").serialize();
-				sendAjax("{:U('del')}", vars);
-				$("input[name='id[]']:checkbox:checked").each(function() {
-					location.reload();
+				sendAjax("{:U('del')}", vars, function(data) {
+					if (data.status) {
+						ui_alert(data.info, function() {
+							location.reload();
+						});
+					}
 				});
 			});
 		}
 
 		function move_to(val) {
 			var vars = $("#form_data").serialize();
-			sendAjax("{:U('move_to')}", 'val=' + val + '&' + vars);
-			$("input[name='id[]']:checkbox:checked").each(function() {
-				location.reload();
+			sendAjax("{:U('move_to')}", 'val=' + val + '&' + vars, function(data) {
+				if (data.status) {
+					ui_alert(data.info, function() {
+						location.reload();
+					});
+				}
 			});
 		}
+
 
 		$(document).ready(function() {
 			set_return_url();

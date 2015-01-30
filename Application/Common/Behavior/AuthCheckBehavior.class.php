@@ -9,8 +9,8 @@ class AuthCheckBehavior extends Behavior {
 	protected $config;
 	public function run(&$params) {
 		//个人数据
-		$this -> config = &$params;
 		$app_type = $params['app_type'];
+
 		switch($app_type) {
 			case 'public' :
 				$auth = array('admin' => false, 'write' => false, 'read' => true);
@@ -31,28 +31,10 @@ class AuthCheckBehavior extends Behavior {
 				break;
 
 			case 'common' :
-				$action_auth = C('AUTH');
-
-				if (!empty($params['action_auth'])) {
-					$action_auth = array_merge(C('AUTH'), $params['action_auth']);
-				}
-
-				$auth = $this -> get_auth();
-				break;
-
-			case 'flow' :
-				$action_auth = C('AUTH');
-				if (!empty($params['action_auth'])) {
-					$action_auth = array_merge(C('AUTH'), $params['action_auth']);
-				}
 				$auth = $this -> get_auth();
 				break;
 
 			case 'master' :
-				$action_auth = C('AUTH');
-				if (!empty($params['action_auth'])) {
-					$action_auth = array_merge(C('AUTH'), $params['action_auth']);
-				}
 				$auth = $this -> get_auth();
 				//dump($auth);
 				if ($auth['admin']) {
@@ -61,31 +43,13 @@ class AuthCheckBehavior extends Behavior {
 				break;
 
 			case 'folder' :
-				$action_auth = C('AUTH');
-				if (!empty($params['action_auth'])) {
-					$action_auth = array_merge($action_auth, $params['action_auth']);
-				}
-				if (!empty($params['sub_action_auth'])) {
-					$action_auth = array_merge($action_auth, $params['sub_action_auth']);
-				}
 
-				$sub_action_auth = $params['sub_action_auth'];
-				if (!empty($sub_action_auth)) {
-					if (array_key_exists(CONTROLLER_NAME, $sub_action_auth)) {
-						$sub_id = $_REQUEST[$params['pid']];
-						if (empty($sub_id)) {
-							$where['id'] = $id;
-							$id = M($params['sub_model']) -> where($where) -> getfield($params['pid']);
-						}
-					};
-				}
-				
-				$fid = $_REQUEST['fid'];	
-				if (isset($fid)) {				
+				$fid = $_REQUEST['fid'];
+				if (isset($fid)) {
 					$auth = D("SystemFolder") -> get_folder_auth($fid);
 					break;
 				}
-	
+
 				$id = $_REQUEST['id'];
 				if (isset($id)) {
 					if (is_array($id)) {
@@ -102,24 +66,65 @@ class AuthCheckBehavior extends Behavior {
 				$auth = $this -> get_auth();
 				break;
 			default :
-				$action_auth = C('AUTH');
 				$auth = $this -> get_auth();
 				break;
 		}
 
-		if ($auth[$action_auth[ACTION_NAME]]) {
-			$this -> config['auth'] = $auth;
-			return true;
-		} else {
+		$default_auth_admin = explode(',', C('AUTH.admin'));
+		$default_auth_write = explode(',', C('AUTH.write'));
+		$default_auth_read = explode(',', C('AUTH.read'));
+
+		$controller_auth_admin = explode(',', $params['admin']);
+		$controller_auth_write = explode(',', $params['write']);
+		$controller_auth_read = explode(',', $params['read']);
+		$controller_auth_public = explode(',', $params['public']);
+
+		$params['auth'] = $auth;
+		$action = strtolower(ACTION_NAME);
+		$is_match = false;
+
+		if (!$is_match and in_array($action, $controller_auth_admin)) {
+			$is_match = true;
+			$result = $auth['admin'];
+		}
+		if (!$is_match and in_array($action, $controller_auth_write)) {
+			$is_match = true;
+			$result = $auth['write'];
+		}
+		if (!$is_match and in_array($action, $controller_auth_read)) {
+			$is_match = true;
+			$result = $auth['read'];
+		}
+
+		if (!$is_match and in_array($action, $controller_auth_public)) {
+			$is_match = true;
+			$result = true;
+		}
+
+		if (!$is_match and in_array($action, $default_auth_admin)) {
+			$is_match = true;
+			$result = $auth['admin'];
+		}
+		if (!$is_match and in_array($action, $default_auth_write)) {
+			$is_match = true;
+			$result = $auth['write'];
+		}
+		if (!$is_match and in_array($action, $default_auth_read)) {
+			$is_match = true;
+			$result = $auth['read'];
+		}
+
+		if (!$result) {
 			$auth_id = session(C('USER_AUTH_KEY'));
 			if (!isset($auth_id)) {
 				//跳转到认证网关
 				redirect(U(C('USER_AUTH_GATEWAY')));
 			}
 			$e['message'] = "没有权限";
-			include      C('TMPL_NO_HAVE_AUTH');			
+			include          C('TMPL_NO_HAVE_AUTH');
 			die ;
 		};
+		return true;
 	}
 
 	function get_auth() {

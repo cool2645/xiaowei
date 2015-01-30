@@ -80,6 +80,7 @@ class HomeController extends Controller {
 		$menu = D("Node") -> access_list();
 		$system_folder_menu = D("SystemFolder") -> get_folder_menu();
 		$user_folder_menu = D("UserFolder") -> get_folder_menu();
+
 		$menu = array_merge($menu, $system_folder_menu, $user_folder_menu);
 		$menu = sort_by($menu, 'sort');
 		$tree = list_to_tree($menu);

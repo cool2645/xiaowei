@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class FlowController extends HomeController {
-	protected $config = array('app_type' => 'flow', 'action_auth' => array('folder' => 'read', 'mark' => 'admin', 'field_manage' => 'admin'));
+	protected $config = array('app_type' => 'common','admin'=>'approve,mark', 'action_auth' => array('folder' => 'read', 'mark' => 'admin', 'field_manage' => 'admin'));
 
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
@@ -261,7 +261,7 @@ class FlowController extends HomeController {
 		$this -> display();
 	}
 
-	function read() {
+	function read($id) {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
@@ -274,7 +274,6 @@ class FlowController extends HomeController {
 		$this -> _flow_auth_filter($folder, $map);
 
 		$model = D("Flow");
-		$id = I('request.id');
 		$where['id'] = array('eq', $id);
 		$where['_logic'] = 'and';
 		$map['_complex'] = $where;
@@ -331,7 +330,7 @@ class FlowController extends HomeController {
 		$this -> display();
 	}
 
-	function edit() {
+	function edit($id) {
 		$plugin['date'] = true;
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
@@ -346,7 +345,6 @@ class FlowController extends HomeController {
 		$this -> _flow_auth_filter($folder, $map);
 
 		$model = D("Flow");
-		$id = I('id');
 		$where['id'] = array('eq', $id);
 		$where['_logic'] = 'and';
 		$map['_complex'] = $where;

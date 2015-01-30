@@ -13,7 +13,7 @@
 namespace Home\Controller;
 
 class TaskController extends HomeController {
-	protected $config = array('app_type' => 'common', 'action_auth' => array('test' => 'admin', 'let_me_do' => 'read', 'accept' => 'read', 'reject' => 'read', 'save_log' => 'read'));
+	protected $config = array('app_type' => 'common','read'=>'let_me_do,accept,reject,save_log');
 
 	//过滤查询字段
 	function _search_filter(&$map) {

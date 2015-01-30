@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class InfoFolderController extends SystemFolderController {
-	protected $config=array('app_type'=>'personal');
+	protected $config=array('app_type'=>'common');
 	//过滤查询字段
 
 	function index() {

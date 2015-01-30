@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class WorkLogController extends HomeController {
-	protected $config = array('app_type' => 'common', 'action_auth' => array('folder' => 'read', 'tag_manage' => 'admin', 'mark' => 'admin','read_emp' => 'admin'));
+	protected $config = array('app_type' => 'common');
 	//过滤查询字段
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');

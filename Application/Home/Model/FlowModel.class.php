@@ -200,8 +200,8 @@ class  FlowModel extends CommonModel {
 
 			}
 
-			if (strpos($val, "_") == false) {
-				$str_auditor .= $val . "|";
+			if (strpos($auditor, "_") == false) {
+				$str_auditor .= $auditor . "|";
 			}
 		}
 		return $str_auditor;
@@ -279,7 +279,7 @@ class  FlowModel extends CommonModel {
 
 	function is_last_confirm($flow_id) {
 		$confirm = M("Flow") -> where("id=$flow_id") -> getField("confirm");
-		if (empty($consult)) {
+		if (empty($confirm)) {
 			return true;
 		}
 		$last_confirm = array_filter(explode("|", $confirm));

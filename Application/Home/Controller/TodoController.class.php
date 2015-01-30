@@ -44,9 +44,8 @@ class TodoController extends HomeController {
 		$this->_upload();
 	}
 
-	function read() {
+	function read($id) {
 		$model = M('Todo');
-		$id = I('id');
 		$list = $_REQUEST['list'];
 		$this -> assign("list", $list);
 		$list = array_filter(explode("|", $list));
@@ -93,7 +92,7 @@ class TodoController extends HomeController {
 		$this -> display();
 	}
 
-	public function edit() {
+	public function edit($id) {
 		$plugin['jquery-ui'] = true;				
 		$plugin['date'] = true;						
 		$plugin['uploader'] = true;
@@ -101,7 +100,6 @@ class TodoController extends HomeController {
 		$this -> assign("plugin", $plugin);			
 
 		$this -> assign("time_list", $time_list);
-		$id = I('id');
 		$model = M('Todo');
 		$where['user_id'] = get_user_id();
 		$where['id'] = $id;

@@ -75,9 +75,8 @@ class SystemFolderController extends HomeController {
 		}
 	}
 
-	function read() {
+	function read($id) {
 		$model = M("SystemFolder");
-		$id = I('id');
 		$data = $model -> getById($id);
 		if ($data !== false) {// 读取成功
 			$return['data'] = $data;

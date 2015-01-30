@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class InfoController extends HomeController {
 
-	protected $config = array('app_type' => 'folder', 'action_auth' => array('my_sign' => 'read', 'my_info' => 'read', 'sign_info' => 'read', 'folder' => 'read', 'sign' => 'read', 'mark' => 'admin', 'upload' => 'write', 'sign_report' => 'write'));
+	protected $config = array('app_type' => 'folder', 'read' => 'my_sign,my_info,sign_info,folder,sign', 'admin' => 'mark,move_to', 'write' => 'sign_report,upload');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -31,10 +31,8 @@ class InfoController extends HomeController {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$readed_info = get_user_config("readed_info");
-		$arr_read = array_filter(explode(",", $readed_info . "," . $id));
-
-		$this -> assign("readed_id", $arr_read);
+		$unread_info = $this -> _unread_info();
+		$this -> assign("unread_info", $unread_info);
 
 		$map = $this -> _search();
 		if (method_exists($this, '_search_filter')) {
@@ -101,7 +99,7 @@ class InfoController extends HomeController {
 
 		$user_id = get_user_id();
 		$where['user_id'] = array('eq', $user_id);
-		$sign_list = M("InfoSign") -> where($where) -> getField('info_id',true);
+		$sign_list = M("InfoSign") -> where($where) -> getField('info_id', true);
 
 		if ($sign_list) {
 			$map['id'] = array('in', $sign_list);
@@ -137,22 +135,25 @@ class InfoController extends HomeController {
 		}
 	}
 
-	public function mark() {
-		$action = I('action');
+	public function mark($action) {
 		$id = I('id');
 		switch ($action) {
 			case 'del' :
 				$where['id'] = array('in', $id);
-				$folder = M("Notice") -> distinct(true) -> where($where) -> field("folder") -> select();
+				$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
 				if (count($folder) == 1) {
 					$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
 					if ($auth['admin'] == true) {
 						$field = 'is_del';
 						$result = $this -> _set_field($id, $field, 1);
 						if ($result) {
-							$this -> ajaxReturn('', "删除成功", 1);
+							$return['status'] = 1;
+							$return['info'] = '删除成功';
+							$this -> ajaxReturn($return);
 						} else {
-							$this -> ajaxReturn('', "删除失败", 0);
+							$return['status'] = 0;
+							$return['info'] = '删除失败';
+							$this -> ajaxReturn($return);
 						}
 					}
 				} else {
@@ -169,9 +170,13 @@ class InfoController extends HomeController {
 						$field = 'folder';
 						$this -> _set_field($id, $field, $target_folder);
 					}
-					$this -> ajaxReturn('', "操作成功", 1);
+					$return['status'] = 1;
+					$return['info'] = '操作成功';
+					$this -> ajaxReturn($return);
 				} else {
-					$this -> ajaxReturn('', "操作成功", 1);
+					$return['status'] = 1;
+					$return['info'] = '操作成功';
+					$this -> ajaxReturn($return);
 				}
 				break;
 
@@ -199,7 +204,7 @@ class InfoController extends HomeController {
 		$data['sign_time'] = time();
 		$result = $Form -> add($data);
 		if ($result) {
-			$this->_readed($id);
+			$this -> _readed($id);
 			$return['status'] = 1;
 			$return['info'] = "签收成功";
 			$this -> ajaxReturn($return);
@@ -230,10 +235,10 @@ class InfoController extends HomeController {
 		$this -> assign('row_info', $row_info);
 
 		//签收人员
-		$signed_user = M("InfoSign") -> where("info_id=$id") -> getField('user_id',true);
+		$signed_user = M("InfoSign") -> where("info_id=$id") -> getField('user_id', true);
 
 		//发布范围
-		$actor_user = M("InfoScope") -> where("info_id=$id") -> getField('user_id',true);
+		$actor_user = M("InfoScope") -> where("info_id=$id") -> getField('user_id', true);
 
 		//未签收人员
 		if (!empty($signed_user)) {
@@ -321,7 +326,7 @@ class InfoController extends HomeController {
 
 		$this -> assign('fid', $fid);
 
-		$unread_info = $this->_unread_info();
+		$unread_info = $this -> _unread_info();
 		$this -> assign("unread_info", $unread_info);
 
 		$model = D("InfoView");

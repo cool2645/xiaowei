@@ -28,7 +28,7 @@
 										<ul>
 											<volist name="new_mail_list" id="vo">
 												<li>
-													<span class="pull-right hidden-phone">{$vo.create_time|to_date='m-d'}</span>
+													<span class="pull-right hidden-phone">{$vo.create_time|to_date='Y-m-d'}</span>
 													<span  class="auto autocut"> <a url="{:U('mail/read','id='.$vo['id'])}" node="85" return_url="{:U('mail/folder/','fid=inbox')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
 												</li>
 											</volist>
@@ -38,7 +38,7 @@
 										<ul>
 											<volist name="unread_mail_list" id="vo">
 												<li>
-													<span class="pull-right hidden-phone">{$vo.create_time|to_date='m-d '}</span>
+													<span class="pull-right hidden-phone">{$vo.create_time|to_date='Y-m-d '}</span>
 													<span  class="auto autocut"> <a href="{:U('mail/read','id='.$vo['id'])}" node="85" return_url="{:U('mail/folder/','fid=inbox')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
 												</li>
 											</volist>
@@ -71,8 +71,8 @@
 										<ul>
 											<volist name="schedule_list" id="vo">
 												<li>
-													<span class="pull-right hidden-phone">{$vo.start_date}</span>
-													<span  class="auto autocut"> <a url="{:U('schedule/read2','id='.$vo['id'])}" node="91" return_url="{:U('schedule/index')}" onclick="click_home_list(this)">{$vo.name}</a></span>
+													<span class="pull-right hidden-phone">{$vo.start_time|substr=0,10}</span>
+													<span  class="auto autocut"> <a url="{:U('schedule/read2','id='.$vo['id'])}" node="198" return_url="{:U('schedule/index')}" onclick="click_home_list(this)">{$vo.name}</a></span>
 												</li>
 											</volist>
 										</ul>
@@ -81,8 +81,8 @@
 										<ul>
 											<volist name="todo_list" id="vo">
 												<li>
-													<span class="pull-right hidden-phone">{$vo.start_date}</span>
-													<span  class="auto autocut"> <a url="{:U('todo/edit','id='.$vo['id'])}" node="152" return_url="{:U('todo/index')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
+													<span class="pull-right hidden-phone">{$vo.end_date}</span>
+													<span  class="auto autocut"> <a url="{:U('todo/edit','id='.$vo['id'])}" node="198" return_url="{:U('todo/index')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
 												</li>
 											</volist>
 										</ul>
@@ -102,7 +102,7 @@
 								<ul>
 									<volist name="info_list" id="vo">
 										<li>
-											<span class="pull-right hidden-phone">{$vo.start_date}</span>
+											<span class="pull-right hidden-phone">{$vo.create_time|to_date='Y-m-d '}</span>
 											<span  class="auto autocut"><a url="{:U('info/read','id='.$vo['id'])}" node="88" return_url="{:U('info/index')}" onclick="click_home_list(this)">【{$vo.folder_name}】{$vo.name}</a> </span>
 										</li>
 									</volist>
@@ -136,7 +136,7 @@
 										<ul>
 											<volist name="todo_flow_list" id="vo">
 												<li>
-													<span class="pull-right hidden-phone">{$vo.create_time|to_date='m-d'}</span>
+													<span class="pull-right hidden-phone">{$vo.create_time|to_date='Y-m-d'}</span>
 													<span  class="auto autocut"> <a url="{:U('flow/read','id='.$vo['id'].'&fid=confirm')}" node="87" return_url="{:U('flow/folder','fid=confirm')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
 												</li>
 											</volist>
@@ -146,7 +146,7 @@
 										<ul>
 											<volist name="submit_flow_list" id="vo">
 												<li>
-													<span class="pull-right hidden-phone">{$vo.create_time|to_date='m-d'}</span>
+													<span class="pull-right hidden-phone">{$vo.create_time|to_date='Y-m-d'}</span>
 													<span  class="auto autocut"> <a href="{:U('flow/read','id='.$vo['id'].'&fid='.$vo['fid'].'&fid=submit')}" node="87" return_url="{:U('flow/folder','fid=submit')}" onclick="click_home_list(this)">{$vo.name}</a> </span>
 												</li>
 											</volist>

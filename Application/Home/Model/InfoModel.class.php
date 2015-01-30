@@ -98,7 +98,7 @@ class  InfoModel extends CommonModel {
 		$dept = rotate($dept);
 
 		if (empty($dept)) {
-			$dept = arry($id);
+			$dept = array($id);
 		} else {
 			$dept = explode(",", implode(",", $dept['id']) . ",$id");
 		}

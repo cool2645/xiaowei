@@ -39,7 +39,7 @@ class  UserFolderModel extends CommonModel {
 		$rs = $this->db->query($sql);
 		$list=array();
 		foreach($rs as $val){
-			if ($val["pid"]=='ufid-0'){
+			if ($val["pid"]=='ufid_0'){
 				$where['sub_folder']=$val['folder'];
 				$pid=M("Node")->where($where)->getField('id');
 				$val["pid"]=$pid;

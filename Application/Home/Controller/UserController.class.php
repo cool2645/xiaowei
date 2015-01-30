@@ -15,7 +15,7 @@
 namespace Home\Controller;
 
 class UserController extends HomeController {
-	protected $config=array('app_type'=>'master','action_auth'=>array('password'=>'admin','reset_pwd'=>'admin'));
+	protected $config=array('app_type'=>'master');
 	
 	function _search_filter(&$map) {
 		$keyword=I('keyword');

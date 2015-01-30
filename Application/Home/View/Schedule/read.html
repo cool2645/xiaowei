@@ -4,8 +4,12 @@
 	<div class="operate panel panel-default">
 		<div class="panel-body">
 			<div class="pull-left">
-				<a onclick="prev();" class="btn btn-sm btn-primary">上一个</a>
-				<a onclick="next();" class="btn btn-sm btn-primary">下一个</a>
+				<notempty name="prev">
+					<a onclick="prev();" class="btn btn-sm btn-primary">上一个</a>
+				</notempty>
+				<notempty name="next">
+					<a onclick="next();" class="btn btn-sm btn-primary">下一个</a>
+				</notempty>
 			</div>
 			<div class="pull-right">
 				<a onclick="del();" class="btn btn-sm btn-danger">删除</a>
@@ -97,19 +101,11 @@
 		}
 
 		function next() {
-			<empty
-			name = "next" > alert('没有下一个');
-			<else/>
 			window.location.href = "{:U('read','id='.$next.'&list='.$list)}";
-			</empty>
 		}
 
 		function prev() {
-			<empty
-			name = "prev" > alert('没有上一个');
-			<else />
 			window.location.href = "{:U('read','id='.$prev.'&list='.$list)}";
-			</empty>
 		}
 
 		$(function() {

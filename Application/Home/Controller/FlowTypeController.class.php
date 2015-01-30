@@ -106,13 +106,13 @@ class FlowTypeController extends HomeController {
 		$this -> _tag_manage("分组管理", false);
 	}
 
-	function edit() {
+	function edit($id) {
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
 		$this -> assign("user_id", get_user_id());
 		$model = D("FlowTypeView");
-		$id = $_REQUEST['id'];
+
 		$vo = $model -> getById($id);
 		$this -> assign('vo', $vo);
 		$this -> _assign_tag_list();

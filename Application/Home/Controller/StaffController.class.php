@@ -40,8 +40,7 @@ class StaffController extends HomeController {
 		$this -> display();
 	}
 
-	function read() {
-		$id = I('id');
+	function read($id) {
 		if (!empty($id)) {
 			$model = M("Dept");
 			$dept = tree_to_list(list_to_tree( M("Dept") -> where('is_del=0') -> select(), $id));

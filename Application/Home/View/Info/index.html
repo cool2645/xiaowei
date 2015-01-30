@@ -69,7 +69,7 @@
 			<else/>
 			<form method="post" action="" name="form_data" id="form_data">
 				<foreach name="list" item="vo">
-					<li class="tbody <php> if((!in_array($vo['id'],$readed_id))&&($vo['create_time']>time()-3600*8*24)) echo("bold")</php>">
+					<li class="tbody <php> if(in_array($vo['id'],$unread_info)) echo("bold")</php>">
 						<div class="pull-left">
 							<span class="col-10 text-center">{$vo.doc_no}</span>
 							<span class="col-10 text-center autocut">{$vo.folder_name}</span>

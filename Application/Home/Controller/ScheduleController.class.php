@@ -28,12 +28,11 @@ class ScheduleController extends HomeController {
 		$this -> _upload();
 	}
 
-	function read() {
+	function read($id) {
 		$plugin['jquery-ui'] = true;		
 		$this -> assign("plugin", $plugin);
 				
 		$model = M('Schedule');
-		$id = I('id');
 		$list = $_REQUEST['list'];
 		$this -> assign("list", $list);
 		$list = array_filter(explode("|", $list));
@@ -98,7 +97,7 @@ class ScheduleController extends HomeController {
 		$this -> display();
 	}
 
-	public function edit() {
+	public function edit($id) {
 		$plugin['jquery-ui'] = true;
 		$plugin['date'] = true;		
 		$plugin['uploader'] = true;
@@ -119,8 +118,8 @@ class ScheduleController extends HomeController {
 		$this -> index();
 	}
 
-	public function read2(){
-		$this -> read();
+	public function read2($id){
+		$this -> read($id);
 	}
 	
 	public function del(){

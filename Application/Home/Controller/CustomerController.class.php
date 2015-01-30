@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class CustomerController extends HomeController {
-	protected $config = array('app_type' => 'common', 'action_auth' => array('set_tag' => 'admin', 'tag_manage' => 'admin'));
+	protected $config = array('app_type' => 'common','admin'=>'set_tag,tag_manage');
 
 	//过滤查询字段
 	function _search_filter(&$map) {

@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class NodeController extends HomeController {
 
-	protected $config = array('app_type' => 'master', 'action_auth' => array('node' => 'admin'));
+	protected $config = array('app_type' => 'master','admin'=>'node');
 
 	public function index() {
 		$node = M("Node");

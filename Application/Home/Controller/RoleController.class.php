@@ -15,7 +15,7 @@
 namespace Home\Controller;
 
 class RoleController extends HomeController {
-	protected $config = array('app_type' => 'master', 'action_auth' => array('node' => 'admin', 'get_node_list' => 'admin', 'user' => 'admin', 'duty' => 'admin', 'get_role_list' => 'admin', 'get_duty_list' => 'admin', ));
+	protected $config = array('app_type' => 'master');
 
 	public function index() {
 
