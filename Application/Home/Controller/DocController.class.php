@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class DocController extends HomeController {
-	protected $config = array('app_type' => 'folder','admin'=>'mark');
+	protected $config = array('app_type' => 'folder', 'admin' => 'del,move_to,folder_manage');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -107,58 +107,52 @@ class DocController extends HomeController {
 		$this -> _edit($id);
 	}
 
-	public function mark($id, $action) {
-		if (!empty($id)) {
-			switch ($action) {
-				case 'del' :
-					$where['id'] = array('in', $id);
-					$folder = M("Doc") -> distinct(true) -> where($where) -> field("folder") -> select();
-					if (count($folder) == 1) {
-						$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
-						if ($auth['admin'] == true) {
-							$field = 'is_del';
-							$result = $this -> _set_field($id, $field, 1);
-							if ($result) {
-								$return['info'] = "删除成功";
-								$return['status'] = 1;
-								$this -> ajaxReturn($return);
-							} else {
-								$return['info'] = "删除失败";
-								$return['status'] = 0;
-								$this -> ajaxReturn($return);
-							}
-						}
-					} else {
-						$return['info'] = "删除失败";
-						$return['status'] = 0;
-						$this -> ajaxReturn($return);
-					}
-					break;
-				case 'move_folder' :
-					$target_folder = I('val');
-					$where['id'] = array('in', $id);
-					$folder = M("Doc") -> distinct(true) -> where($where) -> field("folder") -> select();
-					if (count($folder) == 1) {
-						$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
-						if ($auth['admin'] == true) {
-							$field = 'folder';
-							$this -> _set_field($id, $field, $target_folder);
-						}
-						$return['info'] = "操作成功";
-						$return['status'] = 1;
-						$this -> ajaxReturn($return);
-					} else {
-						$return['info'] = "操作成功";
-						$return['status'] = 1;
-						$this -> ajaxReturn($return);
-					}
-					break;
-				default :
-					break;
+	public function del($id) {
+		$where['id'] = array('in', $id);
+		$folder = M("Doc") -> distinct(true) -> where($where) -> field("folder") -> select();
+		if (count($folder) == 1) {
+			$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
+			if ($auth['admin'] == true) {
+				$this -> _del($id);
 			}
+		} else {
+			$return['info'] = "删除失败";
+			$return['status'] = 0;
+			$this -> ajaxReturn($return);
 		}
 	}
 
+	public function move_to($id, $val) {
+		$target_folder = $val;
+		$where['id'] = array('in', $id);
+		$folder = M("Doc") -> distinct(true) -> where($where) -> field("folder") -> select();
+		if (count($folder) == 1) {
+			$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
+			if ($auth['admin'] == true) {
+				$field = 'folder';
+				$result = $this -> _set_field($id, $field, $target_folder);
+
+				if ($result) {
+					$return['info'] = "操作成功";
+					$return['status'] = 1;
+					$this -> ajaxReturn($return);
+				} else {
+					$return['info'] = "操作失败";
+					$return['status'] = 1;
+					$this -> ajaxReturn($return);
+				}
+			}
+		} else {
+			$return['info'] = "操作成功";
+			$return['status'] = 1;
+			$this -> ajaxReturn($return);
+		}
+	}
+	
+	function folder_manage(){
+		$this->_system_folder_manage('文档管理',true);
+	} 
+	
 	function upload() {
 		$this -> _upload();
 	}

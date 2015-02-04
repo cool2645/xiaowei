@@ -43,25 +43,29 @@ class AuthCheckBehavior extends Behavior {
 				break;
 
 			case 'folder' :
-
-				$fid = $_REQUEST['fid'];
-				if (isset($fid)) {
+				if (in_array(ACTION_NAME, array('folder_manage'))) {
+					$auth = $this -> get_auth();
+					break;
+				}
+				if (isset($_REQUEST['fid'])) {
+					$fid = $_REQUEST['fid'];
 					$auth = D("SystemFolder") -> get_folder_auth($fid);
 					break;
 				}
 
-				$id = $_REQUEST['id'];
-				if (isset($id)) {
-					if (is_array($id)) {
-						$where["id"] = array("in", array_filter($id));
-					} else {
-						$where["id"] = array('in', array_filter(explode(',', $id)));
+				if (isset($_REQUEST['id'])) {
+					$id = $_REQUEST['id'];
+					if (!empty($id)) {
+						if (is_array($id)) {
+							$where["id"] = array("in", array_filter($id));
+						} else {
+							$where["id"] = array('in', array_filter(explode(',', $id)));
+						}
+						$model = D(CONTROLLER_NAME);
+						$folder_id = $model -> where($where) -> getField('folder');
+						$auth = D("SystemFolder") -> get_folder_auth($folder_id);
+						break;
 					}
-					$model = D(CONTROLLER_NAME);
-
-					$folder_id = $model -> where($where) -> getField('folder');
-					$auth = D("SystemFolder") -> get_folder_auth($folder_id);
-					break;
 				}
 				$auth = $this -> get_auth();
 				break;
@@ -70,36 +74,45 @@ class AuthCheckBehavior extends Behavior {
 				break;
 		}
 
+		$is_match = false;
+		$params['auth'] = $auth;
+		$action = strtolower(ACTION_NAME);
+
+		if (isset($params['admin'])) {
+			$controller_auth_admin = explode(',', $params['admin']);
+			if (!$is_match and in_array($action, $controller_auth_admin)) {
+				$is_match = true;
+				$result = $auth['admin'];
+			}
+		}
+
+		if (isset($params['write'])) {
+			$controller_auth_write = explode(',', $params['write']);
+			if (!$is_match and in_array($action, $controller_auth_write)) {
+				$is_match = true;
+				$result = $auth['write'];
+			}
+		}
+
+		if (isset($params['read'])) {
+			$controller_auth_read = explode(',', $params['read']);
+			if (!$is_match and in_array($action, $controller_auth_read)) {
+				$is_match = true;
+				$result = $auth['read'];
+			}
+		}
+
+		if (isset($params['public'])) {
+			$controller_auth_public = explode(',', $params['public']);
+			if (!$is_match and in_array($action, $controller_auth_public)) {
+				$is_match = true;
+				$result = true;
+			}
+		}
+
 		$default_auth_admin = explode(',', C('AUTH.admin'));
 		$default_auth_write = explode(',', C('AUTH.write'));
 		$default_auth_read = explode(',', C('AUTH.read'));
-
-		$controller_auth_admin = explode(',', $params['admin']);
-		$controller_auth_write = explode(',', $params['write']);
-		$controller_auth_read = explode(',', $params['read']);
-		$controller_auth_public = explode(',', $params['public']);
-
-		$params['auth'] = $auth;
-		$action = strtolower(ACTION_NAME);
-		$is_match = false;
-
-		if (!$is_match and in_array($action, $controller_auth_admin)) {
-			$is_match = true;
-			$result = $auth['admin'];
-		}
-		if (!$is_match and in_array($action, $controller_auth_write)) {
-			$is_match = true;
-			$result = $auth['write'];
-		}
-		if (!$is_match and in_array($action, $controller_auth_read)) {
-			$is_match = true;
-			$result = $auth['read'];
-		}
-
-		if (!$is_match and in_array($action, $controller_auth_public)) {
-			$is_match = true;
-			$result = true;
-		}
 
 		if (!$is_match and in_array($action, $default_auth_admin)) {
 			$is_match = true;
@@ -121,7 +134,7 @@ class AuthCheckBehavior extends Behavior {
 				redirect(U(C('USER_AUTH_GATEWAY')));
 			}
 			$e['message'] = "没有权限";
-			include          C('TMPL_NO_HAVE_AUTH');
+			include                         C('TMPL_NO_HAVE_AUTH');
 			die ;
 		};
 		return true;

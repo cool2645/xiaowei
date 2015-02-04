@@ -341,7 +341,7 @@ class TaskController extends HomeController {
 			if ($total_count == $finish_count) {
 				M("Task") -> where("id=$task_id") -> setField('status', 3);
 				$user_id = M('Task') -> where("id=$task_id") -> getField('user_id');
-				$this -> _send_mail_finish($task_id, $user_id);
+				//$this -> _send_mail_finish($task_id, $user_id);
 			}
 		}
 

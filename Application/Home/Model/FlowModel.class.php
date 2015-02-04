@@ -103,22 +103,28 @@ class  FlowModel extends CommonModel {
 
 	function _after_update($data, $options) {
 		$id = $data['id'];
-		
+		$step=$data['step'];
+
 		if ($data['step'] == 20) {
-
 			$model = M("Flow");
-
 			$where['id'] = array('eq', $id);
 
 			$str_confirm = $this -> _conv_auditor($data['confirm']);
+			if (!empty($str_confirm)) {
+				$model -> where($where) -> setField('confirm', $str_confirm);
+			}
+
 			$str_consult = $this -> _conv_auditor($data['consult']);
+			if (!empty($str_consult)) {
+				$model -> where($where) -> setField('consult', $str_consult);
+			}
+
 			$str_refer = $this -> _conv_auditor($data['refer']);
+			if (!empty($str_refer)) {
+				$model -> where($where) -> setField('refer', $str_refer);
+			}
 
-			$model -> where($where) -> setField('confirm', $str_confirm);
-			$model -> where($where) -> setField('consult', $str_consult);
-			$model -> where($where) -> setField('refer', $str_refer);
-
-			$this -> next_step($data['id'], 20);
+			$this -> next_step($data['id'],$step);
 		}
 	}
 
@@ -207,28 +213,27 @@ class  FlowModel extends CommonModel {
 		return $str_auditor;
 	}
 
-	public function next_step($flow_id, $step, $emp_no) {
+	public function back_to($flow_id, $emp_no) {
 
-		if (!empty($emp_no)) {
-			$data['flow_id'] = $flow_id;
-			$data['emp_no'] = $emp_no;
-
-			$model = D("FlowLog");
-			$where['flow_id'] = $flow_id;
-			$where['emp_no'] = $emp_no;
-			$data['step'] = D("FlowLog") -> where($where) -> getField('step');
-			if (empty($data['step'])) {
-				$data['step'] = 20;
-			}
-
-			$user_id = M("User") -> where("emp_no=$emp_no") -> getField("id");
-			send_push($new, "您有一个流程被退回", 1, $user_id);
-
-			$model -> create($data);
-			$model -> add();
-			return;
+		$model = D("FlowLog");
+		$where['flow_id'] = $flow_id;
+		$where['emp_no'] = $emp_no;
+		$data['step'] = D("FlowLog") -> where($where) -> getField('step');
+		if (empty($data['step'])) {
+			$data['step'] = 20;
 		}
 
+		$data['flow_id'] = $flow_id;
+		$data['emp_no'] = $emp_no;
+
+		$model -> create($data);
+		$model -> add();
+
+		$user_id = M("User") -> where("emp_no=$emp_no") -> getField("id");
+		send_push($new, "您有一个流程被退回", 1, $user_id);
+	}
+
+	public function next_step($flow_id, $step) {
 		$model = D("Flow");
 		if (substr($step, 0, 1) == 2) {
 			if ($this -> is_last_confirm($flow_id)) {
@@ -338,7 +343,8 @@ class  FlowModel extends CommonModel {
 				$data['create_time'] = time();
 				D("FlowLog") -> add($data);
 
-				$user_id = M("User") -> where("emp_no=$val") -> getField("id");
+				$where['emp_no'] = array('eq', $val);
+				$user_id = M("User") -> where($where) -> getField("id");
 				send_push($new, "收到新的流程", 1, $user_id);
 			}
 		}

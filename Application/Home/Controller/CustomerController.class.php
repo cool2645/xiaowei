@@ -141,24 +141,8 @@ class CustomerController extends HomeController {
 		}
 	}
 
-	function mark() {
-		$id = I('id');
-		$val = I('val');
-		$field = 'group';
-		$result = $this -> _set_field($id, $field, $val);
-		if ($result !== false) {
-			$this -> assign('jumpUrl', get_return_url());
-			$this -> success('操作成功!');
-		} else {
-			//失败提示
-			$this -> error('操作失败!');
-		}
-	}
-
-	function del(){
-		$id = $_POST['id'];
-		$count = $this ->_del($id,null,true);
-
+	function del($id){
+		$count = $this ->_del($id,CONTROLLER_NAME,true);
 		if ($count) {
 			$model = D("SystemTag");
 			$result = $model -> del_data_by_row($id);
@@ -207,7 +191,7 @@ class CustomerController extends HomeController {
 	}
 	
 	function tag_manage() {
-		$this -> _tag_manage("分组管理",false);
+		$this -> _system_tag_manage("分组管理");
 	}
 
 	protected function _insert(){		

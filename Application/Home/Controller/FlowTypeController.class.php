@@ -49,43 +49,24 @@ class FlowTypeController extends HomeController {
 		return;
 	}
 
-	function mark() {
-		$action = I('get.action');
-		;
-		$id = I('id');
-		$val = I('val');
-		if (!empty($id)) {
-			switch ($action) {
-				case 'del' :
-					$result = $this -> _destory($id);
-					if ($result) {
-						$return['info'] = '删除成功';
-						$return['status'] = 1;
-						$this -> ajaxReturn($return);
-					} else {
-						$return['info'] = '删除失败';
-						$return['status'] = 0;
-						$this -> ajaxReturn($return);
-					}
-					break;
-				case 'move_folder' :
-					if (!empty($id)) {
-						$model = D("SystemTag");
-						$model -> del_data_by_row($id);
-						if (!empty($val)) {
-							$result = $model -> set_tag($id, $val);
-							$field = 'tag';
-							$result = $this -> _set_field($id, $field, $val);
-						}
-					};
-					if ($result !== false) {
-						$this -> assign('jumpUrl', get_return_url());
-						$this -> success('操作成功!');
-					} else {
-						//失败提示
-						$this -> error('操作失败!');
-					}
-			}
+	function del($id) {
+		$result = $this -> _destory($id);
+	}
+
+	function move_to($id, $val) {
+		$model = D("SystemTag");
+		$model -> del_data_by_row($id);
+		$result = $model -> set_tag($id, $val);
+		
+		$field = 'tag';
+		$result = $this -> _set_field($id, $field, $val);
+
+		if ($result !== false) {
+			$this -> assign('jumpUrl', get_return_url());
+			$this -> success('操作成功!');
+		} else {
+			//失败提示
+			$this -> error('操作失败!');
 		}
 	}
 
@@ -103,7 +84,7 @@ class FlowTypeController extends HomeController {
 	}
 
 	function tag_manage() {
-		$this -> _tag_manage("分组管理", false);
+		$this -> _system_tag_manage("分组管理");
 	}
 
 	function edit($id) {

@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class InfoController extends HomeController {
 
-	protected $config = array('app_type' => 'folder', 'read' => 'my_sign,my_info,sign_info,folder,sign', 'admin' => 'mark,move_to', 'write' => 'sign_report,upload');
+	protected $config = array('app_type' => 'folder', 'read' => 'my_sign,my_info,sign_info,folder,sign', 'admin' => 'mark,move_to,folder_manage', 'write' => 'sign_report,upload');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -135,57 +135,6 @@ class InfoController extends HomeController {
 		}
 	}
 
-	public function mark($action) {
-		$id = I('id');
-		switch ($action) {
-			case 'del' :
-				$where['id'] = array('in', $id);
-				$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
-				if (count($folder) == 1) {
-					$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
-					if ($auth['admin'] == true) {
-						$field = 'is_del';
-						$result = $this -> _set_field($id, $field, 1);
-						if ($result) {
-							$return['status'] = 1;
-							$return['info'] = '删除成功';
-							$this -> ajaxReturn($return);
-						} else {
-							$return['status'] = 0;
-							$return['info'] = '删除失败';
-							$this -> ajaxReturn($return);
-						}
-					}
-				} else {
-					$this -> ajaxReturn('', "删除失败", 0);
-				}
-				break;
-			case 'move_folder' :
-				$target_folder = I('val');
-				$where['id'] = array('in', $id);
-				$folder = M("Info") -> distinct(true) -> where($where) -> field("folder") -> select();
-				if (count($folder) == 1) {
-					$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
-					if ($auth['admin'] == true) {
-						$field = 'folder';
-						$this -> _set_field($id, $field, $target_folder);
-					}
-					$return['status'] = 1;
-					$return['info'] = '操作成功';
-					$this -> ajaxReturn($return);
-				} else {
-					$return['status'] = 1;
-					$return['info'] = '操作成功';
-					$this -> ajaxReturn($return);
-				}
-				break;
-
-			//增加签收
-			default :
-				break;
-		}
-	}
-
 	function sign($id) {
 		$user_id = get_user_id();
 
@@ -283,27 +232,28 @@ class InfoController extends HomeController {
 	}
 
 	public function read($id) {
+		$user_id = get_user_id();
+		$this -> assign('user_id', $user_id);
+
 		$model = M('Info');
 		$vo = $model -> find($id);
 		$this -> assign('vo', $vo);
 
 		$where_scope['info_id'] = array('eq', $id);
 		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id', true);
+		$this -> assign('is_sign', 0);
 		if (!empty($scope_user)) {
-
-		}
-		$user_id = get_user_id();
-		$this -> assign('user_id', $user_id);
-		if (in_array($user_id, $scope_user)) {
-			if ($vo['is_sign']) {
-				$sign_info = D("InfoSign") -> get_info($id);
-				$this -> assign('sign_info', $sign_info);
-				$this -> assign('is_sign', 1);
+			if (in_array($user_id, $scope_user)) {
+				if ($vo['is_sign']) {
+					$sign_info = D("InfoSign") -> get_info($id);
+					$this -> assign('sign_info', $sign_info);
+					$this -> assign('is_sign', 1);
+				} else {
+					$this -> _readed($id);
+				}
 			} else {
 				$this -> _readed($id);
 			}
-		} else {
-			$this -> _readed($id);
 		}
 
 		$where['id'] = array('eq', $id);
@@ -356,6 +306,10 @@ class InfoController extends HomeController {
 		$this -> assign("folder_name", D("SystemFolder") -> get_folder_name($fid));
 		$this -> _assign_folder_list();
 		$this -> display();
+	}
+
+	public function folder_manage() {
+		$this -> _system_folder_manage("信息管理");
 	}
 
 	public function upload() {

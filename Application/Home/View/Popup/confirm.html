@@ -34,15 +34,6 @@
 					<div id="position" class="display-none" style="height:200px;">
 						{$list_position}
 					</div>
-					<div id="personal" class="display-none" style="height:200px;">
-						<ul class="tree_menu">
-							<volist name="list_personal" id="vo">
-								<li>
-									<a class="" node="{$key}"><i class="icon level1"></i><span>{$vo}</span></a>
-								</li>
-							</volist>
-						</ul>
-					</div>
 				</div>
 				<div>
 					<div id="addr_list" style="width:100%;height:210px;"></div>
@@ -137,21 +128,22 @@
 			$("#addr_list").html("");
 			if ( type = $("input[name='type']:checked").val() == "company") {
 				var detp_id = "dept_" + $("#company a.active").attr("node");
-				var dept_name = $("#company a.active span").text();				
+				var dept_name = $("#company a.active span").text();
 				var name = dept_name + "&lt;dept@group&gt;";
-				var html_string = conv_address_item(name,detp_id);
+				var html_string = conv_address_item(name, detp_id);
 				$("#addr_list").html(html_string);
 			}
 			for (s in result.data) {
 				var id = result.data[s].id;
 				var position_name = result.data[s].position_name;
-				var emp_no = result.data[s].emp_no;				
+				var emp_no = result.data[s].emp_no;
 				var name = result.data[s].name;
 				var name = name + "/" + position_name;
-				var html_string = conv_address_item(name,emp_no);
+				var html_string = conv_address_item(name, emp_no);
 				$("#addr_list").append(html_string);
 			}
 		}
+
 
 		$(document).ready(function() {
 
@@ -200,13 +192,13 @@
 			$("#bcc select").on("dblclick", function() {
 				$(this).find("option:selected").remove();
 				$("#bcc_count").text("(" + $("#bcc select option").length + ")");
-			});			
+			});
 		});
 		//最终确认
 
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
-				$(this).prop('checked',false);
+				$(this).prop('checked', false);
 				$text = $(this).parents("label").find("span").text();
 				$val = $(this).val();
 				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {

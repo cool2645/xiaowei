@@ -26,12 +26,12 @@ class IndexController extends HomeController {
 
 		$config = D("UserConfig") -> get_config();
 		$this -> assign("home_sort", $config['home_sort']);
-		
+
 		$this -> _mail_list();
 		$this -> _flow_list();
 		$this -> _schedule_list();
 		$this -> _info_list();
- 
+
 		$this -> display();
 	}
 
@@ -48,7 +48,7 @@ class IndexController extends HomeController {
 		//获取最新邮件
 		$where['user_id'] = $user_id;
 		$where['is_del'] = array('eq', '0');
-		$where['folder'] = array( array('eq', 1), array('gt',6), 'or');
+		$where['folder'] = array( array('eq', 1), array('gt', 6), 'or');
 
 		$new_mail_list = $model -> where($where) -> field("id,name,create_time") -> order("create_time desc") -> limit(10) -> select();
 		$this -> assign('new_mail_list', $new_mail_list);
@@ -69,20 +69,22 @@ class IndexController extends HomeController {
 		$where['_string'] = "result is null";
 		$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
 		$log_list = rotate($log_list);
-				
+
 		if (!empty($log_list)) {
 			$map['id'] = array('in', $log_list['flow_id']);
-			$todo_flow_list = $model -> where($map) -> field("id,name,create_time") -> limit(6) -> order("create_time desc") -> select();
-			$this -> assign("todo_flow_list", $todo_flow_list);			
+		} else {
+			$map['_string'] = '1=2';
 		}
-		
+		$todo_flow_list = $model -> where($map) -> field("id,name,create_time") -> limit(6) -> order("create_time desc") -> select();
+		$this -> assign("todo_flow_list", $todo_flow_list);
+
 		//已提交
 		$map = array();
 		$map['user_id'] = $user_id;
 		$map['step'] = array('gt', 10);
-		
+
 		$submit_flow_list = $model -> where($map) -> field("id,name,create_time") -> limit(6) -> order("create_time desc") -> select();
-	 
+
 		$this -> assign("submit_flow_list", $submit_flow_list);
 	}
 
@@ -92,21 +94,21 @@ class IndexController extends HomeController {
 		$dept_id = get_dept_id();
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
-		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id',true);
+		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id', true);
 		$info_list = implode(",", $info_list);
 
 		if (!empty($info_list)) {
 			$map['_string'] .= "or Info.id in ($info_list)";
 		}
 
-		$folder_list = D("SystemFolder") -> get_authed_folder($user_id,"InfoFolder");
+		$folder_list = D("SystemFolder") -> get_authed_folder($user_id, "InfoFolder");
 		if ($folder_list) {
 			$map['folder'] = array("in", $folder_list);
 		} else {
 			$map['_string'] = '1=2';
 		}
-		$map['is_del']=array('eq',0);
-			
+		$map['is_del'] = array('eq', 0);
+
 		$model = D("InfoView");
 		//获取最新邮件
 
@@ -131,5 +133,6 @@ class IndexController extends HomeController {
 		$todo_list = M("Todo") -> where($where) -> order('priority desc,sort asc') -> limit(10) -> select();
 		$this -> assign("todo_list", $todo_list);
 	}
+
 }
 ?>

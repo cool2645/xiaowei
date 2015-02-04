@@ -15,13 +15,6 @@ namespace Home\Controller;
 
 class SystemTagController extends HomeController {
 	protected $config=array('app_type'=>'asst');
-		
-	function _search_filter(&$map) {
-		$keyword=I('keyword');
-		if (!empty($keyword)) {
-			$map['code|name'] = array('like', "%" . $keyword . "%");
-		}
-	}
 
 	public function index() {
 		if ($_POST) {
@@ -49,7 +42,6 @@ class SystemTagController extends HomeController {
 
 		$tag_list = $model -> get_tag_list();
 		$this -> assign("tag_list", $tag_list);
-		$this -> assign('js_file',"SystemTag:js/index");
 		$this -> display('SystemTag:index');
 	}
 

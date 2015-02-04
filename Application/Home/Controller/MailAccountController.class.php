@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class MailaccountController extends HomeController {
 	protected $config = array('app_type' => 'personal');
-	public function index(){
+	public function index() {
 		$mail_user = M("MailAccount") -> find(get_user_id());
 		$this -> assign('mail_user', $mail_user);
 		if (count($mail_user)) {
@@ -26,16 +26,14 @@ class MailaccountController extends HomeController {
 		$this -> display();
 	}
 
-	protected function _set_email($email) {
-		$model = M("User");
-		$user_id = get_user_id();
-		$data['id'] = $user_id;
+	protected function _set_email($email) {		
+		$data['id'] = get_user_id();
 		$data['email'] = $email;
-		$model -> save($data);
+		M("User") -> save($data);
 	}
 
-	protected function _insert() {
-		$model = M('MailAccount');
+	protected function _insert($name = CONTROLLER_NAME) {
+		$model = D($name);
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
@@ -45,7 +43,7 @@ class MailaccountController extends HomeController {
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = get_user_name();
 		};
-		$email = $_POST['email'];
+		$email = $model -> email;
 		//保存当前数据对象
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
@@ -58,10 +56,8 @@ class MailaccountController extends HomeController {
 		}
 	}
 
-	protected function _update() {
-
-		$model = M('MailAccount');
-
+	protected function _update($name = CONTROLLER_NAME) {
+		$model = M($name);
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
@@ -69,7 +65,7 @@ class MailaccountController extends HomeController {
 			$model -> id = get_user_id();
 		};
 		// 更新数据
-		$email = $_POST['email'];
+		$email = $model -> email;
 		$list = $model -> save();
 		if (false !== $list) {
 			//成功提示

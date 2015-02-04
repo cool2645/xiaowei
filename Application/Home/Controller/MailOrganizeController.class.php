@@ -41,13 +41,11 @@ class MailOrganizeController extends HomeController {
 		$this -> _edit($id);
 	}
 
-	protected function _update() {
-		$id = $_POST["id"];
-		$model = M("MailOrganize");
+	protected function _update($name = CONTROLLER_NAME) {
+		$id = I("id");
+		$model = D($name);
 		$model -> where("id=$id") -> delete();
-		
-		dump($id);
-		$model = D("MailOrganize");
+					
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}

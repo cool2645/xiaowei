@@ -303,12 +303,12 @@
 					$.each(data, function(i) {
 						html = '<li id=li_' + data[i].id + ' style=background-color:' + schedule_bg(data[i].priority) + ">";
 						html += '<i class="ico_square"></i>';
-						html += '<span class="event_time">' + data[i].start_date + '</span>';
+						html += '<span class="event_time">' + data[i].start_time.substr(0,10) + '</span>';
 						html += ' <p id=' + data[i].id + ' class="event_msg" title="' + data[i].name + '">';
 						html += data[i].name;
 						html += ' </p>';
 						html += "</li>";
-						prev_date = data[i].start_date;
+						prev_date = data[i].start_time;
 						$("ul.event_list").append(html);
 					});
 				}

@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class FlowController extends HomeController {
-	protected $config = array('app_type' => 'common','admin'=>'approve,mark', 'action_auth' => array('folder' => 'read', 'mark' => 'admin', 'field_manage' => 'admin'));
+	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage', 'action_auth' => array('folder' => 'read', 'mark' => 'admin', 'field_manage' => 'admin'));
 
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
@@ -131,7 +131,7 @@ class FlowController extends HomeController {
 		}
 	}
 
-	function folder() {
+	function folder($fid) {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
@@ -147,7 +147,7 @@ class FlowController extends HomeController {
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($map);
 		}
-		$folder = I("fid");
+		$folder = $fid;
 		$this -> assign("folder", $folder);
 
 		if (empty($folder)) {
@@ -249,8 +249,7 @@ class FlowController extends HomeController {
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$type_id = I('type');
-		;
+		$type_id = I('type'); ;
 		$model = M("FlowType");
 		$flow_type = $model -> find($type_id);
 		$this -> assign("flow_type", $flow_type);
@@ -265,14 +264,10 @@ class FlowController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		$folder = I('request.fid');
 
-		$this -> assign("folder", $folder);
-		if (empty($folder)) {
-			$this -> error("系统错误");
-		}
-		$this -> _flow_auth_filter($folder, $map);
-
+		$this -> _flow_auth_filter($fid, $map);
+		
+		$fid=I('fid');
 		$model = D("Flow");
 		$where['id'] = array('eq', $id);
 		$where['_logic'] = 'and';
@@ -468,8 +463,7 @@ class FlowController extends HomeController {
 				$step = $model -> step;
 				//保存当前数据对象
 				$list = $model -> save();
-				$emp_no = I('emp_no');
-				;
+				$emp_no = I('emp_no'); ;
 				if ($list !== false) {//保存成功
 					D("Flow") -> next_step($flow_id, $step, $emp_no);
 					$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
@@ -530,12 +524,16 @@ class FlowController extends HomeController {
 		//保存当前数据对象
 		$list = $model -> save();
 
+		//保存当前数据对象
 		$model = D("FlowLog");
-		$model -> where("step=$step and flow_id=$flow_id and result is null") -> setField('is_del', 1);
+		$where['step'] = array('eq', $step);
+		$where['flow_id'] = array('eq', $flow_id);
+		$where['_string'] = 'result is null';
+		$model -> where($where) -> setField('is_del', 1);
 
 		if ($list !== false) {//保存成功
 			D("Flow") -> next_step($flow_id, $step);
-			$this -> assign('jumpUrl', U('flow/confirm'));
+			$this -> assign('jumpUrl', U('flow/folder', 'fid=confirm'));
 			$this -> success('操作成功!');
 		} else {
 			//失败提示
@@ -558,25 +556,57 @@ class FlowController extends HomeController {
 
 		$flow_id = $model -> flow_id;
 		$step = $model -> step;
-		//保存当前数据对象
 		$list = $model -> save();
+
 		//可以裁决的人有多个人的时候，一个人评价完以后，禁止其他人重复裁决。
 		$model = D("FlowLog");
-		$model -> where("step=$step and flow_id=$flow_id and result is null") -> setField('is_del', 1);
+		$where['step'] = array('eq', $step);
+		$where['flow_id'] = array('eq', $flow_id);
+		$where['_string'] = 'result is null';
+		$model -> where($where) -> setField('is_del', 1);
 
 		if ($list !== false) {//保存成功
 			D("Flow") -> where("id=$flow_id") -> setField('step', 0);
 
 			$user_id = M("Flow") -> where("id=$flow_id") -> getField('user_id');
-
 			send_push($new, "您有一个流程被否决", 1, $user_id);
 
-			$this -> assign('jumpUrl', U('flow/confirm'));
+			$this -> assign('jumpUrl', U('flow/folder', 'fid=confirm'));
 			$this -> success('操作成功!');
 		} else {
 			//失败提示
 			$this -> error('操作失败!');
 		}
+	}
+
+	function back_to($emp_no) {
+		$model = D("FlowLog");
+		if (false === $model -> create()) {
+			$this -> error($model -> getError());
+		}
+
+		$model -> result = 2;
+		if (in_array('user_id', $model -> getDbFields())) {
+			$model -> user_id = get_user_id();
+		};
+		if (in_array('user_name', $model -> getDbFields())) {
+			$model -> user_name = get_user_name();
+		};
+
+		$flow_id = $model -> flow_id;
+		$step = $model -> step;
+		//保存当前数据对象
+		$list = $model -> save();
+		$emp_no = I('emp_no'); ;
+		if ($list !== false) {//保存成功
+			D("Flow") -> back_to($flow_id,$emp_no);
+			$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
+			$this -> success('操作成功!');
+		} else {
+			//失败提示
+			$this -> error('操作失败!');
+		}
+		break;
 	}
 
 	public function down() {

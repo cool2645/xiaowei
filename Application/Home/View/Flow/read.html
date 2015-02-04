@@ -5,6 +5,11 @@
 		<div class="panel-body">
 			<div class="pull-left">
 				<a onclick="go_return_url();" class="btn btn-sm btn-primary">返回</a>
+				<eq name="is_edit" value="1">
+					<neq name="flow_type.type" value="1">
+						<a onclick="popup_confirm();"  class="btn btn-sm btn-primary">选择审批流程</a>
+					</neq>
+				</eq>
 				<a href="#flow_status"  class="btn btn-sm btn-primary">审批情况</a>
 				<notempty name="to_confirm">
 					<a href="#confirm"  class="btn btn-sm btn-primary">办理意见</a>
@@ -18,106 +23,198 @@
 			</div>
 		</div>
 	</div>
-	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"  class="well form-horizontal">
-		<input type="hidden" id="ajax" name="ajax" value="0">
-		<input type="hidden" id="opmode" name="opmode" value="edit">
-		<input type="hidden" id="name" name="name" value="{$vo.name}">
-		<input type="hidden" id="id" name="id" value="{$vo.id}">
-		<div class="form-group col-sm-6">
-			<label class="col-sm-4 control-label" >文件编号：</label>
-			<div class="col-sm-8">
-				<p class="form-control-static">
-					{$vo.doc_no}
-				</p>
-			</div>
-		</div>
+	<eq name="is_edit" value="1">
+		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
+			<input type="hidden" id="id" name="id" value="{$vo.id}">
+			<input type="hidden" id="ajax" name="ajax" value="0">
+			<input type="hidden" id="add_file" name="add_file" >
+			<input type="hidden" id="type" name="type" value="{$flow_type.id}">
+			<input type="hidden" id="opmode" name="opmode" value="edit">
+			<input type="hidden" id="confirm" name="confirm" value="">
+			<input type="hidden" id="confirm_name" name="confirm_name" value="">
+			<input type="hidden" id="consult" name="consult" value="">
+			<input type="hidden" id="consult_name" name="consult_name" value="">
+			<input type="hidden" id="refer" name="refer" value="">
+			<input type="hidden" id="refer_name" name="refer_name" value="">
 
-		<div class="form-group col-sm-6">
-			<label class="col-sm-4 control-label" >日期：</label>
-			<div class="col-sm-8">
-				<p class="form-control-static">
-					{$vo.create_time|to_date='Y-m-d'}
-				</p>
-			</div>
-		</div>
-
-		<div class="form-group  col-sm-6">
-			<label class="col-sm-4 control-label" >编写人：</label>
-			<div class="col-sm-8">
-				<p class="form-control-static">
-					{$vo.user_name}
-				</p>
-			</div>
-		</div>
-
-		<div class="form-group  col-sm-6">
-			<label class="col-sm-4 control-label" >部门：</label>
-			<div class="col-sm-8">
-				<p class="form-control-static">
-					{$vo.dept_name}
-				</p>
-			</div>
-		</div>
-
-		<div class="form-group  col-xs-12">
-			<label class="col-sm-2 control-label" >审批：</label>
-			<div class="col-sm-10">
-				<p id="confirm_wrap" class="form-control-static">
-					{$vo.confirm_name}
-				</p>
-			</div>
-		</div>
-
-		<div class="form-group col-xs-12">
-			<label class="col-sm-2 control-label" >协商：</label>
-			<div class="col-sm-10">
-				<p id="consult_wrap" class="form-control-static address_list">
-					{$vo.consult_name}
-				</p>
-			</div>
-		</div>
-		<div class="form-group col-xs-12">
-			<label class="col-sm-2 control-label" >抄送：</label>
-			<div class="col-sm-10">
-				<p id="refer_wrap" class="form-control-static address_list">
-					{$vo.refer_name}
-				</p>
-			</div>
-		</div>
-		<volist name="field_list" id="field_vo">
-			{:W('UserDefineField/show',array($field_vo))}
-		</volist>
-
-		<neq name="is_edit" value="2">
 			<div class="form-group">
-				<div class="col-xs-12">
-					<eq name = "is_edit" value="0">
+				<label class="col-sm-2 control-label" for="name">标题*：</label>
+				<div class="col-sm-10">
+					<input value="{$vo.name}" class="form-control" type="text" id="name" name="name" check="require" msg="请输入标题">
+				</div>
+			</div>
+
+			<div class="form-group col-sm-6">
+				<label class="col-sm-4 control-label" >文件编号*：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$flow_type.doc_no_format}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group col-sm-6">
+				<label class="col-sm-4 control-label" >日期：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.create_time|to_date='Y-m-d'}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group col-sm-6">
+				<label class="col-sm-4 control-label" >编写人：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.user_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group col-sm-6">
+				<label class="col-sm-4 control-label" >部门：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.dept_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label" >审批：</label>
+				<div class="col-sm-10">
+					<p id="confirm_wrap" class="form-control-static address_list">
+						{$vo.confirm_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label" >协商：</label>
+				<div class="col-sm-10">
+					<p id="consult_wrap" class="form-control-static address_list">
+						{$vo.consult_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label" >抄送：</label>
+				<div class="col-sm-10">
+					<p id="refer_wrap" class="form-control-static address_list">
+						{$vo.consult_name}
+					</p>
+				</div>
+			</div>
+			<volist name="field_list" id="field_vo">
+				{:W('UserDefineField/edit',array($field_vo))}
+			</volist>
+			<neq name="flow_type.is_edit" value="2">
+				<div class="form-group">
+					<div class="col-xs-12">
+						<textarea class="editor" id="content" name="content" style="width:100%;height:300px;">{$vo.content}</textarea>
+					</div>
+				</div>
+			</neq>
+			<div class="form-group">
+				<label class="col-sm-2 control-label" >附件：</label>
+				<div class="col-sm-10">
+					{:W('FileUpload/edit',array('add_file'=>$vo['add_file']))}
+				</div>
+			</div>
+		</form>
+	</eq>
+	<eq name="is_edit" value="0">
+		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"  class="well form-horizontal">
+			<input type="hidden" id="ajax" name="ajax" value="0">
+			<input type="hidden" id="opmode" name="opmode" value="edit">
+			<input type="hidden" id="name" name="name" value="{$vo.name}">
+			<input type="hidden" id="id" name="id" value="{$vo.id}">
+			<div class="form-group col-sm-6">
+				<label class="col-sm-4 control-label" >文件编号：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.doc_no}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group col-sm-6">
+				<label class="col-sm-4 control-label" >日期：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.create_time|to_date='Y-m-d'}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group  col-sm-6">
+				<label class="col-sm-4 control-label" >编写人：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.user_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group  col-sm-6">
+				<label class="col-sm-4 control-label" >部门：</label>
+				<div class="col-sm-8">
+					<p class="form-control-static">
+						{$vo.dept_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group  col-xs-12">
+				<label class="col-sm-2 control-label" >审批：</label>
+				<div class="col-sm-10">
+					<p id="confirm_wrap" class="form-control-static">
+						{$vo.confirm_name}
+					</p>
+				</div>
+			</div>
+
+			<div class="form-group col-xs-12">
+				<label class="col-sm-2 control-label" >协商：</label>
+				<div class="col-sm-10">
+					<p id="consult_wrap" class="form-control-static address_list">
+						{$vo.consult_name}
+					</p>
+				</div>
+			</div>
+			<div class="form-group col-xs-12">
+				<label class="col-sm-2 control-label" >抄送：</label>
+				<div class="col-sm-10">
+					<p id="refer_wrap" class="form-control-static address_list">
+						{$vo.refer_name}
+					</p>
+				</div>
+			</div>
+			<volist name="field_list" id="field_vo">
+				{:W('UserDefineField/view',array($field_vo))}
+			</volist>
+			<neq name="is_edit" value="2">
+				<div class="form-group">
+					<div class="col-xs-12">
 						<div class="content_wrap">
 							<iframe class="content_iframe"></iframe>
 							<textarea class="content display-none"  name="content" style="width:100%;height:300px;" >{$vo.content}</textarea>
 						</div>
-					</eq>
-					<eq name="is_edit" value="1">
-						<textarea class="editor content display-none"  name="content" style="width:100%;height:300px;" >{$vo.content}</textarea>
-					</eq>
+					</div>
 				</div>
-			</div>
-		</neq>
-		<notempty name="vo.add_file">
-			<div class="form-group">
-				<label class="col-sm-2 control-label" >附件：</label>
-				<div class="col-sm-10">
-					<eq name="is_edit" value="0">
-						{:W('FileUpload/show',array('add_file'=>$vo['add_file']))}
-					</eq>
-					<eq name="is_edit" value="1">
-						{:W('FileUpload/edit',array('add_file'=>$vo['add_file']))}
-					</eq>
+			</neq>
+			<notempty name="vo.add_file">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" >附件：</label>
+					<div class="col-sm-10">
+						{:W('FileUpload/view',array('add_file'=>$vo['add_file']))}
+					</div>
 				</div>
-			</div>
-		</notempty>
-		<div class="clearfix"></div>
-	</form>
+			</notempty>
+			<div class="clearfix"></div>
+		</form>
+	</eq>
 
 	<a id="flow_status"></a>
 	{:W('PageHeader/simple',array('name'=>'审批情况','search'=>'N'))}
@@ -190,25 +287,50 @@
 <block name="js">
 	<script type="text/javascript">
 		function approve() {
-			sendForm("form_confirm", "{:U('mark','action=approve')}", "{:U('read','id='.$vo['id'])}");
+			sendForm("form_confirm", "{:U('approve')}", "{:U('read','id='.$vo['id'])}");
 		}
 
 		function reject() {
-			sendForm("form_confirm", "{:U('mark','action=reject')}", "{:U('read','id='.$vo['id'])}");
+			sendForm("form_confirm", "{:U('reject')}", "{:U('read','id='.$vo['id'])}");
 		}
 
 		function back_to(emp_no) {
-			sendForm("form_confirm", fix_url("{:U('mark','action=back')}?emp_no=" + emp_no), "{:U('read','id='.$vo['id'])}");
+			sendForm("form_confirm", fix_url("{:U('back_to')}?emp_no=" + emp_no), "{:U('read','id='.$vo['id'])}");
 		}
 
 		function save() {
 			window.onbeforeunload = null;
-			sendForm("form_data", "{:U('save')}");
+			$("#confirm").val("");
+			$("#confirm_wrap  span").each(function() {
+				$("#confirm").val($("#confirm").val() + $(this).attr("data") + '|');
+			});
+			$("#confirm_name").val($("#confirm_wrap").html());
+			
+			$("#consult").val("");
+			$("#consult_wrap  span").each(function() {
+				$("#consult").val($("#consult").val() + $(this).attr("data") + '|');
+			});
+			$("#consult_name").val($("#consult_wrap").html());
+
+			$("#refer").val("");
+			$("#refer_wrap  span").each(function() {
+				$("#refer").val($("#refer").val() + $(this).attr("data") + '|');
+			});
+			$("#refer_name").val($("#refer_wrap").html());
+
+			if ($("#confirm").val().length < 2) {
+				ui_error('请选择审批流程');
+				return false;
+			}
+			if (check_form("form_data")) {
+				sendForm("form_data", "{:U('save')}");
+			}
 		}
 
-		function select_confirm() {
-			winopen("{:U('popup/confirm')}", 730, 750);
-		};
+		function popup_confirm() {
+			winopen("{:U('popup/confirm')}", 730, 574);
+		}
+
 
 		$(document).ready(function() {
 			set_return_url(document.location, 1);

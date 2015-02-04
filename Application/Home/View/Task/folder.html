@@ -97,8 +97,8 @@
 				</div>
 				<div class="pull-right">
 					<span class="col-20 autocut">分配给</span>
-					<span class="col-15">期望完成时间</span>
-					<span class="col-10 ">状态</span>
+					<span class="col-12">期望完成时间</span>
+					<span class="col-6 ">状态</span>
 					<span class="col-6 text-center">操作</span>
 				</div>
 				<div class="auto autocut">
@@ -116,11 +116,10 @@
 							<span class="col-10 ">{$vo.task_no}</span>
 							<span class="col-10 ">{$vo.user_name}</span>
 						</div>
-
 						<div class="pull-right">
 							<span class="col-20 autocut">&nbsp;{$vo.executor|show_contact}</span>
-							<span class="col-15">&nbsp;{$vo.expected_time}</span>
-							<span class="col-10">&nbsp;{$vo.status|task_status}</span>
+							<span class="col-12">{$vo.expected_time|substr=0,16}&nbsp;</span>
+							<span class="col-6">{$vo.status|task_status}&nbsp;</span>
 							<span class="col-6 text-center">
 								<if condition="($vo.status lt 3) and ($vo.user_id eq $user_id)">
 									<a href="{:U('edit','id='.$vo['id'])}">修改</a>&nbsp;<a href="{:U('del','id='.$vo['id'])}">删除</a>
@@ -144,18 +143,8 @@
 			window.open("{:U('add')}", "_self");
 		}
 
-		function move_to(val) {
-			var vars = $("#form_data").serialize();
-			sendAjax("{:U('mark','action=move_folder')}", "val=" + val + "&" + vars);
-			location.reload();
-		}
-
-
 		$(document).ready(function() {
 			set_return_url();
-			$("#move_to li").click(function() {
-				move_to($(this).attr("id"));
-			});
 		});
 	</script>
 </block>

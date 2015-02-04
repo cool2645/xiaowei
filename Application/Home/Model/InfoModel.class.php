@@ -34,14 +34,12 @@ class  InfoModel extends CommonModel {
 		$this -> _save_scope($id, $scope_user_id);
 	}
 
-	function _before_update($data, $options) {
+	function _after_update($data, $options) {
 		$is_sign = I('is_sign');
 		if (empty($is_sign)) {
 			$data['is_sign'] = 0;
 		}
-	}
 
-	function _after_update($data, $options) {
 		$id = $data['id'];
 		$scope_user_id = $data['scope_user_id'];
 		$this -> _del_scope($id);
@@ -75,7 +73,7 @@ class  InfoModel extends CommonModel {
 				$return_user_list[] = $val;
 			}
 		}
-		
+
 		if (!empty($return_user_list)) {
 			$return_user_list = implode(",", $return_user_list);
 			$where = 'a.id in (' . $return_user_list . ') and b.id=\'' . $id . '\'';
@@ -93,7 +91,7 @@ class  InfoModel extends CommonModel {
 	}
 
 	private function _get_user_list_by_dept_id($id) {
-		
+
 		$dept = tree_to_list(list_to_tree( M("Dept") -> where('is_del=0') -> select(), $id));
 		$dept = rotate($dept);
 
@@ -106,7 +104,7 @@ class  InfoModel extends CommonModel {
 		$model = M("User");
 		$where['dept_id'] = array('in', $dept);
 		$where['is_del'] = array('eq', 0);
-		
+
 		$data = $model -> where($where) -> getField('id user_id,id');
 		return $data;
 	}

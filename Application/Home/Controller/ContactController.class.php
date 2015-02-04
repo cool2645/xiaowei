@@ -141,7 +141,7 @@ class ContactController extends HomeController {
 	}
 
 	function tag_manage() {
-		$this -> _tag_manage("分组管理", false);
+		$this -> _user_tag_manage("分组管理");
 	}
 
 	function del() {

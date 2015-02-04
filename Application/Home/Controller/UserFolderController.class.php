@@ -19,29 +19,53 @@ class UserFolderController extends HomeController {
 		$map['is_del'] = array('eq', '0');
 	}
 
-	protected function _index() {
+	function index() {
+		$model = D("UserFolder");		
+		if (IS_POST) {
+			$opmode = $_POST["opmode"];
+			if (false === $model -> create()) {
+				$this -> error($model -> getError());
+			}
+			if ($opmode == "add") {
+				$model -> controller = CONTROLLER_NAME;
+				$list = $model -> add();
+				if ($list != false) {
+					$this -> success("添加成功");
+				} else {
+					$this -> error("添加成功");
+				}
+			}
+			if ($opmode == "edit") {
+				$list = $model -> save();
+				if ($list != false) {
+					$this -> success("保存成功");
+				} else {
+					$this -> error("保存失败");
+				}
+			}
+			if ($opmode == "del") {
+				$this -> _del($model -> id);
+			}
+		}
 
-		$node = M("UserFolder");
-		$menu = array();
-		$where['user_id'] = get_user_id();
-		$where['folder'] = CONTROLLER_NAME;
-		$menu = $node -> where($where) -> field('id,pid,name') -> order('sort asc') -> select();
-		$tree = list_to_tree($menu);
+		$model = D("UserFolder");
+		$folder_list = $model -> get_folder_list();		
+		$this -> assign("folder_list", $folder_list);
 
-		$model = M("UserFolder");
-		$list = $model -> where($where) -> getField('id,name');
-		$this -> assign('folder_list', $list);
+		$tree = list_to_tree($folder_list);
 		$this -> assign('menu', sub_tree_menu($tree));
-		$this -> display("UserFolder:index");
+
+		$this -> display('UserFolder:index');
+
 	}
 
-	protected function _insert() {
+	protected function _insert($name=CONTROLLER_NAME) {
 		$model = D("UserFolder");
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
 
-		$model -> folder = CONTROLLER_NAME;
+		$model -> folder = $name;
 
 		//保存当前数据对象
 		$list = $model -> add();
@@ -54,7 +78,7 @@ class UserFolderController extends HomeController {
 		}
 	}
 
-	protected function _update() {
+	protected function _update($name=CONTROLLER_NAME) {
 		$model = D("UserFolder");
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
@@ -75,8 +99,7 @@ class UserFolderController extends HomeController {
 		$model = M("UserFolder");
 		$data = $model -> getById($id);
 		if ($data !== false) {// 读取成功
-			$user_id = get_user_id();
-			if ($data['user_id'] == $user_id) {
+			if ($data['user_id'] == get_user_id()) {
 				$data['data'] = $data;
 				$this -> ajaxReturn($data);
 			}
@@ -84,8 +107,7 @@ class UserFolderController extends HomeController {
 		}
 	}
 
-	function del() {
-		$id = I('id');
+	function del($id) {
 		$model = M("UserFolder");
 		$data = $model -> getById($id);
 		$fid = $data['id'];

@@ -26,7 +26,7 @@ return array(
     'USER_AUTH_GATEWAY'=>'public/login',// 默认认证网关
     'DB_LIKE_FIELDS'            =>'content|remark',
 	'SAVE_PATH'=>"Data/Files/",
-    'SHOW_PAGE_TRACE'=>0, //显示调试信息
+    'SHOW_PAGE_TRACE'=>1, //显示调试信息
             
     /* 认证相关 */
     'USER_AUTH_KEY'	=>'auth_id',

@@ -88,11 +88,11 @@
 			sendAjax("{:U('del')}", vars, function(data){
 				if (data.status) {
 					ui_alert(data.info,function(){
-						location.reload();
+						location.reload(true);
 					});
 				}
 			});
-		})
+		});
 	}
 
 	function save() {

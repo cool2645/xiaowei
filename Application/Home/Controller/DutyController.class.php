@@ -46,7 +46,8 @@ class DutyController extends HomeController {
 		$this -> assign("user_list", $user_list);
 
 		$role = M("Duty");
-		$duty_list = $role -> order('sort asc') -> select();
+		$where['is_del']=array('eq',0);
+		$duty_list = $role ->where($where)-> order('sort asc') -> select();
 		$this -> assign("duty_list", $duty_list);
 		$this -> display();
 	}

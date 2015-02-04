@@ -6,13 +6,15 @@ class UserDefineControlWidget extends Controller {
 	protected $config = array('app_type' => 'public');
 
 	public function edit($data) {
-		//dump($data);
-		$control_type = $data['control_type'];
-		//dump($control_type);
-
+				
+		if (empty($data['va'])) {
+			$data['val'] = null;
+		}
+		
 		$data['control_data'] = $this -> conv_control_data($data['control_data']);
 		$this -> assign($data);
-		//dump($data);
+		
+		$control_type = $data['control_type'];		
 		$this -> display("Widget:UserDefineControl/$control_type");
 	}
 

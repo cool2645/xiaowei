@@ -44,7 +44,7 @@
 			<label class="col-sm-2 control-label" for="expected_time">期望完成时间：</label>
 			<div class="col-sm-10">
 				<p class="form-control-static">
-					{$vo.expected_time}
+					{$vo.expected_time|substr=0,16}
 				</p>
 			</div>
 		</div>
@@ -63,7 +63,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="name">附件：</label>
 			<div class="col-sm-10">
-				{:W('FileUpload/show',array('add_file'=>$vo['add_file'],'mode'=>'show'))}
+				{:W('FileUpload/view',array('add_file'=>$vo['add_file'],'mode'=>'show'))}
 			</div>
 		</div>
 	</form>
@@ -84,13 +84,13 @@
 					<span class="col-9 text-center">&nbsp;{$item.executor_name}</span>
 					<span class="col-9 text-center">&nbsp;{$item.status|task_status}</span>
 					<span class="col-9 text-center">&nbsp;{$item.transactor_name}</span>
-					<span class="col-15 text-center">&nbsp;{$item.plan_time}</span>
+					<span class="col-15 text-center">&nbsp;{$item.plan_time|substr=0,16}</span>
 					<span class="col-15 text-center"> &nbsp;
 						<eq name='item.status' value='2'>
 							{$item.finish_rate|finish_rate}
 						</eq>
 						<gt name='item.status' value='2'>
-							{$item.finish_time}
+							{$item.finish_time|substr=0,16}
 						</gt></span>
 					<span class="auto">
 						<div style="overflow:hidden">
@@ -128,7 +128,7 @@
 								<div class="form-group col-sm-12">
 									<label class="col-sm-2 control-label" >计划完成时间：</label>
 									<div class="col-sm-10">
-										<input class="input-date-time col-20" name="plan_time" value="{$task_working.plan_time}" check="require" msg="请输入计划完成时间">
+										<input class="input-date-time" name="plan_time" value="{$task_working.plan_time|substr=0,16}" check="require" msg="请输入计划完成时间">
 									</div>
 								</div>
 								<div class="form-group col-sm-12">
@@ -161,7 +161,7 @@
 								<div class="form-group col-sm-12">
 									<label class="col-sm-2 control-label" >任务完成时间：</label>
 									<div class="col-sm-10">
-										<input class="input-date-time col-20" name="finish_time" id="finish_time" value="{$task_working.plan_time}" check="require" msg="请输入实际完成时间">
+										<input class="input-date-time" name="finish_time" id="finish_time" value="{$task_working.finish_time|substr=0,16}" check="require" msg="请输入实际完成时间">
 									</div>
 								</div>
 								<div class="form-group panel-body">
@@ -221,24 +221,9 @@
 		$(function() {
 			show_content();
 		});
-		function del() {
-			ui_confirm('确定要删除吗?', function() {
-				sendAjax("{:U('mark','action=del')}", 'id=' + $("#id").val(), function(data) {
-					if (data.status) {
-						ui_alert(data.info, function() {
-							go_return_url();
-						});
-					}
-				});
-			});
-		}
 
 		function popup_actor() {
 			winopen("{:U('popup/task')}", 730, 574);
-		}
-
-		function edit() {
-			window.open(fix_url("{:U('edit')}?id=" + $("#id").val()), "_self");
 		}
 
 		function accept($task_log_id) {
@@ -294,7 +279,7 @@
 				}
 
 				if ($status_name == "finish") {
-					ui_confirm('选择完成以后不能修改了,是否继续修改了?', function() {
+					ui_confirm('选择完成以后不能修改了,是否提交?', function() {
 						sendAjax("{:U('save_log')}", vars, function(data) {
 							if (data.status) {
 								ui_alert(data.info, function() {

@@ -30,7 +30,8 @@ class PopupController extends HomeController {
 		$map['user_id'] = array('eq', get_user_id());
 	}
 
-	function read($id, $type) {
+	function read($id) {
+		$type=I($type);
 		switch ($type) {
 			case "company" :
 				$model = M("Dept");

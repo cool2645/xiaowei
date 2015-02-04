@@ -1,6 +1,6 @@
 <extend name="Layout/page_popup" />
 <block name="content">
-	{:W('PageHeader',array('name'=>'输入不接受原因','search'=>'N'))}
+	{:W('PageHeader/simple',array('name'=>'输入不接受原因','search'=>'N'))}
 	<form method='post' id="form_data_reject" name="form_data_reject" >
 		<input type="hidden" name="id" value="{$task_log.id}">
 		<input type="hidden" name="status" value="5">
@@ -18,11 +18,11 @@
 		function save() {
 			if (check_form('form_data_reject')) {
 				var vars = $("#form_data_reject").serialize();
-				ui_confirm('不接受以后不能修改了,是否继续修改了?', function() {
+				ui_confirm('不接受以后不能修改了,是否继续提交?', function() {
 					sendAjax("{:U('reject')}", vars, function(data) {
 						if (data.status) {
 							ui_alert(data.info, function() {
-								parent.location.reload();
+								parent.location.reload(true);
 								myclose();
 							});
 						}

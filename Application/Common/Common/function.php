@@ -226,10 +226,10 @@ function badge_count_info($id) {
 function badge_count_system_folder($id) {
 	//获取最新消息
 	$where['id'] = array('eq', $id);
-	$folder_name = M("SystemFolder") -> where($where) -> getField('folder');
+	$controller = M("SystemFolder") -> where($where) -> getField('controller');
 	$count = 0;
-	switch ($folder_name) {
-		case 'InfoFolder' :
+	switch ($controller) {
+		case 'Info' :
 			$count = badge_count_info($id);
 			break;
 
@@ -720,7 +720,7 @@ function fix_array_key($list, $key) {
 	return $arr;
 }
 
-function fill_option($list, $data) {
+function fill_option($list,$data=null) {
 	$html = "";
 	foreach ($list as $key => $val) {
 		if (is_array($val)) {
@@ -1013,7 +1013,7 @@ function show_contact($str, $mode = "show") {
 			if ($mode == "edit") {
 				$tmp = $tmp . "<span data=\"$data\"><nobr><b  title=\"$name - $data\">$name</b><a class=\"del\" title=\"删除\"><i class=\"fa fa-times\"></i></a></nobr></span>";
 			} else {
-				$tmp = $tmp . "<a email=\"$email\" title=\"$email\" >$name</a>";
+				$tmp = $tmp . "<a title=\"$name\" >$name</a>";
 			}
 		}
 	}

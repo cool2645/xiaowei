@@ -1,6 +1,10 @@
 <extend name="Layout/page_detail" />
 <block name="content">
-	<input type="hidden" name="ajax" id="ajax" value="0">
+	<input type="hidden" name="ajax" id="ajax" value="1">
+	<select name="folder_list" id="folder_list" class="display-none">
+		<option value="0">根节点</option>
+		{:fill_option($folder_list)}
+	</select>
 	{:W('PageHeader/simple',array('name'=>$folder_name,'search'=>'N'))}
 	<div class="operate panel panel-default">
 		<div class="panel-body">
@@ -25,18 +29,27 @@
 				<input type="hidden" name="admin" id="admin">
 				<input type="hidden" name="write" id="write">
 				<input type="hidden" name="read" id="read">
-				<select name="folder_list" id="folder_list" class="display-none">
-					<option value="0">根节点</option>
-					{:fill_option($folder_list)}
-				</select>
-
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="name">名称*：</label>
 					<div class="col-sm-9">
 						<input class="form-control" type="text" id="name" name="name" check="require" msg="请输入名称">
 					</div>
 				</div>
-
+				<if condition="$has_pid">
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="folder_name">父节点*：</label>
+						<div class="col-sm-9">
+							<div class="input-group">
+								<input type="hidden" name="pid" id="pid">
+								<input name="folder_name" class="form-control val" id="folder_name" type="text" msg="请选择父节点" check="require" />
+								<span class="input-group-btn">
+									<button class="btn btn-sm btn-primary" onclick="select_pid()" type="button">
+										选择
+									</button> </span>
+							</div>
+						</div>
+					</div>
+				</if>
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="folder_name">管理：</label>
 					<div class="col-sm-9">
@@ -137,20 +150,16 @@
 				$("#read").val($("#read").val() + $(this).text().replace(';', '') + '|' + $(this).attr("data") + ";");
 			});
 			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "{:U('index')}");
+				sendForm("form_data", "", "__SELF__");
 			};
 		};
 
 		function del() {
-			var vars = $("#form_data").serialize();
 			ui_confirm('确定要删除吗?', function() {
-				sendAjax("{:U('del')}", vars, function(data) {
-					if (data.status) {
-						ui_alert(data.info, function() {
-							location.reload();
-						});
-					}
-				});
+				$("#opmode").val("del");
+				if (check_form("form_data")) {
+					sendForm("form_data", "", "__SELF__");
+				}
 			});
 		}
 
@@ -175,7 +184,7 @@
 			});
 
 			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}");
+				sendForm("form_data", "", "__SELF__");
 			}
 		};
 
@@ -198,8 +207,8 @@
 			winopen("{:U('popup/auth')}", 730, 574);
 		}
 
-		function select_pid() {
-			winopen("{:U('winpop')}", 730, 400);
+		function select_pid() {		
+			winopen("{:U('SystemFolder/winpop','controller='.CONTROLLER_NAME)}", 730, 400);
 		}
 
 
@@ -213,7 +222,7 @@
 			$(".sub_left_menu .tree_menu  a").click(function() {
 				$(".sub_left_menu .tree_menu  a").attr("class", "");
 				$(this).attr("class", "active");
-				sendAjax("{:U('read')}", "id=" + $(this).attr("node"), function(data) {
+				sendAjax("{:U('SystemFolder/read')}", "id=" + $(this).attr("node"), function(data) {
 					showdata(data);
 				});
 				return false;

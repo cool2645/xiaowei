@@ -14,22 +14,24 @@
 namespace Home\Controller;
 
 class FinanceController extends HomeController {
-	protected $config = array('app_type' => 'common','admin'=>'account_list,save_account,edit_account,del_account','write'=>'add_income,add_payment,add_transfer,save_transfer');
+	protected $config = array('app_type' => 'common', 'admin' => 'account_list,add_account,save_account,edit_account,del_account', 'write' => 'add_income,add_payment,add_transfer,save_transfer','read'=>'read_account');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
-		$keyword=I('keyword');
+		$keyword = I('keyword');
 		if (!empty($keyword)) {
-			$map['name'] = array('like', "%" .$keyword . "%");
+			$map['name'] = array('like', "%" . $keyword . "%");
 		}
 	}
 
 	public function index() {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
-
 		$this -> assign('auth', $this -> config['auth']);
+
+		$account_list = M("FinanceAccount") -> where('is_del=0') -> getField("id,name");
+		$this -> assign('account_list', $account_list);
 
 		$map = $this -> _search();
 		if (method_exists($this, '_search_filter')) {
@@ -43,7 +45,7 @@ class FinanceController extends HomeController {
 		$this -> display();
 	}
 
-	public function add_income() {
+	public function add_income(){
 		$plugin['date'] = true;
 		$plugin['uploader'] = true;
 		$this -> assign("plugin", $plugin);
@@ -87,44 +89,33 @@ class FinanceController extends HomeController {
 
 	public function save_transfer() {
 
-		$account_id_payment = $_REQUEST['account_id_payment'];
-		$account_id_income = $_REQUEST['account_id_income'];
+		$account_id_payment = I('account_id_payment');
+		$account_name_payment = I('account_name_payment');
+				
+		$account_id_income = I('account_id_income');
+		$account_name_income = I('account_name_income');
 
 		$account_list = M("FinanceAccount") -> getField('id,name');
 
 		$account_name_payment = $account_list[$account_id_payment];
 		$account_name_income = $account_list[$account_id_income];
 
-		$money = $_REQUEST['money'];
+		$money = I('money');
 
 		$remark_income = "由[$account_name_payment]转入[$money]";
 		$remark_payment = "向[$account_name_income]转出[$money]";
-
-		$data['doc_no'] = $_REQUEST['doc_no'];
-		$data['input_date'] = $_REQUEST['input_date'];
-		$data['type'] = "转账";
-		$data['actor_user_name'] = $_REQUEST['actor_user_name'];
-		$data['doc_type'] = 3;
-
-		$data_payment = $data;
-		$data_income = $data;
-
-		$data_payment['account_id'] = $account_id_payment;
-		$data_payment['payment'] = $money;
-		$data_payment['remark'] = $remark_payment;
-
-		$data_income['account_id'] = $account_id_income;
-		$data_income['income'] = $money;
-		$data_income['remark'] = $remark_income;
-
+		
 		$model = D("Finance");
 		/*保存当前数据对象 */
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
 		$model -> account_id = $account_id_payment;
+		$model -> account_name = $account_name_payment;
 		$model -> payment = $money;
 		$model -> remark = $remark_payment;
+		$model->related_account_id=$account_id_income;
+		$model->related_account_name=$account_name_income;
 
 		$list = $model -> add();
 
@@ -134,8 +125,11 @@ class FinanceController extends HomeController {
 		}
 
 		$model -> account_id = $account_id_income;
+		$model -> account_name = $account_name_income;
 		$model -> income = $money;
 		$model -> remark = $remark_income;
+		$model->related_account_id=$account_id_payment;
+		$model->related_account_name=$account_name_payment;
 
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
@@ -185,15 +179,15 @@ class FinanceController extends HomeController {
 		$this -> display();
 	}
 
-	function read_account() {
-		$this -> edit_account();
+	function read_account($account_id) {
+		$this -> _edit($account_id, "FinanceAccount");
 	}
 
 	function edit_account($account_id) {
 		$this -> _edit($account_id, "FinanceAccount");
 	}
 
-	function save_account() {
+	function save_account(){
 		$this -> _save("FinanceAccount");
 	}
 

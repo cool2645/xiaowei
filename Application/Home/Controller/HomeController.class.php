@@ -62,12 +62,9 @@ class HomeController extends Controller {
 
 	/**显示top menu及 left menu **/
 	protected function _assign_menu() {
-
 		$user_id = get_user_id();
 
-		$model = D("Node");
-		$top_menu = cookie('top_menu');
-
+		$model = D("Node");		
 		$top_menu_list = $model -> get_top_menu($user_id);
 		if (empty($top_menu_list)) {
 			$this -> assign('jumpUrl', U("Public/logout"));
@@ -85,6 +82,7 @@ class HomeController extends Controller {
 		$menu = sort_by($menu, 'sort');
 		$tree = list_to_tree($menu);
 
+		$top_menu = cookie('top_menu');
 		if (!empty($top_menu)) {
 			$top_menu_name = $model -> where("id=$top_menu") -> getField('name');
 			$this -> assign("top_menu_name", $top_menu_name);
@@ -113,7 +111,7 @@ class HomeController extends Controller {
 				}
 			}
 		};
-			 
+
 		//$node_tree = list_to_tree($node_list);
 		foreach ($node_list as $key => $val) {
 			if ($val['badge_function'] == 'badge_sum') {
@@ -121,7 +119,7 @@ class HomeController extends Controller {
 				$child_menu = tree_to_list($child_menu);
 				//dump($child_menu);
 				$child_menu_id = rotate($child_menu);
-				
+
 				if (isset($child_menu_id['id'])) {
 					$child_menu_id = $child_menu_id['id'];
 					$count = 0;
@@ -135,8 +133,8 @@ class HomeController extends Controller {
 			}
 		};
 		if (!empty($badge_count)) {
-			$total=$badge_count+$badge_sum;
-			$this -> assign('badge_count',$total);
+			$total = $badge_count + $badge_sum;
+			$this -> assign('badge_count', $total);
 		}
 	}
 
@@ -156,8 +154,8 @@ class HomeController extends Controller {
 	}
 
 	/** 保存操作  **/
-	function save() {
-		$this -> _save();
+	function save($opmode) {
+		$this -> _save($opmode);
 	}
 
 	/**列表页面 **/
@@ -193,8 +191,7 @@ class HomeController extends Controller {
 		$this -> display();
 	}
 
-	protected function _save($name = CONTROLLER_NAME) {
-		$opmode = I('opmode');
+	protected function _save($opmode, $name = CONTROLLER_NAME) {
 		switch($opmode) {
 			case "add" :
 				$this -> _insert($name);
@@ -248,9 +245,6 @@ class HomeController extends Controller {
 
 	/** 删除标记  **/
 	protected function _del($id, $name = CONTROLLER_NAME, $return_flag = false) {
-		if (empty($id)) {
-			$this -> error('没有可删除的数据!');
-		}
 
 		$model = M($name);
 
@@ -274,6 +268,8 @@ class HomeController extends Controller {
 			} else {
 				$this -> error('没有可删除的数据!');
 			}
+		} else {
+			$this -> error('没有可删除的数据!');
 		}
 	}
 
@@ -294,7 +290,7 @@ class HomeController extends Controller {
 		}
 
 		if (in_array('add_file', $model -> getDbFields())) {
-			$file_list = $model -> where($where) -> getField("id,add_file");
+			$file_list = $model -> where($where) -> getField("add_file", true);
 			$file_list = array_filter(explode(";", implode($file_list)));
 			if (!empty($file_list)) {
 				$this -> _destory_file($file_list);
@@ -332,7 +328,7 @@ class HomeController extends Controller {
 		$model = M("File");
 		$admin = $this -> config['auth']['admin'];
 
-		if ($admin) {
+		if (!$admin) {
 			$where['user_id'] = array('eq', get_user_id());
 		};
 
@@ -407,14 +403,13 @@ class HomeController extends Controller {
 	}
 
 	//生成查询条件
-	protected function _search($name = CONTROLLER_NAME) {
+	protected function _search($model=null) {
 		$map = array();
 		//过滤非查询条件
 		$request = array_filter(array_keys(array_filter($_REQUEST)), "filter_search_field");
-		if (empty($name)) {
-			$name = CONTROLLER_NAME;
-		}
-		$model = D($name);
+		if(empty($model)){
+			$model = D(CONTROLLER_NAME);
+		}		
 		$fields = get_model_fields($model);
 
 		foreach ($request as $val) {
@@ -449,7 +444,7 @@ class HomeController extends Controller {
 		return $map;
 	}
 
-	protected function _list($model, $map, $sort = '') {
+	protected function _list($model, $map, $sort = '') {		
 		//排序字段 默认为主键名
 		if (isset($_REQUEST['_sort'])) {
 			$sort = $_REQUEST['_sort'];
@@ -461,11 +456,9 @@ class HomeController extends Controller {
 		//取得满足条件的记录数
 		$count_model = clone $model;
 		//取得满足条件的记录数
-
 		$count = $count_model -> where($map) -> count();
 
 		if ($count > 0) {
-
 			//创建分页对象
 			if (!empty($_REQUEST['list_rows'])) {
 				$list_rows = $_REQUEST['list_rows'];
@@ -485,9 +478,10 @@ class HomeController extends Controller {
 				$this -> assign('list', $vo_list);
 				$this -> assign('sort', $sort);
 				$this -> assign("page", $page);
+				return $vo_list;
 			}
 		}
-		return $vo_list;
+		return FALSE;		
 	}
 
 	protected function _assign_folder_list() {
@@ -527,14 +521,28 @@ class HomeController extends Controller {
 		}
 	}
 
-	protected function _tag_manage($tag_name, $has_pid = true) {
-		$this -> assign("tag_name", $tag_name);
-		$this -> assign("has_pid", $has_pid);
-		if ($this -> config['app_type'] == 'personal') {
-			R('UserTag/index');
-		} else {
-			R('SystemTag/index');
-		}
+	protected function _user_folder_manage($folder_name, $has_pid = false) {		
+		$this -> assign('folder_name', $folder_name);
+		$this -> assign('has_pid', $has_pid);
+		R('UserFolder/index');
+	}
+
+	protected function _system_folder_manage($folder_name, $has_pid = false) {
+		$this -> assign('folder_name', $folder_name);
+		$this -> assign('has_pid', $has_pid);
+		R('SystemFolder/index');
+	}
+
+	protected function _user_tag_manage($tag_name, $has_pid = false) {
+		$this->assign('tag_name',$tag_name);
+		$this -> assign('has_pid', $has_pid);
+		R('UserTag/index');
+	}
+
+	protected function _system_tag_manage($tag_name, $has_pid = false) {
+		$this->assign('tag_name',$tag_name);
+		$this -> assign('has_pid', $has_pid);
+		R('SystemTag/index');
 	}
 
 	protected function _field_manage($row_type) {

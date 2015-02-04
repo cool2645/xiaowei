@@ -144,7 +144,7 @@
 		node = $("#dialog2").attr("node");
 		if (node) {
 			sendAjax("{:U('mark_status')}", "id=" + node + "&val=" + val, function(data) {
-				location.reload();
+				location.reload(true);
 			});
 		}
 	}

@@ -50,7 +50,7 @@ class MailController extends HomeController {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$this -> _get_mail_account();
+		$this -> _get_mail_account(get_user_id());
 		$this -> _assign_mail_folder_list();
 
 		$folder_id = $_GET['fid'];
@@ -164,7 +164,7 @@ class MailController extends HomeController {
 				$val = 3;
 				$result = $this -> _set_field($id, $field, $val);
 				break;
-			case 'move_folder' :
+			case 'move_to' :
 				$field = 'folder';
 				$val = I('val');
 				$result = $this -> _set_field($id, $field, $val);
@@ -179,6 +179,10 @@ class MailController extends HomeController {
 			//失败提示
 			$this -> error('操作失败!');
 		}
+	}
+
+	function folder_manage() {
+		$this -> _user_folder_manage('邮件自定义文件夹');
 	}
 
 	function upload() {
@@ -410,8 +414,7 @@ class MailController extends HomeController {
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$type = I('type');
-		;
+		$type = I('type'); ;
 		$this -> assign('type', $type);
 
 		if ($type == "reply") {
@@ -533,9 +536,9 @@ class MailController extends HomeController {
 					$info = $File -> upload($files, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
 
 					if ($inline == "INLINE") {
-						$model -> content = str_replace("cid:" . $cid,$info[0]['path'], $model -> content);
-					} else {						
-						$add_file = $add_file . think_encrypt($info[0]['id']). ';';
+						$model -> content = str_replace("cid:" . $cid, $info[0]['path'], $model -> content);
+					} else {
+						$add_file = $add_file . think_encrypt($info[0]['id']) . ';';
 					}
 				}
 			}
@@ -706,7 +709,7 @@ class MailController extends HomeController {
 	//--------------------------------------------------------------------
 	public function _assign_mail_folder_list() {
 		$model = D("UserFolder");
-		$user_folder = $model -> get_folder_list("MailFolder");
+		$user_folder = $model -> get_folder_list("Mail");
 		$system_folder = array( array("id" => 1, "name" => "收件箱"), array("id" => 2, "name" => "已发送"));
 		if (!empty($user_folder)) {
 			$mail_folder = array_merge($system_folder, $user_folder);

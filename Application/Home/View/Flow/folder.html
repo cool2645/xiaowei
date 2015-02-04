@@ -54,13 +54,13 @@
 	<ul>
 		<li class="thead" style="padding-left:10px">
 			<div class="pull-left">
-				<span class="col-16 ">编号</span>
-				<span class="col-16 ">类型</span>				
+				<span class="col-13 ">编号</span>
+				<span class="col-13 ">类型</span>				
 			</div>
 			<div class="pull-right">
-				<span  class="col-9  ">登录时间</span>				
-				<span  class="col-6  "> 登录人</span>
-				<span class="col-6  ">状态</span>
+				<span  class="col-9 ">登录时间</span>				
+				<span  class="col-6 "> 登录人</span>
+				<span class="col-6 ">状态</span>
 			</div>
 			<div class="autocut auto">
 				标题
@@ -79,8 +79,8 @@
 				<foreach name="list" item="vo">
 					<li class="tbody">
 						<div class="pull-left">
-							<span class="col-16 ">{$vo.doc_no}</span>
-							<span class="col-16  "> {$vo.type_name}</span>
+							<span class="col-13 ">{$vo.doc_no}</span>
+							<span class="col-13  "> {$vo.type_name}</span>
 						</div>
 						<div class="pull-right">
 							<span class="col-9   "> {$vo.create_time|to_date='Y-m-d'} </span>
