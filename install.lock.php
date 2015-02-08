@@ -1,5 +1,5 @@
 <?php
-$db_config_files = "Application/Common/conf/db.php";
+$db_config_files = "Application/Common/Conf/db.php";
 
 if (isset($_POST["install"])) {
 	$db_host = $_POST["db_host"];

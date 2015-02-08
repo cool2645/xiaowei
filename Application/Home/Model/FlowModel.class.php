@@ -349,6 +349,5 @@ class  FlowModel extends CommonModel {
 			}
 		}
 	}
-
 }
 ?>

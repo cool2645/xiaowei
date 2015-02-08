@@ -1,15 +1,15 @@
 <?php
 return array(
 	//'配置项'=>'配置值'	
-	'LOAD_EXT_CONFIG'	=>'db,auth,wechat',
+	'LOAD_EXT_CONFIG'	=>'db,auth',
 	
-	'MULTI_MODULE' => false, // 单模块访问
+	'MULTI_MODULE' => true, // 单模块访问
 	'DEFAULT_MODULE' => 'Home', // 默认访问模块    
     'DEFAULT_FILTER' => '',
+    'MODULE_ALLOW_LIST'  => array('Home','Weixin'),
      
     /* URL配置 */
-    'URL_CASE_INSENSITIVE' => false, //默认false 表示URL区分大小写 true则表示不区分大小写
-    'URL_MODEL'            => 0, //URL模式
+    'URL_CASE_INSENSITIVE' => true, //默认false 表示URL区分大小写 true则表示不区分大小写
     'VAR_URL_PARAMS'       => '', // PATHINFO URL参数变量
     'URL_PATHINFO_DEPR'    => '/', //PATHINFO URL分割符
 	
@@ -25,8 +25,8 @@ return array(
     'ADMIN_AUTH_KEY'			=>'administrator',        
     'USER_AUTH_GATEWAY'=>'public/login',// 默认认证网关
     'DB_LIKE_FIELDS'            =>'content|remark',
-	'SAVE_PATH'=>"Data/Files/",
-    'SHOW_PAGE_TRACE'=>1, //显示调试信息
+
+    'SHOW_PAGE_TRACE'=>0, //显示调试信息
             
     /* 认证相关 */
     'USER_AUTH_KEY'	=>'auth_id',

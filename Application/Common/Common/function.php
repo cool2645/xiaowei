@@ -1386,7 +1386,6 @@ function get_position_name($id) {
 
 function send_push($data, $info, $status, $user_id, $time = null) {
 	$model = M("Push");
-
 	$model -> data = $data;
 	$model -> info = $info;
 	$model -> status = $status;

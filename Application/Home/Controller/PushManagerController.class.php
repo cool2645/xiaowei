@@ -79,7 +79,7 @@ class PushManagerController extends HomeController {
 				}
 			}
 		} else {
-			dump("Y1");
+
 		}
 	}
 
@@ -119,7 +119,7 @@ class PushManagerController extends HomeController {
 				}
 			}
 		} else {
-			dump("Y1");
+	
 		}
 	}
 
@@ -149,17 +149,18 @@ class PushManagerController extends HomeController {
 			$this -> _send_wechat($push['info'], $push['openid']);
 			sleep(1);
 		}
-		sleep(1);
+		sleep(5);
 		$return['info'] = 'finish';
 		$return['status'] = 1;
 		$this -> ajaxReturn($return);
 	}
 
 	private function _send_wechat($content, $openid = '', $type = 'text') {
-		import("@.ORG.Util.ThinkWechat");
-		$weixin = new ThinkWechat();
+		import("Weixin.ORG.Util.ThinkWechat");
+		$weixin = new \ThinkWechat(2);
 		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
-		$restr = $weixin -> sendMsg($content, $openid, $type);
+		$restr = $weixin -> send_msg($content, $openid, $type);
+		
 		return $restr;
 	}
 

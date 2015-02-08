@@ -14,25 +14,25 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="list_rows">列表数量：</label>
 		<div class="col-sm-10">
-			<input class="form-control col-20" text" id="list_rows" name="list_rows" value="{$config.list_rows}" check="number" msg="必须是数字">
+			<input class="form-control col-20" type="text" id="list_rows" name="list_rows" value="{$config.list_rows}" check="number" msg="必须是数字">
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="list_rows">网页推送：</label>
 		<div class="col-sm-10">
-			<label>
+			<label class="col-6">
 					<input name="push_web[]" class="ace push_web" type="checkbox" value="mail">
 					<span class="lbl">邮件</span>
 			</label>
-			<label>
+			<label class="col-6">
 					<input name="push_web[]" class="ace push_web" type="checkbox" value="flow">
 					<span class="lbl">流程</span>
 			</label>
-			<label>
-					<input name="push_web[]" class="ace push_web" type="checkbox" value="notice">
-					<span class="lbl">公告</span>
+			<label class="col-6">
+					<input name="push_web[]" class="ace push_web" type="checkbox" value="info">
+					<span class="lbl">信息</span>
 			</label>
-			<label>
+			<label class="col-6">
 					<input name="push_web[]" class="ace push_web" type="checkbox" value="message">
 					<span class="lbl">消息</span>
 			</label>
@@ -41,19 +41,19 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="list_rows">微信推送：</label>
 		<div class="col-sm-10">
-			<label>
+			<label class="col-6">
 					<input name="push_wechat[]" class="ace push_wechat" type="checkbox" value="mail">
 					<span class="lbl">邮件</span>
 			</label>
-			<label>
+			<label class="col-6">
 					<input name="push_wechat[]" class="ace push_wechat" type="checkbox" value="flow">
 					<span class="lbl">流程</span>
 			</label>
-			<label>
-					<input name="push_wechat[]" class="ace push_wechat" type="checkbox" value="notice">
-					<span class="lbl">公告</span>
+			<label class="col-6">
+					<input name="push_wechat[]" class="ace push_wechat" type="checkbox" value="info">
+					<span class="lbl">信息</span>
 			</label>
-			<label>
+			<label class="col-6">
 					<input name="push_wechat[]" class="ace push_wechat" type="checkbox" value="message">
 					<span class="lbl">消息</span>
 			</label>

@@ -65,7 +65,7 @@ class ScheduleController extends HomeController {
 		if (empty($_POST["be_start_date"])&&empty($_POST["en_start_date"])) {
 			$start_date = to_date(mktime(0, 0, 0, date("m"), 1, date("Y")), 'Y-m-d');
 			$end_date = to_date(mktime(0, 0, 0, date("m") + 1, 0, date("Y")), 'Y-m-d');			
-			$map['start_date'] = array(array("egt", $start_date),array("elt",$end_date));					
+			$map['start_time'] = array(array("egt", $start_date),array("elt",$end_date));					
 		} else {
 			$start_date = $_POST["be_start_date"];
 			$end_date = $_POST["en_start_date"];

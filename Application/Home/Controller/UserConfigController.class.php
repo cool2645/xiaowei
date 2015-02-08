@@ -1,32 +1,32 @@
 <?php
 /*---------------------------------------------------------------------------
-  小微OA系统 - 让工作更轻松快乐 
+ 小微OA系统 - 让工作更轻松快乐
 
-  Copyright (c) 2013 http://www.smeoa.com All rights reserved.                                             
+ Copyright (c) 2013 http://www.smeoa.com All rights reserved.
 
-  Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )  
+ Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 
-  Author:  jinzhu.yin<smeoa@qq.com>                         
+ Author:  jinzhu.yin<smeoa@qq.com>
 
-  Support: https://git.oschina.net/smeoa/smeoa               
+ Support: https://git.oschina.net/smeoa/smeoa
  -------------------------------------------------------------------------*/
 
 namespace Home\Controller;
 
 class UserConfigController extends HomeController {
-	protected $config=array('app_type'=>'personal');
-	public function index(){
-		$config=M("UserConfig")->find(get_user_id());
-		$this->assign("config",$config);
+	protected $config = array('app_type' => 'personal');
+	public function index() {
+		$config = M("UserConfig") -> find(get_user_id());
+		$this -> assign("config", $config);
 		$this -> display();
 	}
 
-	function save(){
-		$config = M("UserConfig") -> find(get_user_id());		
+	function save() {
+		$config = M("UserConfig") -> find(get_user_id());
 		if (count($config)) {
 			$this -> _update();
 		} else {
-			$this ->_insert();
+			$this -> _insert();
 		}
 	}
 
@@ -36,12 +36,12 @@ class UserConfigController extends HomeController {
 			$this -> error($model -> getError());
 		}
 
-		$model->push_web=implode(",",$model->push_web);
-		$model->push_wechat=implode(",",$model->push_wechat);
+		$model -> push_web = implode(",", $model -> push_web);
+		$model -> push_wechat = implode(",", $model -> push_wechat);
 
 		//保存当前数据对象
 		$list = $model -> add();
-		if ($list !== false) {//保存成功		
+		if ($list !== false) {//保存成功
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('新增成功!');
 		} else {
@@ -56,8 +56,8 @@ class UserConfigController extends HomeController {
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
-		$model->push_web=implode(",",$model->push_web);
-		$model->push_wechat=implode(",",$model->push_wechat);
+		$model -> push_web = implode(",", $model -> push_web);
+		$model -> push_wechat = implode(",", $model -> push_wechat);
 
 		$model -> id = get_user_id();
 		// 更新数据
@@ -71,6 +71,5 @@ class UserConfigController extends HomeController {
 			$this -> error('编辑失败!');
 		}
 	}
-
 }
 ?>

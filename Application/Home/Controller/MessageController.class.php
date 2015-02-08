@@ -33,7 +33,7 @@ class MessageController extends HomeController {
 		$model = D("Message");
 		if (empty($_POST['keyword'])) {
 			$list = $model -> get_list();
-			$this -> assign('list', $list);
+			$this -> assign('list', $list);			
 		} else {
 			if (method_exists($this, '_filter')) {
 				$this -> _filter($map);
@@ -41,7 +41,7 @@ class MessageController extends HomeController {
 			if (!empty($model)) {
 				$this -> _list($model, $map);
 			}
-		}
+		}		
 		$this -> assign('owner_id', get_user_id());
 		$this -> display();
 	}

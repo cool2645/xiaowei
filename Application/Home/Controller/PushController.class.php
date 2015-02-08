@@ -78,12 +78,6 @@ class PushController extends Controller {
 		$this -> ajaxReturn($return);
 	}
 
-	//获取当前状态
-	function status(){
-		$data=get_new_count();
-		$this -> ajaxReturn($data);
-	}
-
 	function add($status, $info, $data) {
 		$user_id = get_user_id();
 		$model = M("Push");

@@ -31,7 +31,7 @@ class PopupController extends HomeController {
 	}
 
 	function read($id) {
-		$type=I($type);
+		$type=I('type');
 		switch ($type) {
 			case "company" :
 				$model = M("Dept");
@@ -363,17 +363,18 @@ class PopupController extends HomeController {
 				// 对jpeg图形设置隔行扫描
 				if ('jpg' == $type || 'jpeg' == $type)
 					imageinterlace($thumbImg, 1);
-
-				if (!is_dir(get_save_path() . "emp_pic/")) {
-					mkdir(get_save_path() . "emp_pic/", 0777, true);
-					chmod(get_save_path() . "emp_pic/", 0777);
+				
+				$emp_pic_path=C('EMP_PIC_PATH');
+				if (!is_dir($emp_pic_path)) {
+					mkdir($emp_pic_path, 0777, true);
+					chmod($emp_pic_path, 0777);
 				}
 
 				// 生成图片
 				$imageFun = 'image' . ($type == 'jpg' ? 'jpeg' : $type);
 				$id = I('id');
 
-				$thumbname = get_save_path() . "emp_pic/" . $id . "." . $type;
+				$thumbname = $emp_pic_path . $id . "." . $type;
 
 				$imageFun($thumbImg, $thumbname, 100);
 
@@ -385,7 +386,7 @@ class PopupController extends HomeController {
 				imagedestroy($im);
 
 				$result['result_code'] = 1;
-				$result['result_des'] = str_replace(get_save_path(), "", $thumbname);
+				$result['result_des'] = $thumbname;
 			}
 		}
 		echo json_encode($result);

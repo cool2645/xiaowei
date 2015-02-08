@@ -31,12 +31,12 @@
 						</div>
 					</div>
 					<div class="col-xs-11">
-						<p>
+						<p class="<gt name='vo.unread' value='0'>bold</gt>">
 							<eq name="vo.sender_id" value="$owner_id">
-								{$vo.receiver_name}:{$vo.content}
+								发给 {$vo.receiver_name}：{$vo.content}
 							</eq>
 							<eq name="vo.receiver_id" value="$owner_id">
-								{$vo.sender_name}:{$vo.content}
+								{$vo.sender_name}：{$vo.content}
 							</eq>
 						</p>
 						<p>
@@ -63,8 +63,7 @@
 
 <block name="js">
 	<script type="text/javascript">
-
-		function del_message($reply_id){
+		function del_message($reply_id) {
 			ui_confirm('确定要删除吗?', function() {
 				sendAjax("{:U('del','type=dialogue')}", 'reply_id=' + $reply_id, function(data) {
 					if (data.status) {
@@ -83,6 +82,7 @@
 		function add() {
 			window.open("{:U('add','fid='.$folder)}", "_self");
 		}
+
 
 		$(document).ready(function() {
 			set_return_url();

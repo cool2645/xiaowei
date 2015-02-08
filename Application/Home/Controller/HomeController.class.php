@@ -17,17 +17,8 @@ use Think\Controller;
 class HomeController extends Controller {
 	protected $config = array('app_type' => 'public');
 	function _initialize() {
-
-		$is_weixin = is_weixin();
-		if ($is_weixin) {
-			$code = $_REQUEST["code"];
-			if (!empty($code)) {
-				$this -> _weixin_login($code);
-			}
-		}
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
-
 			//跳转到认证网关
 			redirect(U(C('USER_AUTH_GATEWAY')));
 		}
@@ -35,36 +26,11 @@ class HomeController extends Controller {
 		$this -> _assign_badge_count();
 	}
 
-	protected function _weixin_login($code) {
-		import("@.ORG.Util.ThinkWechat");
-		$weixin = new ThinkWechat();
-		$openid = $weixin -> openid($code);
-
-		$model = M("User");
-		$auth_info = $model -> where("openid = '{$openid}' and westatus = 1") -> find();
-		// 查到userid
-
-		if ($auth_info) {
-			session(C('USER_AUTH_KEY'), $auth_info['id']);
-			session('emp_no', $auth_info['emp_no']);
-			session('email', $auth_info['email']);
-			session('user_name', $auth_info['name']);
-			session('user_pic', $auth_info['pic']);
-			session('dept_id', $auth_info['dept_id']);
-
-			if ($auth_info['emp_no'] == 'admin') {
-				session(C('ADMIN_AUTH_KEY'), true);
-			}
-		} else {
-			redirect(U('wechat/oauth', array('openid' => $openid)));
-		}
-	}
-
 	/**显示top menu及 left menu **/
 	protected function _assign_menu() {
 		$user_id = get_user_id();
 
-		$model = D("Node");		
+		$model = D("Node");
 		$top_menu_list = $model -> get_top_menu($user_id);
 		if (empty($top_menu_list)) {
 			$this -> assign('jumpUrl', U("Public/logout"));
@@ -199,9 +165,6 @@ class HomeController extends Controller {
 			case "edit" :
 				$this -> _update($name);
 				break;
-			case "del" :
-				$this -> _del($name);
-				break;
 			default :
 				$this -> error("非法操作");
 		}
@@ -245,9 +208,7 @@ class HomeController extends Controller {
 
 	/** 删除标记  **/
 	protected function _del($id, $name = CONTROLLER_NAME, $return_flag = false) {
-
 		$model = M($name);
-
 		if (!empty($model)) {
 			if (isset($id)) {
 				if (is_array($id)) {
@@ -291,7 +252,7 @@ class HomeController extends Controller {
 
 		if (in_array('add_file', $model -> getDbFields())) {
 			$file_list = $model -> where($where) -> getField("add_file", true);
-			$file_list = array_filter(explode(";", implode($file_list)));
+			$file_list = array_filter(explode(";", implode(';', $file_list)));
 			if (!empty($file_list)) {
 				$this -> _destory_file($file_list);
 			}
@@ -307,7 +268,6 @@ class HomeController extends Controller {
 		} else {
 			$this -> error('删除失败!');
 		}
-
 	}
 
 	public function del_file($sid) {
@@ -333,11 +293,10 @@ class HomeController extends Controller {
 		};
 
 		$list = $model -> where($where) -> select();
-		$save_path = get_save_path();
 
 		foreach ($list as $file) {
-			if (file_exists(__ROOT__ . "/" . $save_path . $file['savename'])) {
-				unlink(__ROOT__ . "/" . $save_path . $file['savename']);
+			if (file_exists(__ROOT__ . "/" . C('DOWNLOAD_UPLOAD.rootPath') . $file['savepath'] . $file['savename'])) {
+				unlink(__ROOT__ . "/" . C('DOWNLOAD_UPLOAD.rootPath') . $file['savepath'] . $file['savename']);
 			}
 		}
 
@@ -357,7 +316,6 @@ class HomeController extends Controller {
 		$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
 
 		/* 记录附件信息 */
-		/* 记录附件信息 */
 		if ($info) {
 			if (!empty($info['file'])) {
 				$return = $info['file'];
@@ -373,7 +331,6 @@ class HomeController extends Controller {
 			$return['status'] = 0;
 			$return['info'] = $File -> getError();
 		}
-
 		/* 返回JSON数据 */
 		$this -> ajaxReturn($return);
 	}
@@ -403,13 +360,13 @@ class HomeController extends Controller {
 	}
 
 	//生成查询条件
-	protected function _search($model=null) {
+	protected function _search($model = null) {
 		$map = array();
 		//过滤非查询条件
 		$request = array_filter(array_keys(array_filter($_REQUEST)), "filter_search_field");
-		if(empty($model)){
+		if (empty($model)) {
 			$model = D(CONTROLLER_NAME);
-		}		
+		}
 		$fields = get_model_fields($model);
 
 		foreach ($request as $val) {
@@ -418,11 +375,15 @@ class HomeController extends Controller {
 			if (in_array($field, $fields)) {
 				if ($prefix == "be_") {
 					if (isset($_REQUEST["en_" . $field])) {
-						if (strpos($field, "time")) {
-							$map[$field] = array( array('egt', date_to_int(trim($_REQUEST[$val]))), array('elt', date_to_int(trim($_REQUEST["en_" . $field])) + 86400));
+						if (strpos($field, "time") != false) {
+							$start_time = date_to_int(trim($_REQUEST[$val]));
+							$end_time = date_to_int(trim($_REQUEST["en_" . $field])) + 86400;
+							$map[$field] = array( array('egt', $start_time), array('elt', $end_time));
 						}
-						if (strpos($field, "date")) {
-							$map[$field] = array( array('egt', trim($_REQUEST[$val])), array('elt', trim($_REQUEST["en_" . substr($val, 3)])));
+						if (strpos($field, "date") != false) {
+							$start_date = trim($_REQUEST[$val]);
+							$end_date = trim($_REQUEST["en_" . substr($val, 3)]);
+							$map[$field] = array( array('egt', $start_date), array('elt', $end_date));
 						}
 					}
 				}
@@ -444,15 +405,16 @@ class HomeController extends Controller {
 		return $map;
 	}
 
-	protected function _list($model, $map, $sort = '') {		
+	protected function _list($model, $map, $sort = '') {
 		//排序字段 默认为主键名
 		if (isset($_REQUEST['_sort'])) {
 			$sort = $_REQUEST['_sort'];
-		} else {
-			if (empty($sort)) {
-				$sort = "id desc";
-			}
+		} else if (in_array('sort', get_model_fields($model))) {
+			$sort = "sort asc";
+		} else if (empty($sort)) {
+			$sort = "id desc";
 		}
+
 		//取得满足条件的记录数
 		$count_model = clone $model;
 		//取得满足条件的记录数
@@ -481,7 +443,7 @@ class HomeController extends Controller {
 				return $vo_list;
 			}
 		}
-		return FALSE;		
+		return FALSE;
 	}
 
 	protected function _assign_folder_list() {
@@ -521,7 +483,7 @@ class HomeController extends Controller {
 		}
 	}
 
-	protected function _user_folder_manage($folder_name, $has_pid = false) {		
+	protected function _user_folder_manage($folder_name, $has_pid = false) {
 		$this -> assign('folder_name', $folder_name);
 		$this -> assign('has_pid', $has_pid);
 		R('UserFolder/index');
@@ -534,13 +496,13 @@ class HomeController extends Controller {
 	}
 
 	protected function _user_tag_manage($tag_name, $has_pid = false) {
-		$this->assign('tag_name',$tag_name);
+		$this -> assign('tag_name', $tag_name);
 		$this -> assign('has_pid', $has_pid);
 		R('UserTag/index');
 	}
 
 	protected function _system_tag_manage($tag_name, $has_pid = false) {
-		$this->assign('tag_name',$tag_name);
+		$this -> assign('tag_name', $tag_name);
 		$this -> assign('has_pid', $has_pid);
 		R('SystemTag/index');
 	}
