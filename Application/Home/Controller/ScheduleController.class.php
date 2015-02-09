@@ -122,8 +122,8 @@ class ScheduleController extends HomeController {
 		$this -> read($id);
 	}
 	
-	public function del(){
-		$this->_del();
+	public function del($id){
+		$this->_del($id);
 	}
 
 	function json() {

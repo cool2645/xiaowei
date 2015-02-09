@@ -95,7 +95,6 @@ class DocController extends HomeController {
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$type = D("SystemFolder") -> where("id=$fid") -> getField("folder");
 		$this -> assign('folder', $fid);
 		$this -> display();
 	}
@@ -109,9 +108,9 @@ class DocController extends HomeController {
 
 	public function del($id) {
 		$where['id'] = array('in', $id);
-		$folder = M("Doc") -> distinct(true) -> where($where) -> field("folder") -> select();
+		$folder = M("Doc") -> distinct(true) -> where($where) -> getField('folder',true);
 		if (count($folder) == 1) {
-			$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
+			$auth = D("SystemFolder") -> get_folder_auth($folder[0]);
 			if ($auth['admin'] == true) {
 				$this -> _del($id);
 			}
@@ -125,9 +124,9 @@ class DocController extends HomeController {
 	public function move_to($id, $val) {
 		$target_folder = $val;
 		$where['id'] = array('in', $id);
-		$folder = M("Doc") -> distinct(true) -> where($where) -> field("folder") -> select();
+		$folder = M("Doc") -> distinct(true) -> where($where) ->  getField('folder',true);
 		if (count($folder) == 1) {
-			$auth = D("SystemFolder") -> get_folder_auth($folder[0]["folder"]);
+			$auth = D("SystemFolder") -> get_folder_auth($folder[0]);
 			if ($auth['admin'] == true) {
 				$field = 'folder';
 				$result = $this -> _set_field($id, $field, $target_folder);

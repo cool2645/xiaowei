@@ -144,9 +144,8 @@ class ContactController extends HomeController {
 		$this -> _user_tag_manage("分组管理");
 	}
 
-	function del() {
-		$id = $_POST['id'];
-		$count = $this -> _del($id, null, true);
+	function del($id) {
+		$count = $this -> _del($id,CONTROLLER_NAME, true);
 
 		if ($count) {
 			$model = D("UserTag");

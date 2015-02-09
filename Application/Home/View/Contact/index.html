@@ -102,6 +102,9 @@
 									<label class="inline pull-left col-3">
 										<input class="ace" type="checkbox" name="id[]" value="{$vo.id}"/>
 										<span class="lbl"></span></label>
+									<nobr class="col-7 pull-left text-right">
+										姓名：
+									</nobr>
 									<a href="{:U('edit','id='.$vo['id'])}" class="data wrap"> {$vo.name}&nbsp;
 									<notempty name="vo.dept">
 										/ {$vo.dept}&nbsp;
