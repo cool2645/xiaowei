@@ -1456,10 +1456,7 @@ ul.tree_menu i {
 .WorkLog textarea {
 	height: 350px;
 }
-.Flow .dropdown-menu {
-	width: 60px;
-	min-width: 76px;
-}
+
 .Product .product-wrap {
 	background: #eee;
 	padding: 4px 2px 5px;

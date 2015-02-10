@@ -434,10 +434,10 @@ class UploadFile extends Think
         }
 
         //检查是否合法上传
-        if(!$this->checkUpload($file['tmp_name'])) {
-            $this->error = '非法上传文件！';
-            return false;
-        }
+        //if(!$this->checkUpload($file['tmp_name'])) {
+       //    $this->error = '非法上传文件！';
+        //    return false;
+        //}
         return true;
     }
 

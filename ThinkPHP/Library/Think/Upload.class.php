@@ -131,6 +131,7 @@ class Upload {
             return false;
         }
 
+
         /* 检查上传目录 */
         if(!$this->uploader->checkSavePath($this->savePath)){
             $this->error = $this->uploader->getError();
@@ -143,7 +144,8 @@ class Upload {
             $finfo   =  finfo_open ( FILEINFO_MIME_TYPE );
         }
         // 对上传文件数组信息处理
-        $files   =  $this->dealFiles($files);    
+        $files   =  $this->dealFiles($files); 
+
         foreach ($files as $key => $file) {
             $file['name']  = strip_tags($file['name']);
             if(!isset($file['key']))   $file['key']    =   $key;
@@ -266,6 +268,7 @@ class Upload {
      */
     private function check($file) {
         /* 文件上传失败，捕获错误代码 */
+ 
         if ($file['error']) {
             $this->error($file['error']);
             return false;
@@ -277,10 +280,10 @@ class Upload {
         }
 
         /* 检查是否合法上传 */
-        if (!is_uploaded_file($file['tmp_name'])) {
-            $this->error = '非法上传文件！';
-            return false;
-        }
+        //if (!is_uploaded_file($file['tmp_name'])) {
+        //    $this->error = '非法上传文件！';
+        //    return false;
+        //}
 
         /* 检查文件大小 */
         if (!$this->checkSize($file['size'])) {

@@ -312,7 +312,7 @@ class receiveMail {
 	 * @param string $path
 	 * @return array
 	 */
-	public function get_attach($msg_count, $path) {
+	public function get_attach($msg_count) {
 		if (!$this -> _connect)
 			return false;
 		$struckture = imap_fetchstructure($this -> _connect, $msg_count);
@@ -427,7 +427,7 @@ class receiveMail {
 							$tmpfile = tempnam(sys_get_temp_dir(), 'helloxiaowei');
 							$str_file = $cid . "|" . $disposition . "|" . $name . "|" . $tmpfile;
 							$fp = fopen($tmpfile, "w");
-							
+
 							fwrite($fp, $message);
 							fclose($fp);
 							$return = $return . $str_file . "?";

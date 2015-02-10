@@ -120,8 +120,8 @@ class HomeController extends Controller {
 	}
 
 	/** 保存操作  **/
-	function save($opmode) {
-		$this -> _save($opmode);
+	function save() {
+		$this -> _save();
 	}
 
 	/**列表页面 **/
@@ -157,7 +157,8 @@ class HomeController extends Controller {
 		$this -> display();
 	}
 
-	protected function _save($opmode, $name = CONTROLLER_NAME) {
+	protected function _save($name = CONTROLLER_NAME) {
+		$opmode=I('opmode');
 		switch($opmode) {
 			case "add" :
 				$this -> _insert($name);

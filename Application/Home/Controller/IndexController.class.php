@@ -90,8 +90,8 @@ class IndexController extends HomeController {
 
 	protected function _info_list() {
 		$user_id = get_user_id();
-
 		$dept_id = get_dept_id();
+		
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
 		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id', true);
@@ -101,7 +101,7 @@ class IndexController extends HomeController {
 			$map['_string'] .= "or Info.id in ($info_list)";
 		}
 
-		$folder_list = D("SystemFolder") -> get_authed_folder($user_id, "InfoFolder");
+		$folder_list = D("SystemFolder") -> get_authed_folder($user_id, "Info");
 		if ($folder_list) {
 			$map['folder'] = array("in", $folder_list);
 		} else {

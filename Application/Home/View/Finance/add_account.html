@@ -54,7 +54,7 @@
 			window.onbeforeunload = null;
 			if (check_form("form_data")) {
 				$("#balance").val($("#init").val());
-				sendForm("form_data", "{:U('save_account')}");
+				sendForm("form_data", "{:U('save_account')}","{:U('account_list')}");
 			}
 		}
 	</script>

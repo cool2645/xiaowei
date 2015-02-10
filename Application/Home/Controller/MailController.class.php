@@ -196,7 +196,7 @@ class MailController extends HomeController {
 	//--------------------------------------------------------------------
 	//  写邮件
 	//--------------------------------------------------------------------
-	function add() {
+	function add() {		
 		$this -> _get_mail_account();
 
 		$plugin['uploader'] = true;
@@ -241,6 +241,7 @@ class MailController extends HomeController {
 			$mail -> CharSet = "UTF-8";
 			// 这里指定字符集！解决中文乱码问题
 			$mail -> Encoding = "base64";
+
 			$mail -> Username = $mail_account['mail_id'];
 			// SMTP account username
 			$mail -> Password = $mail_account['mail_pwd'];
@@ -321,9 +322,11 @@ class MailController extends HomeController {
 
 			$add_file = $_REQUEST['add_file'];
 			if (!empty($add_file)) {
-				$files = $this -> _real_file($add_file);
+				$files = array_filter(explode(';', $add_file));
 				foreach ($files as $file) {
-					$mail -> AddAttachment(get_save_path() . $file['savename'], $file['name']);
+					$file_id = think_decrypt($file);
+					$vo=M("File")->find($file_id);						
+					$mail -> AddAttachment(__ROOT__ . C('DOWNLOAD_UPLOAD.rootPath') . $vo['savepath'].$vo['savename'],$vo['name']);
 				}
 			}
 
@@ -491,7 +494,7 @@ class MailController extends HomeController {
 					$model -> read = 0;
 					$model -> folder = 1;
 					$model -> is_del = 0;
-					$str = $mail -> get_attach($mail_id, $this -> tmpPath);
+					$str = $mail -> get_attach($mail_id);
 					$model -> add_file = $this -> _receive_file($str, $model);
 					$this -> _organize($model);
 					$model -> add();
@@ -534,7 +537,6 @@ class MailController extends HomeController {
 					$File = D('File');
 					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
 					$info = $File -> upload($files, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
-
 					if ($inline == "INLINE") {
 						$model -> content = str_replace("cid:" . $cid, $info[0]['path'], $model -> content);
 					} else {
@@ -613,11 +615,7 @@ class MailController extends HomeController {
 	//   下载邮件附件，返回文件ID
 	//--------------------------------------------------------------------
 	private function _real_file($str) {
-		$files = array_filter(explode(';', $str));
-		$where['sid'] = array('in', $files);
-		$model = M("File");
-		$File = $model -> where($where) -> field("name,savename") -> select();
-		return $File;
+
 	}
 
 	//--------------------------------------------------------------------

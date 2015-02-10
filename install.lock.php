@@ -1,4 +1,5 @@
 <?php
+if(version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !');
 $db_config_files = "Application/Common/Conf/db.php";
 
 if (isset($_POST["install"])) {
@@ -83,7 +84,7 @@ if (isset($_POST["install"])) {
 		<meta content='' name='description' />
 		<meta content='' name='author' />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="Public/Static/css/bootstrap.min.css" rel="stylesheet" >
+		<link href="Public/Static/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
 		<link href="Public/Home/css/style.css" rel="stylesheet">
 	</head>
 	<body>

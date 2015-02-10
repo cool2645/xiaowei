@@ -11,7 +11,6 @@
  Support: https://git.oschina.net/smeoa/smeoa
  -------------------------------------------------------------------------*/
 
-// 用户模型
 namespace Home\Model;
 use Think\Model;
 
