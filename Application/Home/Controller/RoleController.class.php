@@ -17,6 +17,15 @@ namespace Home\Controller;
 class RoleController extends HomeController {
 	protected $config = array('app_type' => 'master');
 
+	//过滤查询字段
+	function _search_filter(&$map) {
+		$map['is_del'] = array('eq', '0');
+		$keyword = I('keyword');
+		if (!empty($keyword)) {
+			$map['User.name|emp_no|Position.name|Rank.name|Dept.name'] = array('like', "%" . $keyword . "%");
+		}
+	}
+
 	public function index() {
 
 		$list = M("Role") -> order('sort asc') -> select();
@@ -154,8 +163,12 @@ class RoleController extends HomeController {
 	}
 
 	public function user() {
-		$keyword = I('keyword');
-		$user_list = D("User") -> get_user_list($keyword);
+
+		$map = $this -> _search();
+		if (method_exists($this, '_search_filter')) {
+			$this -> _search_filter($map);
+		}
+		$user_list = D("UserView") -> where($map)->select();
 		$this -> assign("user_list", $user_list);
 
 		$role = M("Role");
@@ -179,8 +192,8 @@ class RoleController extends HomeController {
 		$model = D("Role");
 		$data = $model -> get_duty_list($role_id);
 		if ($data !== false) {
-			$return['status']=1;
-			$return['data']=$data;
+			$return['status'] = 1;
+			$return['data'] = $data;
 			// 读取成功
 			$this -> ajaxReturn($return);
 		}

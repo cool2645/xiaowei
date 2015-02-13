@@ -24,7 +24,7 @@ class ContactController extends HomeController {
 			$map['tag'] = $_POST['tag'];
 		}
 		$keyword = I('keyword');
-		if (!empty($keyword)) {			
+		if (!empty($keyword)) {
 			$where['name'] = array('like', "%" . $keyword . "%");
 			$where['office_tel'] = array('like', "%" . $keyword . "%");
 			$where['mobile_tel'] = array('like', "%" . $keyword . "%");
@@ -89,24 +89,20 @@ class ContactController extends HomeController {
 	}
 
 	public function import() {
-		$save_path = get_save_path();
 		$opmode = $_POST["opmode"];
 		if ($opmode == "import") {
-			import("@.ORG.Util.UploadFile");
-			$upload = new UploadFile();
-			$upload -> savePath = $save_path;
-			$upload -> allowExts = array('xlsx');
-			$upload -> saveRule = uniqid;
-			$upload -> autoSub = false;
-			if (!$upload -> upload()) {
-				$this -> error($upload -> getErrorMsg());
+			$File = D('File');
+			$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+			$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
+
+			if (!$info) {
+				$this -> error($File -> getError());
 			} else {
 				//取得成功上传的文件信息
-				$uploadList = $upload -> getUploadFileInfo();
 				Vendor('Excel.PHPExcel');
 				//导入thinkphp第三方类库
+				$inputFileName = C('DOWNLOAD_UPLOAD.rootPath') . $info['uploadfile']["savepath"] . $info['uploadfile']["savename"];
 
-				$inputFileName = $save_path . $uploadList[0]["savename"];
 				$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 				$sheetData = $objPHPExcel -> getActiveSheet() -> toArray(null, true, true, true);
 				$model = M("Contact");
@@ -145,7 +141,7 @@ class ContactController extends HomeController {
 	}
 
 	function del($id) {
-		$count = $this -> _del($id,CONTROLLER_NAME, true);
+		$count = $this -> _del($id, CONTROLLER_NAME, true);
 
 		if ($count) {
 			$model = D("UserTag");
@@ -211,7 +207,7 @@ class ContactController extends HomeController {
 		}
 	}
 
-	protected function _update() {		
+	protected function _update() {
 		$id = $_POST['id'];
 		$model = D("Contact");
 		if (false === $model -> create()) {
@@ -235,5 +231,6 @@ class ContactController extends HomeController {
 		$tag_list = $model -> get_tag_list('id,name');
 		$this -> assign("tag_list", $tag_list);
 	}
+
 }
 ?>

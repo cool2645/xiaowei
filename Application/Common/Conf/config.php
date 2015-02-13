@@ -6,7 +6,7 @@ return array(
 	'MULTI_MODULE' => true, // 单模块访问
 	'DEFAULT_MODULE' => 'Home', // 默认访问模块    
     'DEFAULT_FILTER' => '',
-    'MODULE_ALLOW_LIST'  => array('Home','Weixin'),
+    'MODULE_ALLOW_LIST'  => array('Home','Weixin','App'),
      
     /* URL配置 */
     'URL_CASE_INSENSITIVE' => true, //默认false 表示URL区分大小写 true则表示不区分大小写

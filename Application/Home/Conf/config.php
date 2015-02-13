@@ -10,7 +10,8 @@
 			'__JS__'     => __ROOT__ . '/Public/' . MODULE_NAME . '/js',
 		),
 		'TMPL_NO_HAVE_AUTH'=>APP_PATH.MODULE_NAME.'/View/Public/no_have_auth.html',	
-	'EMP_PIC_PATH'=>'./Uploads/emp_pic/',	
+	'EMP_PIC_PATH'=>'./Uploads/emp_pic/',
+	'TEMPLETE_PATH'=>'./Uploads/Templete',	
     /* 文件上传相关配置 */
     'DOWNLOAD_UPLOAD' => array(
         'mimes'    => '', //允许上传的文件MiMe类型

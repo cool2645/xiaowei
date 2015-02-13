@@ -12,8 +12,6 @@ return array(
 	 //微信设置
      'SITE_NAME' => 'smeoa',
      'SITE_URL' => 'http://xiaowei.smeoa.com', 
-     'WECHAT_APPID' => 'wxf1d6276b520aseqs',
-     'WECHAT_APPSECRET' => '229c5e1670bbd86cdee13ad4e4a1934a',
      	 
      'WECHAT_ENCORDINGAESKEY'=>'NmzgF68Lh4Kvn3fJmqj02Rx0bxEDEEHwji9aKhkFTRo',//微信企业号解密密钥
      'WECHAT_CORPID'=>'wx4124a601419ba115',//微信企业号CORPID

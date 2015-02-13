@@ -15,7 +15,7 @@ namespace Home\Controller;
 
 class SupplierController extends HomeController {
 	//过滤查询字段
-	protected $config = array('app_type' => 'common','admin'=>'set_tag,tag_manage');
+	protected $config = array('app_type' => 'common', 'admin' => 'set_tag,tag_manage');
 
 	function _search_filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
@@ -45,13 +45,13 @@ class SupplierController extends HomeController {
 
 	function export() {
 		$model = M("Supplier");
-		$where['is_del']=0;
+		$where['is_del'] = 0;
 		$list = $model -> where($where) -> select();
 
 		Vendor('Excel.PHPExcel');
 		//导入thinkphp第三方类库
 
-		$inputFileName ="Public/templete/Supplier.xlsx";
+		$inputFileName = "Public/templete/Supplier.xlsx";
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
 		$objPHPExcel -> getProperties() -> setCreator("smeoa") -> setLastModifiedBy("smeoa") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
@@ -67,8 +67,8 @@ class SupplierController extends HomeController {
 
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel -> setActiveSheetIndex(0);
-	
-		$file_name="customer.xlsx";
+
+		$file_name = "customer.xlsx";
 		// Redirect output to a client’s web browser (Excel2007)
 		header("Content-Type: application/force-download");
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -81,26 +81,21 @@ class SupplierController extends HomeController {
 	}
 
 	public function import() {
-		$save_path = get_save_path();
+
 		$opmode = $_POST["opmode"];
 		if ($opmode == "import") {
-			import("@.ORG.Util.UploadFile");
-			$upload = new UploadFile();
-			$upload -> savePath = $save_path;
-			$upload -> allowExts = array('xlsx');
-			$upload -> saveRule = uniqid;
-			$upload -> autoSub = false;
+			$File = D('File');
+			$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+			$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
 
-			if (!$upload -> upload()) {
-				$this -> error($upload -> getErrorMsg());
+			if (!$info) {
+				$this->error($File -> getError());
 			} else {
 				//取得成功上传的文件信息
-				$uploadList = $upload -> getUploadFileInfo();
 				Vendor('Excel.PHPExcel');
 				//导入thinkphp第三方类库
-
-				$inputFileName = $save_path . $uploadList[0]["savename"];
-				$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+				$inputFileName = C('DOWNLOAD_UPLOAD.rootPath').$info['uploadfile']["savepath"].$info['uploadfile']["savename"];
+				$objPHPExcel = \PHPExcel_IOFactory::load($inputFileName);
 				$sheetData = $objPHPExcel -> getActiveSheet() -> toArray(null, true, true, true);
 				$model = M("Supplier");
 				for ($i = 2; $i <= count($sheetData); $i++) {
@@ -133,8 +128,8 @@ class SupplierController extends HomeController {
 		}
 	}
 
-	function del($id) {	
-		$count = $this ->_del($id,CONTROLLER_NAME,true);
+	function del($id) {
+		$count = $this -> _del($id, CONTROLLER_NAME, true);
 
 		if ($count) {
 			$model = D("SystemTag");

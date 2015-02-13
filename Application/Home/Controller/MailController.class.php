@@ -46,14 +46,14 @@ class MailController extends HomeController {
 	// mailbox 6. 永久删除	is_del=1
 	//--------------------------------------------------------------------
 
-	public function folder() {
+	public function folder($fid) {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 
 		$this -> _get_mail_account(get_user_id());
 		$this -> _assign_mail_folder_list();
 
-		$folder_id = $_GET['fid'];
+		$folder_id =$fid;
 		$mail_system_folder = array('receve', 'inbox', 'outbox', 'darftbox', 'delbox', 'spambox', 'unread', 'all');
 		if (in_array($folder_id, $mail_system_folder)) {
 			$folder = $folder_id;

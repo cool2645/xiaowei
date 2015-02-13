@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class CustomerController extends HomeController {
-	protected $config = array('app_type' => 'common','admin'=>'set_tag,tag_manage');
+	protected $config = array('app_type' => 'common', 'admin' => 'set_tag,tag_manage');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -24,7 +24,7 @@ class CustomerController extends HomeController {
 			$map['tag'] = $_POST['tag'];
 		}
 		$keyword = I('keyword');
-		if (!empty($keyword)) {			
+		if (!empty($keyword)) {
 			$where['name'] = array('like', "%" . $keyword . "%");
 			$where['office_tel'] = array('like', "%" . $keyword . "%");
 			$where['office_tel'] = array('like', "%" . $keyword . "%");
@@ -39,7 +39,7 @@ class CustomerController extends HomeController {
 		$list = $model -> where($where) -> select();
 		$this -> assign('list', $list);
 		$tag_data = D("SystemTag") -> get_data_list();
-		
+
 		$new = array();
 		foreach ($tag_data as $val) {
 			$new[$val['row_id']] = $new[$val['row_id']] . $val['tag_id'] . ",";
@@ -52,13 +52,13 @@ class CustomerController extends HomeController {
 
 	function export() {
 		$model = M("Customer");
-		$where['is_del']=0;
+		$where['is_del'] = 0;
 		$list = $model -> where($where) -> select();
 
 		Vendor('Excel.PHPExcel');
 		//导入thinkphp第三方类库
 
-		$inputFileName ="Public/templete/customer.xlsx";
+		$inputFileName = "Public/templete/customer.xlsx";
 		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
 		$objPHPExcel -> getProperties() -> setCreator("smeoa") -> setLastModifiedBy("smeoa") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
@@ -74,8 +74,8 @@ class CustomerController extends HomeController {
 
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel -> setActiveSheetIndex(0);
-	
-		$file_name="customer.xlsx";
+
+		$file_name = "customer.xlsx";
 		// Redirect output to a client’s web browser (Excel2007)
 		header("Content-Type: application/force-download");
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -88,25 +88,20 @@ class CustomerController extends HomeController {
 	}
 
 	public function import() {
-		$save_path = get_save_path();
 		$opmode = $_POST["opmode"];
 		if ($opmode == "import") {
-			import("@.ORG.Util.UploadFile");
-			$upload = new UploadFile();
-			$upload -> savePath = $save_path;
-			$upload -> allowExts = array('xlsx');
-			$upload -> saveRule = uniqid;
-			$upload -> autoSub = false;
+			$File = D('File');
+			$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+			$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
 
-			if (!$upload -> upload()) {
-				$this -> error($upload -> getErrorMsg());
+			if (!$info) {
+				$this -> error($File -> getError());
 			} else {
 				//取得成功上传的文件信息
-				$uploadList = $upload -> getUploadFileInfo();
 				Vendor('Excel.PHPExcel');
 				//导入thinkphp第三方类库
+				$inputFileName = C('DOWNLOAD_UPLOAD.rootPath') . $info['uploadfile']["savepath"] . $info['uploadfile']["savename"];
 
-				$inputFileName = $save_path . $uploadList[0]["savename"];
 				$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 				$sheetData = $objPHPExcel -> getActiveSheet() -> toArray(null, true, true, true);
 				$model = M("Customer");
@@ -141,8 +136,8 @@ class CustomerController extends HomeController {
 		}
 	}
 
-	function del($id){
-		$count = $this ->_del($id,CONTROLLER_NAME,true);
+	function del($id) {
+		$count = $this -> _del($id, CONTROLLER_NAME, true);
 		if ($count) {
 			$model = D("SystemTag");
 			$result = $model -> del_data_by_row($id);
@@ -157,15 +152,15 @@ class CustomerController extends HomeController {
 		}
 	}
 
-	function set_tag(){
-		$id=	$_POST['id'];
-		$tag=$_POST['tag'];
-		$new_tag=$_POST['new_tag'];
-		if (!empty($id)){
+	function set_tag() {
+		$id = $_POST['id'];
+		$tag = $_POST['tag'];
+		$new_tag = $_POST['new_tag'];
+		if (!empty($id)) {
 			$model = D("SystemTag");
 			$model -> del_data_by_row($id);
 			if (!empty($_POST['tag'])) {
-				$result = $model -> set_tag($id,$tag);
+				$result = $model -> set_tag($id, $tag);
 			}
 		};
 
@@ -176,8 +171,8 @@ class CustomerController extends HomeController {
 			$model -> is_del = 0;
 			$model -> user_id = get_user_id();
 			$new_tag_id = $model -> add();
-			if (!empty($id)){				
-				$result = $model -> set_tag($id,$new_tag_id);
+			if (!empty($id)) {
+				$result = $model -> set_tag($id, $new_tag_id);
 			}
 		};
 		if ($result !== false) {//保存成功
@@ -189,17 +184,17 @@ class CustomerController extends HomeController {
 			$this -> error('操作失败!');
 		}
 	}
-	
+
 	function tag_manage() {
 		$this -> _system_tag_manage("分组管理");
 	}
 
-	protected function _insert(){		
+	protected function _insert() {
 		$model = D('Customer');
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
-		$model ->letter=get_letter($model ->name);
+		$model -> letter = get_letter($model -> name);
 		//保存当前数据对象
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
@@ -217,7 +212,7 @@ class CustomerController extends HomeController {
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
-		$model ->letter=get_letter($model ->name);
+		$model -> letter = get_letter($model -> name);
 
 		// 更新数据
 		$list = $model -> save();
