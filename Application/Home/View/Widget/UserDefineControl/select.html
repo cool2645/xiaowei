@@ -1,9 +1,9 @@
 <eq name="readonly" value="true">
 	<select disabled="disabled" id="udf_field_{$id}" name="udf_field_{$id}" <notempty name="validate">check="{$validate}" msg="{$msg}"</notempty>>
-		{:fill_option($control_data,$val)};
+		{:fill_option($data,$val)};
 	</select>
 	<else/>
 	<select id="udf_field_{$id}" name="udf_field_{$id}" <notempty name="validate">check="{$validate}" msg="{$msg}"</notempty>>
-		{:fill_option($control_data,$val)};
-	</select>	
+		{:fill_option($data,$val)};
+	</select>
 </eq>

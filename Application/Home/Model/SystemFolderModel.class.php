@@ -57,7 +57,7 @@ class  SystemFolderModel extends CommonModel {
 		return $data;
 	}
 
-	function get_authed_folder($user_id, $controller = CONTROLLER_NAME) {
+	function get_authed_folder($controller = CONTROLLER_NAME) {
 		$folder_list = array();
 		$where['controller'] = array('eq', $controller);
 		$list = $this -> where($where) -> getField('id', true);

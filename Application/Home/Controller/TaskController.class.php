@@ -83,12 +83,19 @@ class TaskController extends HomeController {
 				$this -> assign("folder_name", '不知让谁处理的任务');
 
 				$prefix = C('DB_PREFIX');
-				$sql = "select id from {$prefix}task task where not exists (select * from {$prefix}task_log task_log where task.id=task_log.task_id)";
+				
+				$assign_list=M("Task")->getField('id',true);
+				
+				$sql = "select id from {$prefix}task task where status=0 and not exists (select * from {$prefix}task_log task_log where task.id=task_log.task_id)";
 				$task_list = M() -> query($sql);
+				
+				foreach($task_list as $key=>$val){
+					$list[]=$val['id'];
+				}
 				if (empty($task_list)) {
 					$where['_string'] = '1=2';
 				} else {
-					$where['id'] = array('in', $task_list[0]);
+					$where['id'] = array('in', $list);
 				}
 
 				break;
@@ -359,8 +366,8 @@ class TaskController extends HomeController {
 		$this -> _upload();
 	}
 
-	function down() {
-		$this -> _down();
+	function down($attach_id) {
+		$this -> _down($attach_id);
 	}
 
 	private function _add_to_schedule($task_id) {

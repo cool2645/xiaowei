@@ -31,7 +31,7 @@ class PopupController extends HomeController {
 	}
 
 	function read($id) {
-		$type=I('type');
+		$type = I('type');
 		switch ($type) {
 			case "company" :
 				$model = M("Dept");
@@ -45,18 +45,18 @@ class PopupController extends HomeController {
 				$dept = rotate($dept);
 				$dept = implode(",", $dept['id']) . ",$id";
 
-				$model = D("UserView"); 
+				$model = D("UserView");
 
 				$where['dept_id'] = array('in', $dept);
 				$where['is_del'] = array('eq', 0);
-				$data = $model  -> where($where) -> select();
+				$data = $model -> where($where) -> select();
 				break;
 
 			case "rank" :
 				$model = D("UserView");
 				$where['rank_id'] = array('eq', $id);
 				$where['is_del'] = array('eq', 0);
-				$data = $model ->  where($where) -> select();
+				$data = $model -> where($where) -> select();
 				break;
 
 			case "position" :
@@ -65,7 +65,7 @@ class PopupController extends HomeController {
 				$where['is_del'] = array('eq', 0);
 				$data = $model -> where($where) -> select();
 				break;
-				
+
 			case "personal" :
 				$model = D("UserTag");
 				if ($id == "#") {
@@ -148,7 +148,7 @@ class PopupController extends HomeController {
 		$list = list_to_tree($list);
 		$this -> assign('list_position', popup_tree_menu($list));
 
-		$this -> assign('type', 'rank');
+		$this -> assign('type', 'company');
 		$this -> display();
 		return;
 	}
@@ -181,10 +181,10 @@ class PopupController extends HomeController {
 		return;
 	}
 
-	function scope(){
-		$this->actor();
+	function scope() {
+		$this -> actor();
 	}
-	
+
 	function actor() {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
@@ -212,10 +212,10 @@ class PopupController extends HomeController {
 		return;
 	}
 
-	function task(){
-		$this->actor();
+	function task() {
+		$this -> actor();
 	}
-	
+
 	function confirm() {
 
 		$plugin['jquery-ui'] = true;
@@ -363,8 +363,8 @@ class PopupController extends HomeController {
 				// 对jpeg图形设置隔行扫描
 				if ('jpg' == $type || 'jpeg' == $type)
 					imageinterlace($thumbImg, 1);
-				
-				$emp_pic_path=C('EMP_PIC_PATH');
+
+				$emp_pic_path = C('EMP_PIC_PATH');
 				if (!is_dir($emp_pic_path)) {
 					mkdir($emp_pic_path, 0777, true);
 					chmod($emp_pic_path, 0777);
@@ -421,7 +421,8 @@ class PopupController extends HomeController {
 
 	function json() {
 		header("Content-Type:text/html; charset=utf-8");
-		$type = I('type');;
+		$type = I('type');
+		;
 		$key = $_REQUEST['key'];
 
 		$model = M("User");
@@ -454,6 +455,20 @@ class PopupController extends HomeController {
 		}
 		$contact = array_merge_recursive($company, $personal);
 		exit(json_encode($contact));
+	}
+
+	function link_select($data) {
+		header("Content-Type:text/html; charset=utf-8");
+		switch ($data) {
+			case 'dept' :
+				$model = M("Dept");				
+				$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
+				exit(json_encode($list));
+				break;
+			default :
+				break;
+		}
+		
 	}
 
 }

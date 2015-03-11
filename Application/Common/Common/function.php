@@ -623,6 +623,23 @@ function get_model_fields($model) {
 	return $arr_field;
 }
 
+function show_udf_field($udf_field){
+	foreach ($udf_field as $key => $val) {				
+		list($show,$class)=explode("|",$val['config']);
+		$html.='<span class="'.$class.'">'.$val['name'].'</span>';		
+	}
+	return $html;
+}
+
+function show_udf_val($udf_field,$udf_data){	
+	$field_data = json_decode($udf_data, true);
+	foreach ($udf_field as $key => $val) {				
+		list($show,$class)=explode("|",$val['config']);		
+		$html.='<span class="'.$class.' autocut" title="'.$field_data[$val['id']].'">'.$field_data[$val['id']].'</span>';		
+	}
+	return $html;
+}
+
 function show_step_type($step) {
 	if ($step >= 20 && $step < 30) {
 		return "审批";
@@ -1464,5 +1481,25 @@ function is_submit($val) {
 	if ($val == 1) {
 		return "已提交";
 	}
+}
+
+
+function array_to_obj($e){
+    if( gettype($e)!='array' ) return;
+    foreach($e as $k=>$v){
+        if( gettype($v)=='array' || getType($v)=='object' )
+            $e[$k]=(object)array_to_obj($v);
+    }
+    return (object)$e;
+}
+ 
+function obj_to_array($e){
+    $e=(array)$e;
+    foreach($e as $k=>$v){
+        if( gettype($v)=='resource' ) return;
+        if( gettype($v)=='object' || gettype($v)=='array' )
+            $e[$k]=(array)obj_to_array($v);
+    }
+    return $e;
 }
 ?>

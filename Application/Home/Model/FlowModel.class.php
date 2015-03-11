@@ -229,7 +229,7 @@ class  FlowModel extends CommonModel {
 		$model -> create($data);
 		$model -> add();
 
-		$user_id = M("User") -> where("emp_no=$emp_no") -> getField("id");
+		$user_id = M("User") -> where(array(emp_no=>$emp_no)) -> getField("id");
 		send_push($new, "您有一个流程被退回", 1, $user_id);
 	}
 
@@ -237,7 +237,7 @@ class  FlowModel extends CommonModel {
 		$model = D("Flow");
 		if (substr($step, 0, 1) == 2) {
 			if ($this -> is_last_confirm($flow_id)) {
-				$model -> where("id=$flow_id") -> setField('step', 30);
+				$model -> where(array(id=>$flow_id)) -> setField('step', 30);
 				$step = 30;
 			} else {
 				$step++;
@@ -253,9 +253,9 @@ class  FlowModel extends CommonModel {
 		}
 
 		if ($step == 40) {
-			$model -> where("id=$flow_id") -> setField('step', 40);
+			$model -> where(array(id=>$flow_id)) -> setField('step', 40);
 
-			$user_id = $model -> where("id=$flow_id") -> getField('user_id');
+			$user_id = $model -> where(array(id=>$flow_id)) -> getField('user_id');
 			send_push($new, "您有一个流程通过审核", 1, $user_id);
 
 			$this -> send_to_refer($flow_id);
@@ -283,7 +283,7 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_confirm($flow_id) {
-		$confirm = M("Flow") -> where("id=$flow_id") -> getField("confirm");
+		$confirm = M("Flow") -> where(array(id=>$flow_id)) -> getField("confirm");
 		if (empty($confirm)) {
 			return true;
 		}
@@ -296,7 +296,7 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_consult($flow_id) {
-		$consult = M("Flow") -> where("id=$flow_id") -> getField("consult");
+		$consult = M("Flow") -> where(array(id=>$flow_id)) -> getField("consult");
 		if (empty($consult)) {
 			return true;
 		}
@@ -312,14 +312,14 @@ class  FlowModel extends CommonModel {
 
 	function duty_emp_no($flow_id, $step) {
 		if (substr($step, 0, 1) == 2) {
-			$confirm = M("Flow") -> where("id=$flow_id") -> getField("confirm");
+			$confirm = M("Flow") -> where(array(id=>$flow_id)) -> getField("confirm");
 			$arr_confirm = array_filter(explode("|", $confirm));
 
 			return $arr_confirm[fmod($step, 10) - 1];
 		}
 
 		if (substr($step, 0, 1) == 3) {
-			$consult = M("Flow") -> where("id=$flow_id") -> getField("consult");
+			$consult = M("Flow") -> where(array(id=>$flow_id)) -> getField("consult");
 			$arr_consult = array_filter(explode("|", $consult));
 			return $arr_consult[fmod($step, 10) - 1];
 		}
@@ -328,7 +328,7 @@ class  FlowModel extends CommonModel {
 	function send_to_refer($flow_id) {
 		$model = M("Flow");
 
-		$list = $model -> where("id=$flow_id") -> getField('refer');
+		$list = $model -> where(array(id=>$flow_id)) -> getField('refer');
 
 		if (!empty($list)) {
 			$list = str_replace("|", ",", $list);

@@ -27,11 +27,9 @@ class WorkLogController extends HomeController {
 	}
 
 	public function index(){
-		$plugin['date'] = true;		
-		$this ->assign("widget", $plugin);
 		$this->assign('user_id',get_user_id());	
 
-		$auth=$this->config['auth'];
+		$auth=$this -> config['auth'];
 		$this->assign('auth',$auth);		
 		if($auth['admin']){
 			$node = D("Dept");
@@ -109,8 +107,8 @@ class WorkLogController extends HomeController {
 		$this -> _upload();
 	}
 
-	function down() {
-		$this -> _down();
+	function down($attach_id) {
+		$this -> _down($attach_id);
 	}
 
 	/** 插入新新数据  **/

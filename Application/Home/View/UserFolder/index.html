@@ -111,11 +111,11 @@
 
 		function select_pid() {
 			if ($("div.sub_left_menu a.active").length > 0) {
-				winopen("{:U('winpop')}", 730, 400);
+				winopen("{:U('UserFolder/winpop')}", 730, 400);
 			} else if ($("div.sub_left_menu a").length == 0) {
-				winopen("{:U('winpop')}", 730, 400);
+				winopen("{:U('UserFolder/winpop')}", 730, 400);
 			} else if ($("#opmode").val() == "add") {
-				winopen("{:U('winpop')}", 730, 400);
+				winopen("{:U('UserFolder/winpop')}", 730, 400);
 			} else {
 				ui_error("请选择文件夹");
 				return false;

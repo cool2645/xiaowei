@@ -22,7 +22,7 @@ function editor_init() {
 			}
 		};
 	}
-	editor = new KindEditor.create(".editor", settings);
+	window.editor = new KindEditor.create(".editor", settings);
 
 	if (is_mobile()) {
 		settings = {
@@ -50,7 +50,7 @@ function editor_init() {
 			}
 		};
 	}
-	editor = new KindEditor.create(".simple", settings);
+	window.editor = new KindEditor.create(".simple", settings);
 }
 
 function df() {

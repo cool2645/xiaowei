@@ -59,12 +59,13 @@ class ContactController extends HomeController {
 		//导入thinkphp第三方类库
 		Vendor('Excel.PHPExcel');
 
-		$inputFileName = "Public/templete/contact.xlsx";
-		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
-
+		//$inputFileName = "Public/templete/contact.xlsx";
+		// $objPHPExcel = \PHPExcel_IOFactory::load($inputFileName);
+		$objPHPExcel = new \PHPExcel();
 		$objPHPExcel -> getProperties() -> setCreator("smeoa") -> setLastModifiedBy("smeoa") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
 		// Add some data
 		$i = 1;
+		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "姓名") -> setCellValue("B$i", "单位") -> setCellValue("C$i", "部门") -> setCellValue("D$i", "职位") -> setCellValue("E$i", "办公电话") -> setCellValue("F$i", "手机") -> setCellValue("G$i", "邮箱") -> setCellValue("H$i", "QQ") -> setCellValue("I$i", "网站") -> setCellValue("J$i", "地址") -> setCellValue("K$i", "其他");
 		//dump($list);
 		foreach ($list as $val) {
 			$i++;
@@ -82,7 +83,7 @@ class ContactController extends HomeController {
 		header("Content-Disposition:attachment;filename =" . str_ireplace('+', '%20', URLEncode($file_name)));
 		header('Cache-Control: max-age=0');
 
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		//readfile($filename);
 		$objWriter -> save('php://output');
 		exit ;
@@ -103,7 +104,7 @@ class ContactController extends HomeController {
 				//导入thinkphp第三方类库
 				$inputFileName = C('DOWNLOAD_UPLOAD.rootPath') . $info['uploadfile']["savepath"] . $info['uploadfile']["savename"];
 
-				$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+				$objPHPExcel = \PHPExcel_IOFactory::load($inputFileName);
 				$sheetData = $objPHPExcel -> getActiveSheet() -> toArray(null, true, true, true);
 				$model = M("Contact");
 				for ($i = 2; $i <= count($sheetData); $i++) {

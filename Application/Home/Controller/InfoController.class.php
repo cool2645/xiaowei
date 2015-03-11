@@ -52,7 +52,7 @@ class InfoController extends HomeController {
 			$map['_string'] .= "or Info.id in ($info_list)";
 		}
 
-		$folder_list = D("SystemFolder") -> get_authed_folder($user_id);
+		$folder_list = D("SystemFolder") -> get_authed_folder();
 		if ($folder_list) {
 			$map['folder'] = array("in", $folder_list);
 		} else {
@@ -316,8 +316,8 @@ class InfoController extends HomeController {
 		$this -> _upload();
 	}
 
-	public function down() {
-		$this -> _down();
+	function down($attach_id) {
+		$this -> _down($attach_id);
 	}
 
 	private function _unread_info() {

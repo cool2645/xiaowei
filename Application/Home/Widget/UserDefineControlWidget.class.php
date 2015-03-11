@@ -7,18 +7,18 @@ class UserDefineControlWidget extends Controller {
 
 	public function edit($data) {
 				
-		if (empty($data['va'])) {
+		if (empty($data['val'])) {
 			$data['val'] = null;
 		}
 		
-		$data['control_data'] = $this -> conv_control_data($data['control_data']);
+		$data['data'] = $this -> conv_data($data['data']);
 		$this -> assign($data);
-		
-		$control_type = $data['control_type'];		
-		$this -> display("Widget:UserDefineControl/$control_type");
+		//dump($data);
+		$type = $data['type'];		
+		$this -> display("Widget:UserDefineControl/$type");
 	}
 
-	function conv_control_data($val) {
+	function conv_data($val) {
 		$new = array();
 		if (strpos($val, "|") !== false) {
 			$arr_tmp = explode(",", $val);

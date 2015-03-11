@@ -3,7 +3,8 @@ var uploader = new plupload.Uploader({
 	browse_button : 'pickfiles', // you can pass in id...
 	container: document.getElementById('uploader'), // ... or DOM Element itself
 	url : upload_url,
-	flash_swf_url : app_path+'/Public/assets/plupload/Moxie.swf',	
+	flash_swf_url : app_path+'/Public/Static/plupload/Moxie.swf',	
+	drop_element : 'main-container',
 	filters : {
 		max_file_size : '10mb'
 	},
@@ -84,7 +85,7 @@ window.onbeforeunload = function (e){
 }; 
 
 $(document).on("click", "#uploader a.del", function(){
-	$obj=$(this).parents("li");
+	$(this)=$(this).parents("li");
 	id=$obj.attr("id");
 	file=uploader.getFile(id);
 	ui_confirm("确定要删除吗？",function(){				

@@ -105,7 +105,7 @@ class  InfoModel extends CommonModel {
 		$where['dept_id'] = array('in', $dept);
 		$where['is_del'] = array('eq', 0);
 
-		$data = $model -> where($where) -> getField('id user_id,id');
+		$data = $model -> where($where) -> getField('id',true);
 		return $data;
 	}
 

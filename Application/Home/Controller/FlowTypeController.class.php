@@ -27,7 +27,7 @@ class FlowTypeController extends HomeController {
 	function add() {
 
 		$plugin['editor'] = true;
-		$this -> assign("widget", $plugin);
+		$this -> assign("plugin", $plugin);
 
 		$this -> assign("user_id", get_user_id());
 		$this -> _assign_tag_list();

@@ -156,8 +156,8 @@ class DocController extends HomeController {
 		$this -> _upload();
 	}
 
-	function down() {
-		$this -> _down();
+	function down($attach_id) {
+		$this -> _down($attach_id);
 	}
 
 }

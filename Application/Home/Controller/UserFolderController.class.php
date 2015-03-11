@@ -107,23 +107,23 @@ class UserFolderController extends HomeController {
 		}
 	}
 
-	function del($id) {
-		$model = M("UserFolder");
+	function _del($id,$return_flag = false) {
+		$model = D("UserFolder");
 		$data = $model -> getById($id);
-		$fid = $data['id'];
-		$folder = $data['folder'];
-		$count = M(str_replace("Folder", "", $folder)) -> where("folder=$fid") -> count();
+		$controller = $data['controller'];
+		$count = M($controller) -> where(array('folder'=>$id,'is_del'=>0)) -> count();
 
-		if ($count > 0) {// 读取成功
-			$return['info'] = '只能删除空文件夹';
-			$return['status'] = 1;
-			$this -> ajaxReturn($return);
+		$sub_folder_list = tree_to_list(list_to_tree($model -> get_folder_list(), $id));
+		if ($count > 0 || !empty($sub_folder_list)) {// 读取成功
+			$this -> error('只能删除空文件夹');
 		} else {
-			$result = $model -> where("id=$id") -> delete();
+			$result = $model -> where(array('id'=>$id)) -> setField("is_del", 1);
+			if ($return_flag) {
+					return $result;
+				}
 			if ($result) {
-				$return['info'] = '删除文件夹成功';
-				$return['status'] = 1;
-				$this -> ajaxReturn($return);
+				$this -> success('删除成功');
+				die ;
 			}
 		}
 	}

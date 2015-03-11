@@ -127,9 +127,9 @@
 									电话：
 								</nobr>
 								<nobr class="data">
-									{$vo.office_tel}
+									<a href="tel:{$vo.office_tel}">{$vo.office_tel}</a> 
 									<notempty name="vo.mobile_tel">
-										/ {$vo.mobile_tel}
+										/ <a href="tel:{$vo.mobile_tel}">{$vo.mobile_tel}</a> 
 									</notempty>
 								</nobr>
 							</div>

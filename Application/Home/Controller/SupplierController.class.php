@@ -51,9 +51,9 @@ class SupplierController extends HomeController {
 		Vendor('Excel.PHPExcel');
 		//导入thinkphp第三方类库
 
-		$inputFileName = "Public/templete/Supplier.xlsx";
-		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
-
+		// $inputFileName = "Public/templete/Supplier.xlsx";
+		// $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+		$objPHPExcel = new \PHPExcel();
 		$objPHPExcel -> getProperties() -> setCreator("smeoa") -> setLastModifiedBy("smeoa") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
 		// Add some data
 		$i = 1;
@@ -75,7 +75,7 @@ class SupplierController extends HomeController {
 		header("Content-Disposition:attachment;filename =" . str_ireplace('+', '%20', URLEncode($file_name)));
 		header('Cache-Control: max-age=0');
 
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		$objWriter -> save('php://output');
 		exit ;
 	}

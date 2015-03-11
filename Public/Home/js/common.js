@@ -11,11 +11,11 @@ function freshVerify() {
 }
 
 function click_top_menu(node) {
-	set_cookie("left_menu", "");
 	url = $(node).attr("url");
 	node = $(node).attr("node");
 	set_cookie("top_menu", node);
-
+	set_cookie("left_menu", "");
+	set_cookie("current_node", "");
 	form = $("<form></form>");
 	form.attr('action', url);
 	form.attr('method', 'post');
@@ -85,9 +85,9 @@ function ui_alert(msg, callback) {
 				label : "确定",
 				className : "btn-primary",
 				callback : function() {
-					if(callback!=undefined){
+					if (callback != undefined) {
 						callback();
-					}					
+					}
 				}
 			}
 		}
@@ -317,7 +317,7 @@ var Inputbox = {
 
 function set_val(name, val) {
 	if ($("#" + name + " option").length > 0) {
-		$("#" + name + " option[value='" + val + "']").attr("selected", "selected");
+		$("#" + name).val(val);
 		return;
 	}
 
@@ -329,7 +329,7 @@ function set_val(name, val) {
 	}
 	if ($("." + name).length > 0) {
 		if (($("." + name).first().attr("type")) === "checkbox") {
-			var arr_val = val.split(",")
+			var arr_val = val.split(",");
 			for (var s in arr_val) {
 				$("input." + name + "[value=" + arr_val[s] + "]").attr("checked", true);
 			}
@@ -347,6 +347,12 @@ function set_val(name, val) {
 	if (($("#" + name).attr("rows")) > 0) {
 		$("#" + name).text(val);
 		return;
+	}
+}
+
+function show_udf_val($udf_data) {
+	for (s in $udf_data) {
+		set_val('udf_field_' + s, $udf_data[s]);
 	}
 }
 
@@ -422,7 +428,7 @@ function contact_conv(val) {
 			id = arr_temp[key].split("|")[1];
 			name = arr_temp[key].split("|")[0];
 			title = arr_temp[key].split("|")[0];
-			html += conv_inputbox_item(name,data);
+			html += conv_inputbox_item(name, data);
 			//html +=  '<span data="' + arr_temp[key].split("|")[1] + '" onmousedown="return false"><nobr>' + arr_temp[key].split("|")[0] + '<a class=\"del\" title=\"删除\"><i class=\"fa fa-times\"></i></a></nobr></span>';
 		}
 	}
@@ -589,22 +595,95 @@ function del_cookie(cookie_name) {
 	document.cookie = cookie_name += "=; expires=" + cookie_date.toGMTString();
 }
 
+function init_link_select($obj) {
+	$data = $obj.attr('data');
+	$pid = $obj.attr('pid');
+	$.getJSON(link_select, {
+		data : $data
+	}, function(json) {
+		$data = json;
+		$(".link_select .main").append("<option>请选择</option>");
+		for (s in $data) {
+			//alert($data[s].name);
+			if ($data[s].pid == "0") {
+				$option = $("<option></option>");
+				$option.text($data[s].name);
+				$option.val($data[s].id);
+				$(".link_select .main").append($option);
+			}
+		}
+
+		$(".link_select .main").change(function() {
+			$(".link_select .sub").html("<option>请选择</option>");
+			for (s in $data) {
+				$current = $(this).val();
+				if ($data[s].pid == $current) {
+					$option = $("<option></option>");
+					$option.text($data[s].name);
+					$option.val($data[s].id);
+					$(".link_select .sub").append("<option value='" + $data[s].id + "'>" + $data[s].name + "</option>");
+				}
+			}
+		});
+	});
+}
+
+function init_udf_field() {
+	$(".link_select").each(function() {
+		init_link_select($(this));
+	});
+}
+
+var udf_field = {
+	init : function(udf_data) {
+		udf_field.data = udf_data;
+		udf_field.init_link_select();
+	},
+	init_link_select : function() {
+		$(".link_select").each(function() {
+			$data = $(this).attr('data');
+			$pid = $(this).attr('pid');
+
+			var json;
+			var $main = $(this).find(".main");
+			var $sub = $(this).find(".sub");
+			var fill_option = function($obj, $pid) {
+				$($obj).html("<option>请选择</option>");
+				for (s in json) {
+					if (json[s].pid == $pid) {
+						$option = $("<option></option>");
+						$option.text(json[s].name);
+						$option.val(json[s].id);
+						$($obj).append($option);
+					}
+				}
+				if (udf_field.data !== undefined) {
+					$val = $obj.attr("id").replace("udf_field_", "");
+					$obj.val(udf_field.data[$val]);
+				}
+				$obj.change();
+			};
+
+			$main.change(function() {
+				$current = $main.val();
+				fill_option($sub, $current);
+			});
+
+			$.getJSON(link_select, {
+				data : $data,
+			}, function(data) {
+				json = data;
+				fill_option($main, $pid);
+			});
+		});
+	},
+};
 
 $(document).ready(function() {
 	$(".sidebar .nav a").click(function() {
 		click_nav_menu($(this));
 	});
 	$('.ul_table .tbody input[type=checkbox]').removeAttr('checked');
-	$('.ul_table').delegate('.tbody input[type=checkbox]', 'click', function() {
-		$(this).closest('.tbody').toggleClass('selected');
-		if (this.checked)
-			ul_table.display_bar(1);
-		//display action toolbar when a message is selected
-		else {
-			ul_table.display_bar($('.ul_table input[type=checkbox]:checked').length);
-			//determine number of selected messages and display/hide action toolbar accordingly
-		}
-	});
 	$('#id-toggle-all').removeAttr('checked').on('click', function() {
 		if (this.checked) {
 			ul_table.select_all();
@@ -615,9 +694,10 @@ $(document).ready(function() {
 	current_node = get_cookie("current_node");
 	$(".sidebar .nav a[node='" + current_node + "']").parents("li").each(function() {
 		$(this).addClass("active open");
-		breadcrumb = '<li>' + $(this).find("a:first").text() + '</li>' + breadcrumb;
+		breadcrumb = '<li>' + $(this).find("a:first .menu-text").text() + '</li>' + breadcrumb;
 	});
 	$(".breadcrumb").append(breadcrumb);
+
 	top_menu = get_cookie("top_menu");
 	$(".navbar-nav a.nav-app[node=" + top_menu + "]").addClass("active");
 });

@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class FlowController extends HomeController {
-	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage', 'action_auth' => array('folder' => 'read', 'mark' => 'admin', 'field_manage' => 'admin'));
+	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage,back_to');
 
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
@@ -173,7 +173,7 @@ class FlowController extends HomeController {
 
 		//$inputFileName = "Public/templete/contact.xlsx";
 		//$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
-		$objPHPExcel = new PHPExcel();
+		$objPHPExcel = new \PHPExcel();
 
 		$objPHPExcel -> getProperties() -> setCreator("小微OA") -> setLastModifiedBy("小微OA") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
 		// Add some data
@@ -182,6 +182,7 @@ class FlowController extends HomeController {
 
 		//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
 		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "编号") -> setCellValue("B$i", "类型") -> setCellValue("C$i", "标题") -> setCellValue("D$i", "登录时间") -> setCellValue("E$i", "部门") -> setCellValue("F$i", "登录人") -> setCellValue("G$i", "状态") -> setCellValue("H$i", "审批") -> setCellValue("I$i", "协商") -> setCellValue("J$i", "抄送") -> setCellValue("J$i", "审批情况");
+		$model_flow_field = D("UdfField");
 		foreach ($list as $val) {
 			$i++;
 			//dump($val);
@@ -211,8 +212,8 @@ class FlowController extends HomeController {
 			//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
 			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $doc_no) -> setCellValue("B$i", $type_name) -> setCellValue("C$i", $name) -> setCellValue("D$i", $create_time) -> setCellValue("E$i", $dept_name) -> setCellValue("F$i", $user_name) -> setCellValue("G$i", $step) -> setCellValue("H$i", $confirm_name) -> setCellValue("I$i", $consult_name);
 
-			$model_flow_field = D("FlowField");
-			$field_list = $model_flow_field -> get_data_list($id);
+			
+			$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
 			//	dump($field_list);
 			$k = 0;
 			if (!empty($field_list)) {
@@ -236,7 +237,7 @@ class FlowController extends HomeController {
 		header("Content-Disposition:attachment;filename =" . str_ireplace('+', '%20', URLEncode($file_name)));
 		header('Cache-Control: max-age=0');
 
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		//readfile($filename);
 		$objWriter -> save('php://output');
 		exit ;
@@ -248,7 +249,7 @@ class FlowController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-
+		
 		$type_id = I('type'); ;
 		$model = M("FlowType");
 		$flow_type = $model -> find($type_id);
@@ -261,10 +262,11 @@ class FlowController extends HomeController {
 	}
 
 	function read($id) {
+		$plugin['date'] = true;
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-
+		$fid=I("fid");
 		$this -> _flow_auth_filter($fid, $map);
 		
 		$fid=I('fid');
@@ -279,14 +281,6 @@ class FlowController extends HomeController {
 
 		$flow_type_id = $vo['type'];
 		$this -> assign('vo', $vo);
-		$this -> assign("emp_no", $vo['emp_no']);
-		$this -> assign("user_name", $vo['user_name']);
-
-		$model_flow_field = D("UdfField");
-		$field_list = $model_flow_field -> get_data_list($id);
-		//dump($field_list);
-		$this -> assign("field_list", $field_list);
-
 		$model = M("FlowType");
 		$flow_type = $model -> find($flow_type_id);
 		$this -> assign("flow_type", $flow_type);
@@ -311,9 +305,7 @@ class FlowController extends HomeController {
 			$this -> assign("is_edit", $is_edit);
 		} else {
 			$is_edit = $flow_type['is_edit'];
-			if ($is_edit <> "2") {
-				$this -> assign("is_edit", 0);
-			}
+			$this -> assign("is_edit", 0);
 		}
 
 		$where = array();
@@ -349,8 +341,8 @@ class FlowController extends HomeController {
 		}
 		$this -> assign('vo', $vo);
 
-		$model_flow_field = D("UdfField");
-		$field_list = $model_flow_field -> get_data_list($id);
+		$field_list = D("UdfField") -> get_data_list($vo['udf_data']);
+		//dump($field_list);		
 		$this -> assign("field_list", $field_list);
 
 		$model = M("FlowType");
@@ -387,11 +379,13 @@ class FlowController extends HomeController {
 		if (empty($str_auditor)) {
 			$this -> error('没有找到任何审核人');
 		}
-		/*保存当前数据对象 */
+				
+		$model->udf_data=D('UdfField')->get_field_data();
+		 
 		$list = $model -> add();
 
 		if ($list !== false) {//保存成功
-			$flow_filed = D("UdfField") -> set_field($list);
+			//$flow_filed = D("UdfField") -> set_field($list);
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('新增成功!');
 		} else {
@@ -407,9 +401,9 @@ class FlowController extends HomeController {
 			$this -> error($model -> getError());
 		}
 		$flow_id = $model -> id;
+		$model->udf_data=D('UdfField')->get_field_data();
 		$list = $model -> save();
-		if (false !== $list) {
-			$flow_filed = D("UdfField") -> set_field($flow_id);
+		if (false !== $list) {			
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
 			//成功提示
@@ -597,7 +591,6 @@ class FlowController extends HomeController {
 		$step = $model -> step;
 		//保存当前数据对象
 		$list = $model -> save();
-		$emp_no = I('emp_no'); ;
 		if ($list !== false) {//保存成功
 			D("Flow") -> back_to($flow_id,$emp_no);
 			$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
@@ -606,11 +599,11 @@ class FlowController extends HomeController {
 			//失败提示
 			$this -> error('操作失败!');
 		}
-		break;
+		return;
 	}
 
-	public function down() {
-		$this -> _down();
+	function down($attach_id) {
+		$this -> _down($attach_id);
 	}
 
 	public function upload() {

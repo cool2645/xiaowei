@@ -4,7 +4,10 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 body {
 	background-color: #fff;
 }
-
+.control-label{
+	height:34px;
+	line-height:21px;
+}
 input[type=checkbox].ace, input[type=radio].ace {
 	height: 0px;
 	position: relative;

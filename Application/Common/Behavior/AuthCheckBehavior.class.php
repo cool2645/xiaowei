@@ -9,8 +9,7 @@ class AuthCheckBehavior extends Behavior {
 	protected $config;
 	public function run(&$params) {
 		//个人数据
-		$app_type = $params['app_type'];
-
+		$app_type = $params['app_type'];	
 		switch($app_type) {
 			case 'public' :
 				$auth = array('admin' => false, 'write' => false, 'read' => true);
@@ -33,7 +32,6 @@ class AuthCheckBehavior extends Behavior {
 			case 'common' :
 				$auth = $this -> get_auth();
 				break;
-
 			case 'master' :
 				$auth = $this -> get_auth();
 				//dump($auth);
@@ -42,8 +40,8 @@ class AuthCheckBehavior extends Behavior {
 				}
 				break;
 
-			case 'folder' :
-				if (in_array(ACTION_NAME, array('folder_manage'))) {
+			case 'folder' :				
+				if (in_array(ACTION_NAME, array('folder_manage','field_manage'))) {
 					$auth = $this -> get_auth();
 					break;
 				}
@@ -76,16 +74,14 @@ class AuthCheckBehavior extends Behavior {
 
 		$is_match = false;
 		$params['auth'] = $auth;
-		$action = strtolower(ACTION_NAME);
-
+		$action = strtolower(ACTION_NAME);		
 		if (isset($params['admin'])) {
 			$controller_auth_admin = explode(',', $params['admin']);
 			if (!$is_match and in_array($action, $controller_auth_admin)) {
 				$is_match = true;
 				$result = $auth['admin'];
 			}
-		}
-
+		}		
 		if (isset($params['write'])) {
 			$controller_auth_write = explode(',', $params['write']);
 			if (!$is_match and in_array($action, $controller_auth_write)) {

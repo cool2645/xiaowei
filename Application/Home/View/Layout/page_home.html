@@ -22,7 +22,6 @@
 			<include file="Layout:plugin_css"/>
 		</block>
 
-
 		<!-- fonts -->
 		<!-- ace styles -->
 
@@ -51,7 +50,7 @@
 	<block name="page_script">
 		<include file="Layout:page_script"/>
 	</block>
-		
+
 	<body class="{$Think.CONTROLLER_NAME}">
 		<div class="shade"></div>
 		<block name="header">
@@ -77,7 +76,8 @@
 
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="fa fa-double-angle-up fa-only bigger-110"></i> </a>
 		</div><!-- /.main-container -->
-
+		<div id="push_msg"></div>
+		<iframe src="{:U('push/client2')}" class="push" id="push"></iframe>
 		<!-- basic scripts -->
 
 		<!--[if !IE]>
@@ -103,7 +103,6 @@
 		<block name="plugin_js">
 			<include file="Layout:plugin_js"/>
 		</block>
-
 
 		<!-- ace scripts -->
 		<script src="__STATIC__/ace/js/uncompressed/ace-elements.js"></script>

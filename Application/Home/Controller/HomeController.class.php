@@ -15,7 +15,7 @@ namespace Home\Controller;
 use Think\Controller;
 
 class HomeController extends Controller {
-	protected $config = array('app_type' => 'public');
+	protected $config = array('app_type' => 'asst');
 	function _initialize() {
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
@@ -154,7 +154,8 @@ class HomeController extends Controller {
 			}
 		}
 		$this -> assign('vo', $vo);
-		$this -> display();
+		$this -> display();		
+		return $vo;
 	}
 
 	protected function _save($name = CONTROLLER_NAME) {
@@ -278,9 +279,14 @@ class HomeController extends Controller {
 	protected function _destory_file($file_list) {
 		if (isset($file_list)) {
 			if (is_array($file_list)) {
-				$where["sid"] = array("in", $file_list);
+				$files = array_map(think_decrypt, $file_list);
+				$where['id'] = array('in', $files);
 			} else {
-				$where["sid"] = array('in', array_filter(explode(',', $file_list)));
+				$files = array_filter(explode(';', $file_list));
+
+				$files = array_map(think_decrypt, $files);
+
+				$where['id'] = array('in', $files);
 			}
 		} else {
 			exit();
@@ -296,8 +302,9 @@ class HomeController extends Controller {
 		$list = $model -> where($where) -> select();
 
 		foreach ($list as $file) {
-			if (file_exists(__ROOT__ . "/" . C('DOWNLOAD_UPLOAD.rootPath') . $file['savepath'] . $file['savename'])) {
-				unlink(__ROOT__ . "/" . C('DOWNLOAD_UPLOAD.rootPath') . $file['savepath'] . $file['savename']);
+
+			if (file_exists(__ROOT__ .  substr(C('DOWNLOAD_UPLOAD.rootPath'),2) . $file['savepath'] . $file['savename'])) {
+				unlink(__ROOT__ .  substr(C('DOWNLOAD_UPLOAD.rootPath'),2) . $file['savepath'] . $file['savename']);
 			}
 		}
 
@@ -351,8 +358,8 @@ class HomeController extends Controller {
 		$this -> ajaxReturn($return);
 	}
 
-	protected function _down($sid) {
-		$file_id = think_decrypt(I('attach_id'));
+	protected function _down($attach_id) {
+		$file_id = think_decrypt($attach_id);
 		$File = D('File');
 		$root = C('DOWNLOAD_UPLOAD.rootPath');
 		if (false === $File -> download($root, $file_id)) {

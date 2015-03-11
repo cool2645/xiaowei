@@ -18,6 +18,7 @@
 					</select>
 				</div>
 				<div class="pull-right">
+					<a onclick="weixin_sync()" class="btn btn-sm btn-primary">同步到微信</a>
 					<a onclick="reset_pwd()" class="btn btn-sm btn-primary">设置密码</a>
 					<a onclick="add()"  class="btn btn-sm btn-primary">新增</a>
 					<a onclick="save()"  class="btn btn-sm btn-primary">保存</a>
@@ -195,6 +196,11 @@
 		function select_dept() {
 			winopen("{:U('dept/winpop2')}", 730, 500);
 		}
+		
+		function weixin_sync() {
+			winopen("{:U('weixin_sync')}", 730, 500);
+		}		
+		
 
 		function select_avatar() {
 			if ($("#id").val().length < 1) {

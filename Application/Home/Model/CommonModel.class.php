@@ -33,27 +33,5 @@ class CommonModel extends Model {
 		$result = M("Dept") -> find(session("dept_id"));
 		return $result['name'];
 	}
-
-	protected function _pushReturn($data, $info, $status, $user_id, $time = null) {
-		$model = M("Push");
-
-		$model -> data = $data;
-		$model -> info = $info;
-		$model -> status = $status;
-
-		if (empty($user_id)) {
-			$model -> user_id = get_user_id();
-		} else {
-			$model -> user_id = $user_id;
-		}
-
-		if (empty($time)) {
-			$model -> time = time();
-		} else {
-			$model -> time = $time;
-		}
-		$model -> add();
-	}
-
 }
 ?>

@@ -164,9 +164,9 @@ class PushManagerController extends HomeController {
 		return $restr;
 	}
 
-	function wechat_test($test) {
-		$openid = 'oPq8Btwkfs8zMvAHxjmruSiaiIr0';
-		$this -> send_wechat($test, $openid);
+	function test() {
+		$openid = '1001';
+		$this -> _send_wechat(date("Y-m-d h:s"), $openid);
 	}
 
 	private function _global($name, $value = '', $path = DATA_PATH) {

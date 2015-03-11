@@ -17,13 +17,13 @@
 			</div>
 			<div class="pull-right">
 				<a onclick="winprint();" class="btn btn-sm btn-primary">打印</a>
-				<eq name="is_edit" value="1">
+				<in name="is_edit" value="1,11">
 					<a onclick="save();" class="btn btn-sm btn-primary">保存</a>
-				</eq>
+				</in>
 			</div>
 		</div>
 	</div>
-	<eq name="is_edit" value="1">
+	<in name="is_edit" value="1,11">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
 			<input type="hidden" id="id" name="id" value="{$vo.id}">
 			<input type="hidden" id="ajax" name="ajax" value="0">
@@ -102,20 +102,18 @@
 				<label class="col-sm-2 control-label" >抄送：</label>
 				<div class="col-sm-10">
 					<p id="refer_wrap" class="form-control-static address_list">
-						{$vo.consult_name}
+						{$vo.refer_name}
 					</p>
 				</div>
 			</div>
-			<volist name="field_list" id="field_vo">
-				{:W('UserDefineField/edit',array($field_vo))}
-			</volist>
-			<neq name="flow_type.is_edit" value="2">
+			{:W('UserDefineField/edit2',array($vo['udf_data']))}
+			<in name="flow_type.is_edit" value="10,11">
 				<div class="form-group">
 					<div class="col-xs-12">
 						<textarea class="editor" id="content" name="content" style="width:100%;height:300px;">{$vo.content}</textarea>
 					</div>
 				</div>
-			</neq>
+			</in>
 			<div class="form-group">
 				<label class="col-sm-2 control-label" >附件：</label>
 				<div class="col-sm-10">
@@ -123,8 +121,8 @@
 				</div>
 			</div>
 		</form>
-	</eq>
-	<eq name="is_edit" value="0">
+	</in>
+	<in name="is_edit" value="0,10">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"  class="well form-horizontal">
 			<input type="hidden" id="ajax" name="ajax" value="0">
 			<input type="hidden" id="opmode" name="opmode" value="edit">
@@ -190,11 +188,9 @@
 						{$vo.refer_name}
 					</p>
 				</div>
-			</div>
-			<volist name="field_list" id="field_vo">
-				{:W('UserDefineField/view',array($field_vo))}
-			</volist>
-			<neq name="is_edit" value="2">
+			</div>		
+			{:W('UserDefineField/edit2',array($vo['udf_data']))}
+			<in name="flow_type.is_edit" value="10,11">
 				<div class="form-group">
 					<div class="col-xs-12">
 						<div class="content_wrap">
@@ -203,7 +199,7 @@
 						</div>
 					</div>
 				</div>
-			</neq>
+			</in>
 			<notempty name="vo.add_file">
 				<div class="form-group">
 					<label class="col-sm-2 control-label" >附件：</label>
@@ -214,7 +210,7 @@
 			</notempty>
 			<div class="clearfix"></div>
 		</form>
-	</eq>
+	</in>
 
 	<a id="flow_status"></a>
 	{:W('PageHeader/simple',array('name'=>'审批情况','search'=>'N'))}
@@ -286,6 +282,7 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
+		udf_field.init({$vo['udf_data']});			
 		function approve() {
 			sendForm("form_confirm", "{:U('approve')}", "{:U('read','id='.$vo['id'])}");
 		}
@@ -305,7 +302,7 @@
 				$("#confirm").val($("#confirm").val() + $(this).attr("data") + '|');
 			});
 			$("#confirm_name").val($("#confirm_wrap").html());
-			
+
 			$("#consult").val("");
 			$("#consult_wrap  span").each(function() {
 				$("#consult").val($("#consult").val() + $(this).attr("data") + '|');
@@ -330,7 +327,6 @@
 		function popup_confirm() {
 			winopen("{:U('popup/confirm')}", 730, 574);
 		}
-
 
 		$(document).ready(function() {
 			set_return_url(document.location, 1);

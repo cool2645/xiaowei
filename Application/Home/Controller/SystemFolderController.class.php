@@ -73,13 +73,16 @@ class SystemFolderController extends HomeController {
 		$model = D("SystemFolder");
 		$data = $model -> getById($id);
 		$controller = $data['controller'];
-		$count = M($controller) -> where("folder=$id") -> count();
+		$count = M($controller) -> where(array('folder'=>$id,'is_del'=>0)) -> count();
 
 		$sub_folder_list = tree_to_list(list_to_tree($model -> get_folder_list(), $id));
-		if ($count > 0 and empty($sub_folder_list)) {// 读取成功
+		if ($count > 0 || !empty($sub_folder_list)) {// 读取成功
 			$this -> error('只能删除空文件夹');
 		} else {
-			$result = $model -> where("id=$id") -> delete();
+			$result = $model -> where(array('id'=>$id)) -> setField("is_del", 1);
+			if ($return_flag) {
+					return $result;
+				}
 			if ($result) {
 				$this -> success('删除成功');
 				die ;

@@ -173,7 +173,7 @@ class Page {
 			$allPage="<input type=\"button\" value=\"".$this->config['all']."\" onclick=\"this.form.mode.value='';this.form.$p.value=1;this.form.list_rows.value=".$this->totalRows.";this.form.submit();\">";	
 		}
 		$exportPage='';	
-		if(method_exists(A(MODULE_NAME),'_'.ACTION_NAME.'_export')){			
+		if(method_exists(A(CONTROLLER_NAME),'_'.ACTION_NAME.'_export')){			
 			$exportPage="<input type=\"button\" value=\"".$this->config['export']."\" onclick=\"this.form.mode.value='export';this.form.list_rows.value=".$this->totalRows.";this.form.submit();\">";			
 		}
 		 		

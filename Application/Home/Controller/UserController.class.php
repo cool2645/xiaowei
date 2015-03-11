@@ -102,7 +102,50 @@ class UserController extends HomeController {
 			}
 		}
 	}
+		
+	public function weixin_sync(){
+		
+		import("Weixin.ORG.Util.ThinkWechat");
+		$weixin = new \ThinkWechat(2);					
+		$user_list=M("User")->getField('emp_no',true);	
+		
+		$weixin_user_list=$weixin->get_user_list();
+		foreach($weixin_user_list as $key=>$val){
+			$data[]=$val->userid;
+		}
+		//$where['emp_no']=array('in',$data);
+		
+		$weixin->del_user_list($data);
+		
+		$user_list=M("User")->where(array('is_del'=>0))->getField('emp_no,name,mobile_tel');
+		
+		$error_code_desc=C('WEIXIN_ERROR_CODE');
+		foreach($user_list as $key=>$val){
+			$error_code=json_decode($weixin->add_user($val['emp_no'],$val['name'],$val['mobile_tel']))->errcode;
+			$list[$key]['error_code']=$error_code;			
+			$list[$key]['desc']=$error_code_desc[$error_code];		
+			$list[$key]['emp_no']=$key;
+		}
+		$this->assign('list',$list);
+		$this->display();
+	}
+		
+	private function _add_weixin_user($user_id,$name,$mobile){
+		import("Weixin.ORG.Util.ThinkWechat");
+		$weixin = new \ThinkWechat(2);
+		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
+		$restr = $weixin -> add_user($id,$name,$mobile);		
+		return $restr;
+	}
 
+	private function _del_weixin_user($user_id,$name,$mobile){
+		import("Weixin.ORG.Util.ThinkWechat");
+		$weixin = new \ThinkWechat(2);
+		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
+		$restr = $weixin -> add_user($id,$name,$mobile);		
+		return $restr;
+	}	
+	
 	function _update() {
 		$name = CONTROLLER_NAME;
 		$model = D($name);
