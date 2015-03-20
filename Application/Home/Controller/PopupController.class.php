@@ -376,11 +376,11 @@ class PopupController extends HomeController {
 
 				$thumbname = $emp_pic_path . $id . "." . $type;
 
-				$imageFun($thumbImg, $thumbname, 100);
+				$imageFun($thumbImg, $thumbname);
 
 				$thumbImg_120 = imagecreatetruecolor(120, 120);
 				imagecopyresampled($thumbImg_120, $thumbImg, 0, 0, intval($x * $rate), intval($y * $rate), intval(120 * 1), intval(120 * 1), intval($w * $rate), intval($h * $rate));
-				$imageFun($thumbImg_120, $thumbname, 100);
+				$imageFun($thumbImg_120, $thumbname);
 
 				imagedestroy($thumbImg);
 				imagedestroy($im);

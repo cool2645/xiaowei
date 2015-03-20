@@ -46,7 +46,7 @@ class HomeController extends Controller {
 
 		$menu = array_merge($menu, $system_folder_menu, $user_folder_menu);
 		$menu = sort_by($menu, 'sort');
-		$tree = list_to_tree($menu);
+
 
 		$top_menu = cookie('top_menu');
 		if (!empty($top_menu)) {

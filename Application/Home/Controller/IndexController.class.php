@@ -101,7 +101,7 @@ class IndexController extends HomeController {
 			$map['_string'] .= "or Info.id in ($info_list)";
 		}
 
-		$folder_list = D("SystemFolder") -> get_authed_folder($user_id, "Info");
+		$folder_list = D("SystemFolder") -> get_authed_folder("Info");
 		if ($folder_list) {
 			$map['folder'] = array("in", $folder_list);
 		} else {

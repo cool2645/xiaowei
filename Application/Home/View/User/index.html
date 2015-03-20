@@ -18,7 +18,7 @@
 					</select>
 				</div>
 				<div class="pull-right">
-					<a onclick="weixin_sync()" class="btn btn-sm btn-primary">同步到微信</a>
+					<a onclick="weixin_sync()" class="display-none btn btn-sm btn-primary">同步到微信</a>
 					<a onclick="reset_pwd()" class="btn btn-sm btn-primary">设置密码</a>
 					<a onclick="add()"  class="btn btn-sm btn-primary">新增</a>
 					<a onclick="save()"  class="btn btn-sm btn-primary">保存</a>
@@ -60,14 +60,14 @@
 				<input type="hidden" name="opmode" id="opmode" value="edit">
 				<table class="table table-bordered" >
 					<tr>
-						<th>
+						<th class="col-10">
 						<nobr>
 							员工编号*
 						</nobr></th>
-						<td colspan="2">
+						<td colspan="2" class="col-30">
 						<input class="form-control" type="text" id="emp_no" name="emp_no"  check="require" msg="请输入员工编号">
 						</td>
-						<td rowspan="4"><img class="img-thumbnail col-12" id="emp_pic" ></td>
+						<td rowspan="3" class="col-20"><img class="img-thumbnail col-12" id="emp_pic" ></td>
 					</tr>
 					<tr>
 						<th>姓名*</th>
@@ -88,10 +88,11 @@
 						<td colspan="2">
 						<input data-date-format="yyyy-mm-dd" type="text" id="birthday" name="birthday" readonly="readonly" class="input-date form-control">
 						</td>
+												<td colspan="2"><a onclick="select_avatar();" class="btn btn-sm btn-primary">上传头像</a></td>
 					</tr>
 					<tr>
 						<th>部门*</th>
-						<td colspan="2">
+						<td class="col-20">
 						<div class="input-group ">
 							<input class="form-control" name="dept_name"  id="dept_name" type="text" msg="请选择部门" check="require" readonly="readonly" />
 							<input name="dept_id" id="dept_id" type="hidden" msg="请选择部门" check="require" />
@@ -99,16 +100,7 @@
 								<a class="btn btn-sm btn-primary" onclick="select_dept();" > <i class="fa fa-search" ></i> </a>
 							</div>
 						</div></td>
-						<td colspan="2"><a onclick="select_avatar();" class="btn btn-sm btn-primary">上传头像</a></td>
-					</tr>
-					<tr>
-						<th>职级*</th>
-						<td>
-						<select name="rank_id" id="rank_id" class="form-control" msg="请选择职级" check="require">
-							<option value="">选择职级</option>
-							{:fill_option($rank_list)}
-						</select></td>
-						<th>职位*</th>
+												<th class="col-10">职位*</th>
 						<td>
 						<select name="position_id" id="position_id" class="form-control" msg="请选择职位" check="require">
 							<option value="">选择职位</option>
@@ -236,7 +228,7 @@
 				set_val(s, result.data[s]);
 			}
 			$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
-			img_url = "{:get_save_url()}" + $("#pic").val() + "?t=" + Math.random();
+			img_url = "{:get_save_url()}" +$("#pic").val() + "?t=" + Math.random();
 			$("#emp_pic").attr("src", img_url);
 			$("#save_name").val("");
 			$("#opmode").val("edit");

@@ -120,7 +120,9 @@ class FileModel extends Model{
         }
         /* 查找文件 */
         $map = array('md5' => $file['md5'],'sha1'=>$file['sha1'],);
-        return $this->field(true)->where($map)->find();
+        // return $this->field(true)->where($map)->find();
+        /* return false允许上传重复文件，以防止不同账号上传相同文件后一者删除另一者找不到*/
+        return false;
     }
 
     /**

@@ -351,7 +351,7 @@ class InfoController extends HomeController {
 
 	private function _readed($id) {
 		$user_id = get_user_id();
-		$folder_list = D("SystemFolder") -> get_authed_folder($user_id);
+		$folder_list = D("SystemFolder") -> get_authed_folder();
 
 		$where_readed['folder'] = array("in", $folder_list);
 		$where_readed['create_time'] = array("egt", time() - 3600 * 24 * 30);

@@ -17,15 +17,15 @@
 			<input type="hidden" name="opmode" id="opmode" value="">
 			<table class="table table-bordered" >
 				<tr>
-					<th>
+					<th class="col-10">
 					<nobr>
 						员工编号
 					</nobr></th>
-					<td colspan="2">
+					<td colspan="2" class="col-30">
 					<p class="form-control-static">
 						{$vo.emp_no}
 					</p></td>
-					<td rowspan="4"><img class="img-thumbnail col-12" id="emp_pic" src="{:get_save_url()}{$vo.pic}?t={:time()}"></td>
+					<td rowspan="3" class="col-20"><img class="img-thumbnail col-12" id="emp_pic" src="{:get_save_url()}{$vo.pic}?t={:time()}"></td>
 				</tr>
 				<tr>
 					<th>姓名</th>
@@ -47,22 +47,15 @@
 					<td colspan="2">
 					<input type="text" id="birthday" name="birthday" readonly="readonly" class="input-date form-control" value="{$vo.birthday}">
 					</td>
+										<td colspan="2"><a onclick="select_avatar();" class="btn btn-sm btn-primary">上传头像</a></td>
 				</tr>
 				<tr>
 					<th>部门*</th>
-					<td colspan="2">
+					<td class="col-20">
 					<p class="form-control-static">
 						{$vo.dept_name}
 					</p></td>
-					<td colspan="2"><a onclick="select_avatar();" class="btn btn-sm btn-primary">上传头像</a></td>
-				</tr>
-				<tr>
-					<th>职级</th>
-					<td>
-					<p class="form-control-static">
-						{$vo.position_name}
-					</p></td>
-					<th>职位</th>
+					<th class="col-10">职位</th>
 					<td>
 					<p class="form-control-static">
 						{$vo.rank_name}

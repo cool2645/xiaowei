@@ -35,7 +35,7 @@ class DocController extends HomeController {
 			$this -> _search_filter($map);
 		}
 
-		$folder_list = D("SystemFolder") -> get_authed_folder(get_user_id());
+		$folder_list = D("SystemFolder") -> get_authed_folder();
 		if (!empty($folder_list)) {
 			$map['folder'] = array("in", $folder_list);
 		} else {

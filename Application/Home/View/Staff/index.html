@@ -15,8 +15,8 @@
 							<span class="text-center col-6 hidden-xs" >员工编码</span>
 							<span class="text-center col-6" >姓名</span>
 							<span class="text-center col-6">职位</span>
-							<span class="text-center col-6 hidden-xs" >职级</span>
-							<span class="text-center col-10" >电话</span>
+							<span class="text-center col-6 display-none" >职级</span>
+							<span class="text-center col-10" >手机</span>
 						</div>
 						<div class="auto autocut hidden-xs">
 							<span style="width:100%;">邮件</span>
@@ -24,7 +24,7 @@
 					</li>
 				</ul>
 			</div>
-			<div>
+			<div class="hidden-xs">
 				<div class="col-sm-4 text-center">
 					<img id="emp_pic" class="img-thumbnail"/>
 				</div>
@@ -61,7 +61,7 @@
 				<span class="text-center col-6 emp_no hidden-xs" ></span>
 				<span class="text-center col-6 name" ></span>
 				<span class="text-center col-6 position" ></span>
-				<span class="text-center col-6 rank hidden-xs" ></span>
+				<span class="text-center col-6 rank hidden-xs display-none" ></span>
 				<span class="text-center col-10 mobile_tel"></span>
 			</div>
 			<div class="auto autocut hidden-xs">
@@ -162,7 +162,7 @@
 				$(".user_info .mobile_tel").html($mobile_tel);
 				$(".user_info .email").text($(this).attr("email"));
 				$(".user_info .duty").text($(this).attr("duty"));
-				$("#emp_pic").prop("src", "{:get_save_url()}" + $(this).attr("pic"));
+				$("#emp_pic").prop("src", "{:get_save_url()}"+$(this).attr("pic"));
 			});
 		});
 
