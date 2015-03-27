@@ -1,13 +1,13 @@
 <extend name="Layout/page_popup" />
 <block name="content">
-	<input class="left dis" type="radio" id="rb_company" name="type" value="company" >
+	<input class="left dis" type="radio" id="rb_dept" name="type" value="dept" >
 	{:W('PageHeader/simple',array('name'=>'选择人员','search'=>'N'))}
 	<div class="operate panel panel-default">
 		<div class="panel-body">
 			<div class="pull-left">
 				<label class="checkbox inline">
-					<input class="left" type="radio" id="rb_company" name="type" value="company" >
-					公司</label>
+					<input class="left" type="radio" id="rb_dept" name="type" value="dept" >
+					部门</label>
 				<label class="checkbox inline display-none">
 					<input class="left" type="radio" id="rb_rank" name="type" value="rank">
 					职级</label>
@@ -29,8 +29,8 @@
 				</div>
 			</div>
 			<div class="row popup_tree_menu">
-				<div id="company" class="display-none" style="height:200px;">
-					{$list_company}
+				<div id="dept" class="display-none" style="height:200px;">
+					{$list_dept}
 				</div>
 				<div id="rank" class="display-none" style="height:200px;">
 					{$list_rank}
@@ -78,9 +78,9 @@
 		// 显示AJAX 读取的数据
 		function showdata(result) {
 			$("#addr_list").html("");
-			if ( type = $("input[name='type']:checked").val() == "company") {
-				var id = $("#company a.active").attr("node");
-				//var dept_name = $("#company a.active span").text();
+			if ( type = $("input[name='type']:checked").val() == "dept") {
+				var id = $("#dept a.active").attr("node");
+				//var dept_name = $("#dept a.active span").text();
 				//var email = "dept@group";
 				//var html_string = "<label><input type=\"checkbox\" name=\"addr_id\" value=\"dept_" + id + "\"><a id=\"D" + id + "\" title=" + email + " onmousedown=\"return false\" href=\"javascript:void(0);\">" + dept_name + "&lt;" + email + "&gt; </a></label>";
 				//$("#addr_list").html(html_string);

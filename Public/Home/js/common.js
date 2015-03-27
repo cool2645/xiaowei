@@ -221,18 +221,12 @@ var ul_table = {
 		$('.tbody input[type=checkbox]').each(function() {
 			this.checked = true;
 			$(this).closest('.tbody').addClass('selected');
-			count++;
 		});
-
 		$('#id-toggle-all').get(0).checked = true;
-
-		ul_table.display_bar(count);
 	},
 	select_none : function() {
 		$('.tbody input[type=checkbox]').removeAttr('checked').closest('.tbody').removeClass('selected');
 		$('#id-toggle-all').get(0).checked = false;
-
-		ul_table.display_bar(0);
 	},
 	select_read : function() {
 		$('.message-unread input[type=checkbox]').removeAttr('checked').closest('.tbody').removeClass('selected');

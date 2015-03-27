@@ -165,7 +165,7 @@ class UserController extends HomeController {
 		}
 	}
 
-	protected function add_role($user_id) {
+	protected function add_default_role($user_id) {
 		//新增用户自动加入相应权限组
 		$RoleUser = M("RoleUser");
 		$RoleUser -> user_id = $user_id;
@@ -212,8 +212,78 @@ class UserController extends HomeController {
 	}
 
 	function del(){
-		$id=$_POST['id'];
+		$id=$_POST['user_id'];
 		$this->_destory($id);		
+	}
+	
+		public function import() {
+		$opmode = $_POST["opmode"];
+		if ($opmode == "import") {
+			$File = D('File');
+			$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+			$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
+			if (!$info) {
+				$this -> error();
+			} else {
+				//取得成功上传的文件信息
+				//$uploadList = $upload -> getUploadFileInfo();
+				Vendor('Excel.PHPExcel');
+				//导入thinkphp第三方类库
+
+				$import_file = $info['uploadfile']["path"];
+				$import_file = substr($import_file, 1);
+
+				//$import_file=realpath($import_file);
+
+				$objPHPExcel = \PHPExcel_IOFactory::load($import_file);
+				//$objPHPExcel = \PHPExcel_IOFactory::load('Uploads/Download/Org/2014-12/547e87ac4b0bf.xls');
+				$dept = M("Dept") -> getField('name,id');
+				$position = M("Position") -> getField('name,id');
+				$role = M("Role") -> getField('name,id');
+				$sheetData = $objPHPExcel -> getActiveSheet() -> toArray(null, true, true, true);
+				$model = D("User");
+				for ($i = 2; $i <= count($sheetData); $i++) {
+					$data = array();
+
+					$data_user['emp_no'] = $sheetData[$i]["A"];
+					$data_user['userid'] = $sheetData[$i]["A"];
+					$data_user['name'] = $sheetData[$i]["B"];
+
+					$data_user['dept_id'] = $dept[$sheetData[$i]["C"]];
+					$data_user['position_id'] = $position[$sheetData[$i]["D"]];
+
+					$data_user['duty'] = $sheetData[$i]["J"];
+					$data_user['office_tel'] = $sheetData[$i]["F"];
+					$data_user['mobile_tel'] = $sheetData[$i]["G"];
+					$data_user['sex'] = $sheetData[$i]["H"];
+					$data_user['birthday'] = $sheetData[$i]["I"];
+					
+					$role_list=explode($sheetData[$i]["E"]);
+					foreach ($role_list as $key => $val) {
+						$data_role[]=$role[$val];
+					}
+					$user_id=M("User")->add($data_user);
+					
+					$this->add_role($user_id, $data_role);
+				}
+				//dump($sheetData);
+				$this -> assign('jumpUrl', get_return_url());
+				$this -> success('导入成功！');
+			}
+		} else {
+			$this -> display();
+		}
+	}
+
+	function add_role($user_id, $role_list) {
+		$role_list = explode(",", $role_list);
+		$role_list = array_filter($role_list);
+		$RoleUser = M("RoleUser");
+		$RoleUser -> user_id = $user_id;
+		foreach ($role_list as $role_id) {
+			$RoleUser -> role_id = $role_id;
+			$RoleUser -> add();
+		}
 	}
 }
 ?>

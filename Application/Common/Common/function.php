@@ -410,10 +410,10 @@ function get_save_path() {
 
 function get_save_url() {
 	$app_path = __APP__;
-	$save_path = C('SAVE_PATH');
+	// $save_path = C('SAVE_PATH');
 	$app_path = str_replace("/index.php?s=", "", $app_path);
 	$app_path = str_replace("/index.php", "", $app_path);
-	return $app_path . "/" . $save_path;
+	return $app_path . "/";
 }
 
 function _encode($arr) {
@@ -1409,13 +1409,11 @@ function send_push($data, $info, $status, $user_id, $time = null) {
 }
 
 function get_emp_pic($id) {
-	if (empty($uid)) {
-		return "emp_pic/no_avatar.jpg";
-	}
-	$data = M("User") -> where("id='$id'") -> getField("pic");
+	
+	$data = M("User") -> where(array(id => $id)) -> getField("pic");
 	//dump($data);
 	if (empty($data)) {
-		$data = "emp_pic/no_avatar.jpg";
+		$data = "./Uploads/emp_pic/no_avatar.jpg";
 	}
 	return $data;
 }

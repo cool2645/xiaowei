@@ -33,7 +33,7 @@ class PopupController extends HomeController {
 	function read($id) {
 		$type = I('type');
 		switch ($type) {
-			case "company" :
+			case "dept" :
 				$model = M("Dept");
 				$dept = tree_to_list(list_to_tree( M("Dept") -> where('is_del=0') -> select(), $id));
 				$dept = rotate($dept);
@@ -59,6 +59,20 @@ class PopupController extends HomeController {
 				$data = $model -> where($where) -> select();
 				break;
 
+			case "group" :
+				$user_list = D("Group") -> get_user_list($id);
+
+				$model = D("UserView");
+				if (!empty($user_list)) {
+					$where['id'] = array('in', $user_list);
+					$where['is_del'] = array('eq', 0);
+				} else {
+					$where['_string'] = '1=2';
+				}
+
+				$data = $model -> where($where) -> select();
+				break;
+
 			case "position" :
 				$model = D("UserView");
 				$where['position_id'] = array('eq', $id);
@@ -72,14 +86,23 @@ class PopupController extends HomeController {
 					$data = $model -> get_data_list("Contact");
 					$data = rotate($data);
 					$data = $data['row_id'];
-					$where['id'] = array('not in', implode(",", $data));
+					if (!empty($data)) {
+						$where['id'] = array('not in', implode(",", $data));
+					} else {
+						$where['_string'] = '1=2';
+					}
 				} else {
 					$test = $model;
 					$data = $model -> get_data_list("Contact", $id);
 					$data = rotate($data);
 
 					$data = $data['row_id'];
-					$where['id'] = array('in', implode(",", $data));
+				 
+					if(!empty($data)){
+						$where['id'] = array('in', implode(",", $data));
+					} else {
+						$where['_string'] = '1=2';
+					}					 
 				}
 				$model = M("Contact");
 				$where['is_del'] = array('eq', 0);
@@ -93,35 +116,57 @@ class PopupController extends HomeController {
 		$this -> ajaxReturn($return);
 	}
 
-	function contact() {
-		$plugin['jquery-ui'] = true;
-		$this -> assign("plugin", $plugin);
-
+	private function _dept_list() {
 		$model = M("Dept");
 		$list = array();
 		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
 		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
+		$this -> assign('list_dept', popup_tree_menu($list));
+	}
 
+	private function _rank_list() {
 		$model = M("Rank");
 		$list = array();
 		$list = $model -> field('id,name') -> order('sort asc') -> select();
 		$list = list_to_tree($list);
 		$this -> assign('list_rank', popup_tree_menu($list));
+	}
 
+	private function _position_list() {
 		$model = M("Position");
 		$list = array();
 		$list = $model -> field('id,name') -> order('sort asc') -> select();
 		$list = list_to_tree($list);
 		$this -> assign('list_position', popup_tree_menu($list));
+	}
 
+	private function _group_list() {
+		$model = M("Group");
+		$list = array();
+		$where['user_id'] = array('eq', get_user_id());
+		$list = $model -> field('id,name') -> order('sort asc') -> select();
+		$list = list_to_tree($list);
+		$this -> assign('list_group', popup_tree_menu($list));
+	}
+
+	private function _tag_list() {
 		$model = D("UserTag");
-
 		$tag_list = $model -> get_tag_list("id,name", "Contact");
 		$tag_list['#'] = "未分组";
 		$this -> assign("list_personal", $tag_list);
+	}
 
-		$this -> assign('type', 'rank');
+	function contact() {
+		$plugin['jquery-ui'] = true;
+		$this -> assign("plugin", $plugin);
+
+		$this -> _dept_list();
+		//$this->_rank_list();
+		$this -> _position_list();
+		$this -> _tag_list();
+		$this -> _group_list();
+
+		$this -> assign('type', 'dept');
 		$this -> display();
 		return;
 	}
@@ -130,25 +175,11 @@ class PopupController extends HomeController {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
+		$this -> _dept_list();
+		//$this->_rank_list();
+		$this -> _position_list();
 
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'company');
+		$this -> assign('type', 'dept');
 		$this -> display();
 		return;
 	}
@@ -171,12 +202,7 @@ class PopupController extends HomeController {
 	function depts() {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
-
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_dept', sub_tree_menu($list));
+		$this -> _dept_list();
 		$this -> display();
 		return;
 	}
@@ -189,25 +215,12 @@ class PopupController extends HomeController {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
+		$this -> _dept_list();
+		//$this->_rank_list();
+		$this -> _position_list();
+		$this -> _group_list();
 
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'rank');
+		$this -> assign('type', 'dept');
 		$this -> display();
 		return;
 	}
@@ -221,25 +234,11 @@ class PopupController extends HomeController {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
+		$this -> _dept_list();
+		//$this->_rank_list();
+		$this -> _position_list();
 
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'company');
+		$this -> assign('type', 'dept');
 		$this -> display();
 		return;
 	}
@@ -259,17 +258,8 @@ class PopupController extends HomeController {
 		$list = list_to_tree($list);
 		$this -> assign('list_dept_grade', sub_tree_menu($list));
 
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_dept', sub_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', sub_tree_menu($list));
+		$this -> _dept_list();
+		$this -> _position_list();
 
 		$this -> assign('type', 'dgp');
 		$this -> display();
@@ -280,11 +270,7 @@ class PopupController extends HomeController {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_dept', sub_tree_menu($list));
+		$this -> _dept_list();
 		$this -> display();
 		return;
 	}
@@ -293,11 +279,7 @@ class PopupController extends HomeController {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', sub_tree_menu($list));
+		$this -> _position_list();
 		$this -> display();
 		return;
 	}
@@ -396,33 +378,17 @@ class PopupController extends HomeController {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
-
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'rank');
+		$this -> _dept_list();
+		$this -> _position_list();
+		$this -> _group_list();
+		$this -> assign('type', 'dept');
 		$this -> display();
 		return;
 	}
 
 	function json() {
 		header("Content-Type:text/html; charset=utf-8");
-		$type = I('type');
-		;
+		$type = I('type'); ;
 		$key = $_REQUEST['key'];
 
 		$model = M("User");
@@ -432,7 +398,7 @@ class PopupController extends HomeController {
 		$where['_logic'] = 'or';
 		$map['_complex'] = $where;
 		$map['is_del'] = array('eq', 0);
-		$company = $model -> where($map) -> field('id,name,email') -> select();
+		$dept = $model -> where($map) -> field('id,name,email') -> select();
 
 		if ($type == "all") {
 			$where = array();
@@ -447,13 +413,13 @@ class PopupController extends HomeController {
 			$map['user_id'] = array('eq', get_user_id());
 			$personal = $model -> where($map) -> field('id,name,email') -> select();
 		}
-		if (empty($company)) {
-			$company = array();
+		if (empty($dept)) {
+			$dept = array();
 		}
 		if (empty($personal)) {
 			$personal = array();
 		}
-		$contact = array_merge_recursive($company, $personal);
+		$contact = array_merge_recursive($dept, $personal);
 		exit(json_encode($contact));
 	}
 
@@ -461,14 +427,13 @@ class PopupController extends HomeController {
 		header("Content-Type:text/html; charset=utf-8");
 		switch ($data) {
 			case 'dept' :
-				$model = M("Dept");				
+				$model = M("Dept");
 				$list = $model -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
 				exit(json_encode($list));
 				break;
 			default :
 				break;
 		}
-		
 	}
 
 }

@@ -85,7 +85,7 @@ window.onbeforeunload = function (e){
 }; 
 
 $(document).on("click", "#uploader a.del", function(){
-	$(this)=$(this).parents("li");
+	$obj=$(this).parents("li");
 	id=$obj.attr("id");
 	file=uploader.getFile(id);
 	ui_confirm("确定要删除吗？",function(){				
@@ -96,7 +96,7 @@ $(document).on("click", "#uploader a.del", function(){
 
 		if($add_file.length>0){
 			$obj.remove();
-			sendAjax(del_url, 'sid=' + $(this).attr("id"));
+			sendAjax(del_url, 'sid=' + $obj.attr("id"));
 		}else{
 			uploader.removeFile(file);
 			$obj.remove();

@@ -723,7 +723,7 @@ class Model {
             $where[$this->getPk()]  =   $options;
             $options                =   array();
             $options['where']       =   $where;
-        }
+        }		
         // 根据复合主键查找记录
         $pk  =  $this->getPk();
         if (is_array($options) && (count($options) > 0) && is_array($pk)) {

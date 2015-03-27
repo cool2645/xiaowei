@@ -13,7 +13,7 @@
 namespace Home\Controller;
 
 class TaskController extends HomeController {
-	protected $config = array('app_type' => 'common','read'=>'let_me_do,accept,reject,save_log');
+	protected $config = array('app_type' => 'common', 'read' => 'let_me_do,accept,reject,save_log');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
@@ -83,14 +83,14 @@ class TaskController extends HomeController {
 				$this -> assign("folder_name", '不知让谁处理的任务');
 
 				$prefix = C('DB_PREFIX');
-				
-				$assign_list=M("Task")->getField('id',true);
-				
+
+				$assign_list = M("Task") -> getField('id', true);
+
 				$sql = "select id from {$prefix}task task where status=0 and not exists (select * from {$prefix}task_log task_log where task.id=task_log.task_id)";
 				$task_list = M() -> query($sql);
-				
-				foreach($task_list as $key=>$val){
-					$list[]=$val['id'];
+
+				foreach ($task_list as $key => $val) {
+					$list[] = $val['id'];
 				}
 				if (empty($task_list)) {
 					$where['_string'] = '1=2';
@@ -131,7 +131,7 @@ class TaskController extends HomeController {
 				} else {
 					$where['id'] = array('in', $task_list);
 				}
-				
+
 			default :
 				break;
 		}
@@ -284,6 +284,20 @@ class TaskController extends HomeController {
 			$model -> transactor_name = get_user_name();
 			$model -> finish_time = to_date(time());
 			$list = $model -> save();
+			$status=I('status');
+			$task_id=I('task_id');
+			if ($status > 2) {
+				$where_count['task_id'] = array('eq', $task_id);
+				$total_count = M("TaskLog") -> where($where_count) -> count();
+
+				$where_count['status'] = array('gt', 2);
+				$finish_count = M("TaskLog") -> where($where_count) -> count();
+				if ($total_count == $finish_count) {
+					M("Task") -> where("id=$task_id") -> setField('status', 5);
+					$user_id = M('Task') -> where("id=$task_id") -> getField('user_id');
+					//$this -> _send_mail_finish($task_id, $user_id);
+				}
+			}
 			if ($list !== false) {
 				$this -> success('提交成功');
 			} else {
@@ -292,15 +306,14 @@ class TaskController extends HomeController {
 		}
 
 		$task_id = I('task_id');
-		$where_log1['type'] = 2;
+		$where_log1['type'] = 1;
 		$where_log1['executor'] = get_user_id();
 		$where_log1['task_id'] = $task_id;
 		$task_log1 = M("TaskLog") -> where($where_log1) -> find();
-
-		if ($task_list1) {
+		if ($task_log1) {
 			$this -> assign('task_log', $task_log1);
 		} else {
-			$where_log2['type'] = 1;
+			$where_log2['type'] = 2;
 			$where_log2['executor'] = get_dept_id();
 			$where_log2['task_id'] = $task_id;
 			$task_log2 = M("TaskLog") -> where($where_log2) -> find();

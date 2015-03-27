@@ -5,8 +5,8 @@
 		<div class="panel-heading clearfix">
 			<div class="pull-left">
 				<label>
-					<input class="ace"  type="radio" id="rb_company" name="type" value="company" >
-					<span class="lbl">公司</span> </label>
+					<input class="ace"  type="radio" id="rb_dept" name="type" value="dept" >
+					<span class="lbl">部门</span> </label>
 
 				<label class="display-none">
 					<input  class="ace"  type="radio" id="rb_rank" name="type" value="rank">
@@ -15,7 +15,6 @@
 				<label>
 					<input  class="ace"  type="radio" id="rb_position" name="type" value="position">
 					<span class="lbl">职位</span> </label>
-
 			</div>
 			<div class="pull-right">
 				<a  onclick="save();" class="btn btn-sm btn-primary">确定</a>
@@ -28,8 +27,8 @@
 					<b>地址簿</b>
 				</div>
 				<div class="popup_tree_menu" >
-					<div id="company" class="display-none" style="height:200px;">
-						{$list_company}
+					<div id="dept" class="display-none" style="height:200px;">
+						{$list_dept}
 					</div>
 					<div id="rank" class="display-none" style="height:200px;">
 						{$list_rank}
@@ -94,9 +93,9 @@
 
 		function showdata(result) {
 			$("#addr_list").html("");
-			if ( type = $("input[name='type']:checked").val() == "company") {
-				var id = "dept_" + $("#company a.active").attr("node");
-				var dept_name = $("#company a.active span").text();
+			if ( type = $("input[name='type']:checked").val() == "dept") {
+				var id = "dept_" + $("#dept a.active").attr("node");
+				var dept_name = $("#dept a.active span").text();
 				var name = dept_name + "&lt;dept@group&gt;";
 				var html_string = conv_address_item(name,id);
 				$("#addr_list").html(html_string);

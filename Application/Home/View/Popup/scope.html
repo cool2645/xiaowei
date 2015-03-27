@@ -4,16 +4,20 @@
 		<div class="panel-heading clearfix">
 			<div class="pull-left">
 				<label>
-					<input class="ace"  type="radio" id="rb_company" name="type" value="company" >
-					<span class="lbl">公司</span> </label>
+					<input class="ace"  type="radio" id="rb_dept" name="type" value="dept" >
+					<span class="lbl">部门</span> </label>
 				<label class="display-none">
 					<input  class="ace"  type="radio" id="rb_rank" name="type" value="rank">
 					<span class="lbl">职级</span> </label>
 				<label>
 					<input  class="ace"  type="radio" id="rb_position" name="type" value="position">
 					<span class="lbl">职位</span> </label>
+				<label>
+					<input  class="ace"  type="radio" id="rb_group" name="type" value="group">
+					<span class="lbl">用户组</span> </label>
 			</div>
 			<div class="pull-right">
+				<a  onclick="select_all()" class="btn btn-sm btn-primary">全选</a>
 				<a  onclick="save();" class="btn btn-sm btn-primary">确定</a>
 				<a  onclick="myclose();" class="btn btn-sm btn-primary">关闭</a>
 			</div>
@@ -24,14 +28,17 @@
 					<b>地址簿</b>
 				</div>
 				<div class="popup_tree_menu" >
-					<div id="company" class="display-none" style="height:200px;">
-						{$list_company}
+					<div id="dept" class="display-none" style="height:200px;">
+						{$list_dept}
 					</div>
 					<div id="rank" class="display-none" style="height:200px;">
 						{$list_rank}
 					</div>
 					<div id="position" class="display-none" style="height:200px;">
 						{$list_position}
+					</div>
+					<div id="group" class="display-none"  style="height:200px;">
+						{$list_group}
 					</div>
 					<div id="personal" class="display-none" style="height:200px;">
 						<ul class="tree_menu">
@@ -70,29 +77,42 @@
 				emp_no = $(this).val();
 				name = jQuery.trim($(this).text());
 				name = name.replace(/<.*>/, '');
-				html_string = conv_inputbox_item(name,emp_no);
+				html_string = conv_inputbox_item(name, emp_no);
 				$("#actor_wrap .address_list", parent.document).append(html_string);
 			});
 			myclose();
 		}
 
+		function select_all() {
+			name='rc';
+			$("input[name='addr_id']").each(function() {
+				$(this).prop('checked', false);
+				$text = $(this).parents("label").find("span").text();
+				$val = $(this).val();
+				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
+					$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
+					$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
+				};
+			});
+		}
+
 		function showdata(result) {
 			$("#addr_list").html("");
-			if ( type = $("input[name='type']:checked").val() == "company") {
-				var id = "dept_" + $("#company a.active").attr("node");
-				var dept_name = $("#company a.active span").text();
+			if ( type = $("input[name='type']:checked").val() == "dept") {
+				var id = "dept_" + $("#dept a.active").attr("node");
+				var dept_name = $("#dept a.active span").text();
 				var email = "dept@group";
 				var name = dept_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(name,id);
+				var html_string = conv_address_item(name, id);
 				$("#addr_list").html(html_string);
 			}
 			for (s in result.data) {
 				var id = result.data[s].id;
 				var position_name = result.data[s].position_name;
-				var user_id = result.data[s].id;				
+				var user_id = result.data[s].id;
 				var name = result.data[s].name;
-				var name = name + "/" + position_name ;
-				var html_string = conv_address_item(name,user_id);
+				var name = name + "/" + position_name;
+				var html_string = conv_address_item(name, user_id);
 				$("#addr_list").append(html_string);
 			}
 		}
@@ -135,13 +155,13 @@
 			$("#rc  select").on("dblclick", function() {
 				$(this).find("option:selected").remove();
 				$("#rc_count").text("(" + $("#rc select option").length + ")");
-			});			
+			});
 		});
 		//最终确认
 
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
-				$(this).prop('checked',false);
+				$(this).prop('checked', false);
 				$text = $(this).parents("label").find("span").text();
 				$val = $(this).val();
 				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
