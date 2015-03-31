@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class FlowController extends HomeController {
-	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage,back_to');
+	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage,back_to,reject');
 
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');

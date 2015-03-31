@@ -1510,6 +1510,9 @@ ul.tree_menu i {
 	background-position: -17px -126px;
 }
 @media print {
+	.operate{
+		display:none;
+	}
 	.navbar {
 		display: none;
 	}

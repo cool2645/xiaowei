@@ -78,13 +78,9 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			if (check_form("form_data")) {
-				$("#opmode").val("add");
-				$("#id").val("");
-				sendForm("form_data", "{:U('save')}", "__CONTROLLER__");
-			}
-		}
-
+			winopen("{:U('add')}",740,500);
+		};
+		
 		function del() {
 			var vars = $("#form_data").serialize();
 			ui_confirm('确定要删除吗?', function() {

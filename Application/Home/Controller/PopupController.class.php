@@ -97,12 +97,12 @@ class PopupController extends HomeController {
 					$data = rotate($data);
 
 					$data = $data['row_id'];
-				 
-					if(!empty($data)){
+
+					if (!empty($data)) {
 						$where['id'] = array('in', implode(",", $data));
 					} else {
 						$where['_string'] = '1=2';
-					}					 
+					}
 				}
 				$model = M("Contact");
 				$where['is_del'] = array('eq', 0);
@@ -194,8 +194,10 @@ class PopupController extends HomeController {
 
 	function avatar() {
 		$id = I('id');
-		$this -> assign("id", $id);
-		$this -> assign("pic", M("User") -> where("id=$id") -> getField('pic'));
+		if (!empty($id)) {
+			$this -> assign("id", $id);
+			$this -> assign("pic", M("User") -> where("id=$id") -> getField('pic'));
+		}
 		$this -> display();
 	}
 
@@ -388,7 +390,8 @@ class PopupController extends HomeController {
 
 	function json() {
 		header("Content-Type:text/html; charset=utf-8");
-		$type = I('type'); ;
+		$type = I('type');
+		;
 		$key = $_REQUEST['key'];
 
 		$model = M("User");

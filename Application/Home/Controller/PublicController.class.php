@@ -10,14 +10,27 @@ class PublicController extends Controller {
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
 	public function login(){
-		$this -> display();
+		$this->assign("is_verify_code",get_system_config("IS_VERIFY_CODE"));
+		$auth_id = session(C('USER_AUTH_KEY'));
+		if (!isset($auth_id)) {
+			$this -> display();
+		} else {
+			header('Location: ' .__APP__);
+		}
 	}
+	// 检测输入的验证码是否正确，$code为用户输入的验证码字符串
+	function check_verify($code, $id = ''){
+	    $verify = new \Think\Verify();
+	    return $verify->check($code, $id);
+	}
+
 
 	// 登录检测
 	public function check_login() {
 		$is_verify_code = get_system_config("IS_VERIFY_CODE");
 		if (!empty($is_verify_code)) {
-			if (session('verify') != md5($_POST['verify'])) {
+			$check=$this->check_verify($_POST['verify'],1);
+			if (!$check) {
 				$this -> error('验证码错误！');
 			}
 		}
@@ -126,7 +139,12 @@ class PublicController extends Controller {
 	}
 
 	public function verify() {
-		$verify = new \Think\Verify();
+		$config =    array(
+		    'fontSize'    =>    15,    // 验证码字体大小
+		    'length'      =>    4,     // 验证码位数
+		    'useNoise'    =>    false, // 关闭验证码杂点
+		);
+		$verify = new \Think\Verify($config);
 		$verify -> entry(1);
 	}
 

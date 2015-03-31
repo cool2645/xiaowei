@@ -1,32 +1,32 @@
 <?php
 /*---------------------------------------------------------------------------
-  小微OA系统 - 让工作更轻松快乐 
+ 小微OA系统 - 让工作更轻松快乐
 
-  Copyright (c) 2013 http://www.smeoa.com All rights reserved.                                             
+ Copyright (c) 2013 http://www.smeoa.com All rights reserved.
 
-  Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )  
+ Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 
-  Author:  jinzhu.yin<smeoa@qq.com>                         
+ Author:  jinzhu.yin<smeoa@qq.com>
 
-  Support: https://git.oschina.net/smeoa/smeoa               
+ Support: https://git.oschina.net/smeoa/smeoa
  -------------------------------------------------------------------------*/
 
 // 后台用户模块
 namespace Home\Controller;
 
 class UserController extends HomeController {
-	protected $config=array('app_type'=>'master');
-	
+	protected $config = array('app_type' => 'master');
+
 	function _search_filter(&$map) {
-		$keyword=I('keyword');
+		$keyword = I('keyword');
 		if (!empty($keyword)) {
 			$map['name|emp_no'] = array('like', "%" . $keyword . "%");
 		}
 	}
 
-	public function index(){
-		$plugin['date'] = true;							
-		$this -> assign("plugin", $plugin);					
+	public function index() {
+		$plugin['date'] = true;
+		$this -> assign("plugin", $plugin);
 		$model = M("Position");
 		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
 		$this -> assign('position_list', $list);
@@ -42,27 +42,42 @@ class UserController extends HomeController {
 		$model = M("Rank");
 		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
 		$this -> assign('rank_list', $list);
-				
-		if (isset($_POST['eq_is_del'])){					
-			$eq_is_del = $_POST['eq_is_del'];			
-		} else{
-			$eq_is_del="0";
+
+		if (isset($_POST['eq_is_del'])) {
+			$eq_is_del = $_POST['eq_is_del'];
+		} else {
+			$eq_is_del = "0";
 		}
 		//die;
-		$this->assign('eq_is_del',$eq_is_del);
+		$this -> assign('eq_is_del', $eq_is_del);
 
 		$map = $this -> _search();
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($map);
 		}
-		$map['is_del']=array('eq',$eq_is_del);	
+		$map['is_del'] = array('eq', $eq_is_del);
 
 		$model = D("User");
-		
+
 		if (!empty($model)) {
-			$this -> _list($model,$map,"emp_no");
+			$this -> _list($model, $map, "emp_no");
 		}
-		$this -> display();							
+		$this -> display();
+	}
+
+	public function add() {
+		$plugin['date'] = true;
+		$this -> assign("plugin", $plugin);
+
+		$model = M("Position");
+		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
+		$this -> assign('position_list', $list);
+
+		$model = M("Dept");
+		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
+		$this -> assign('dept_list', $list);
+
+		$this -> display();
 	}
 
 	// 检查帐号
@@ -72,7 +87,8 @@ class UserController extends HomeController {
 		}
 		$User = M("User");
 		// 检测用户名是否冲突
-		$name = I('emp_no');;
+		$name = I('emp_no');
+		;
 		$result = $User -> getByAccount($name);
 		if ($result) {
 			$this -> error('该编码已经存在！');
@@ -90,11 +106,19 @@ class UserController extends HomeController {
 			$this -> error($model -> getError());
 		} else {
 			// 写入帐号数据
-			$model ->letter=get_letter($model ->name);
-			$model ->password=md5($model ->emp_no.$model->emp_no);
-			if ($result = $model -> add()){
-				$data['id']=$result;
-				M("UserConfig")->add($data);
+			$model -> letter = get_letter($model -> name);
+			$model -> password = md5($model -> emp_no . $model -> emp_no);
+			$emp_no = $model -> emp_no;
+			$name = $model -> name;
+			$mobile_tel = $model -> mobile_tel;
+			if ($result = $model -> add()) {
+				$data['id'] = $result;
+				M("UserConfig") -> add($data);
+				if (!empty($mobile_tel)) {
+					$agent_id = get_system_config('WEIXIN_AGENT_ID');
+					$weixin = new \ThinkWechat($agent_id);
+					$weixin -> add_user($emp_no,$name,$mobile_tel);
+				}
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('用户添加成功！');
 			} else {
@@ -102,50 +126,51 @@ class UserController extends HomeController {
 			}
 		}
 	}
-		
-	public function weixin_sync(){
-		
+
+	public function weixin_sync() {
+
 		import("Weixin.ORG.Util.ThinkWechat");
-		$weixin = new \ThinkWechat(2);					
-		$user_list=M("User")->getField('emp_no',true);	
-		
-		$weixin_user_list=$weixin->get_user_list();
-		foreach($weixin_user_list as $key=>$val){
-			$data[]=$val->userid;
+		$agent_id = get_system_config('WEIXIN_AGENT_ID');
+		$weixin = new \ThinkWechat($agent_id);
+		$user_list = M("User") -> getField('emp_no', true);
+
+		$weixin_user_list = $weixin -> get_user_list();
+		foreach ($weixin_user_list as $key => $val) {
+			$data[] = $val -> userid;
 		}
 		//$where['emp_no']=array('in',$data);
-		
-		$weixin->del_user_list($data);
-		
-		$user_list=M("User")->where(array('is_del'=>0))->getField('emp_no,name,mobile_tel');
-		
-		$error_code_desc=C('WEIXIN_ERROR_CODE');
-		foreach($user_list as $key=>$val){
-			$error_code=json_decode($weixin->add_user($val['emp_no'],$val['name'],$val['mobile_tel']))->errcode;
-			$list[$key]['error_code']=$error_code;			
-			$list[$key]['desc']=$error_code_desc[$error_code];		
-			$list[$key]['emp_no']=$key;
+
+		$weixin -> del_user_list($data);
+
+		$user_list = M("User") -> where(array('is_del' => 0)) -> getField('emp_no,name,mobile_tel');
+
+		$error_code_desc = C('WEIXIN_ERROR_CODE');
+		foreach ($user_list as $key => $val) {
+			$error_code =     json_decode($weixin -> add_user($val['emp_no'], $val['name'], $val['mobile_tel'])) -> errcode;
+			$list[$key]['error_code'] = $error_code;
+			$list[$key]['desc'] = $error_code_desc[$error_code];
+			$list[$key]['emp_no'] = $key;
 		}
-		$this->assign('list',$list);
-		$this->display();
+		$this -> assign('list', $list);
+		$this -> display();
 	}
-		
-	private function _add_weixin_user($user_id,$name,$mobile){
+
+	private function _add_weixin_user($user_id, $name, $mobile) {
 		import("Weixin.ORG.Util.ThinkWechat");
 		$weixin = new \ThinkWechat(2);
 		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
-		$restr = $weixin -> add_user($id,$name,$mobile);		
+		$restr = $weixin -> add_user($id, $name, $mobile);
 		return $restr;
 	}
 
-	private function _del_weixin_user($user_id,$name,$mobile){
+	private function _del_weixin_user($user_id, $name, $mobile) {
 		import("Weixin.ORG.Util.ThinkWechat");
 		$weixin = new \ThinkWechat(2);
 		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
-		$restr = $weixin -> add_user($id,$name,$mobile);		
+		$restr = $weixin -> add_user($id, $name, $mobile);
 		return $restr;
-	}	
-	
+	}
+
 	function _update() {
 		$name = CONTROLLER_NAME;
 		$model = D($name);
@@ -154,9 +179,17 @@ class UserController extends HomeController {
 		}
 		// 更新数据
 		$model -> __set('letter', get_letter($model -> __get('name')));
+		$emp_no = $model -> emp_no;
+		$name = $model -> name;
+		$mobile_tel = $model -> mobile_tel;
 		$list = $model -> save();
 		if (false !== $list) {
 			//成功提示
+			if (!empty($mobile_tel)) {
+				$agent_id = get_system_config('WEIXIN_AGENT_ID');
+				$weixin = new \ThinkWechat($agent_id);
+				$weixin -> add_user($emp_no,$name,$mobile_tel);
+			}
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
 		} else {
@@ -211,12 +244,12 @@ class UserController extends HomeController {
 		exit(json_encode($list));
 	}
 
-	function del(){
-		$id=$_POST['user_id'];
-		$this->_destory($id);		
+	function del() {
+		$id = $_POST['user_id'];
+		$this -> _destory($id);
 	}
-	
-		public function import() {
+
+	public function import() {
 		$opmode = $_POST["opmode"];
 		if ($opmode == "import") {
 			$File = D('File');
@@ -257,14 +290,14 @@ class UserController extends HomeController {
 					$data_user['mobile_tel'] = $sheetData[$i]["G"];
 					$data_user['sex'] = $sheetData[$i]["H"];
 					$data_user['birthday'] = $sheetData[$i]["I"];
-					
-					$role_list=explode($sheetData[$i]["E"]);
+
+					$role_list = explode($sheetData[$i]["E"]);
 					foreach ($role_list as $key => $val) {
-						$data_role[]=$role[$val];
+						$data_role[] = $role[$val];
 					}
-					$user_id=M("User")->add($data_user);
-					
-					$this->add_role($user_id, $data_role);
+					$user_id = M("User") -> add($data_user);
+
+					$this -> add_role($user_id, $data_role);
 				}
 				//dump($sheetData);
 				$this -> assign('jumpUrl', get_return_url());
@@ -285,5 +318,6 @@ class UserController extends HomeController {
 			$RoleUser -> add();
 		}
 	}
+
 }
 ?>

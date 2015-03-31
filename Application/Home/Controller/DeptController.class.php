@@ -36,6 +36,15 @@ class DeptController extends HomeController {
 		$this -> display();
 	}
 
+	public function add(){
+
+		$model = M("DeptGrade");
+		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
+		$this -> assign('dept_grade_list', $list);
+
+		$this -> display();
+	}
+	
 	public function del($id) {		
 		$this -> _destory($id);
 	}

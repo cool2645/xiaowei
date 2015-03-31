@@ -16,12 +16,12 @@
 						<option value="1">禁用</option>
 						<option value="2">其他</option>
 					</select>
-				</div>
-				<div class="pull-right">
-					
 					<a onclick="import_user()" class="btn btn-sm btn-primary">导入</a>
 					<a onclick="weixin_sync()" class="display-none btn btn-sm btn-primary">同步到微信</a>
 					<a onclick="reset_pwd()" class="btn btn-sm btn-primary">设置密码</a>
+				</div>
+				<div class="pull-right">
+
 					<a onclick="add()"  class="btn btn-sm btn-primary">新增</a>
 					<a onclick="save()"  class="btn btn-sm btn-primary">保存</a>
 					|
@@ -165,11 +165,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			$("#opmode").val("add");
-			$("#id").val("");
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "__SELF__");
-			}
+			winopen("{:U('add')}", 740, 500);
 		};
 
 		function del() {
@@ -192,12 +188,12 @@
 			}
 			winopen("{:U('password')}?id=" + $("#id").val(), 730, 300);
 		}
-		
+
 		function import_user() {
 			window.open("{:U('import')}", "_self");
 			return false;
 		}
-		
+
 		function select_dept() {
 			winopen("{:U('dept/winpop2')}", 730, 500);
 		}
