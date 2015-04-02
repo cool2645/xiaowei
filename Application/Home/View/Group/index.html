@@ -29,9 +29,9 @@
 				<tbody>
 					<volist name="list" id="data">
 						<tr id="{$data.id}">
-							<td><span>{$data.name}</span></td>
-							<td><span>{$data.is_public|status}</span></td>
-							<td><span>{$data.is_del|status}</span></td>
+							<td class="click"><span>{$data.name}</span></td>
+							<td class="click"><span>{$data.is_public|status}</span></td>
+							<td class="click"><span>{$data.is_del|status}</span></td>
 							<td><a href="{:U('user',array('id'=>$data['id']))}">管理成员</a></td>
 						</tr>
 					</volist>
@@ -122,7 +122,7 @@
 
 		$(document).ready(function() {
 			set_return_url();
-			$(".sub_left_menu tbody tr span").click(function() {
+			$(".sub_left_menu tbody tr td.click").click(function() {
 				$(".sub_left_menu  tr.active").removeClass("active");
 				$tr = $(this).parents('tr');
 				$tr.attr("class", "active");

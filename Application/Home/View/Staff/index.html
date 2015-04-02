@@ -26,7 +26,7 @@
 			</div>
 			<div class="hidden-xs">
 				<div class="col-sm-4 text-center">
-					<img id="emp_pic" class="img-thumbnail"/>
+					<img id="emp_pic" class="img-thumbnail" onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'"/>
 				</div>
 				<div class="col-sm-8 user_info">
 					<table class="table table-bordered">
@@ -72,11 +72,6 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
-		function save() {
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "__CONTROLLER__");
-			}
-		}
 
 		function showdata(result) {
 			$(".user_list li.tbody").remove();
@@ -97,7 +92,13 @@
 				$("#sample li").attr("name", result.data[s].name);
 				$("#sample li").attr("office_tel", result.data[s].office_tel);
 				$("#sample li").attr("mobile_tel", result.data[s].mobile_tel);
-				$("#sample li").attr("pic", result.data[s].pic + '?t=' + Math.random());
+				
+				$img_url=result.data[s].pic;
+				if($img_url!=""){
+					$("#emp_pic").prop("src", $(this).attr("pic"));
+				}else{
+					$("#emp_pic").prop("src","/Upload/emp_pic/no_avatar.jpg");
+				}
 				html = $("#sample").html();
 
 				$(".user_list ul").append(html);
@@ -162,7 +163,13 @@
 				$(".user_info .mobile_tel").html($mobile_tel);
 				$(".user_info .email").text($(this).attr("email"));
 				$(".user_info .duty").text($(this).attr("duty"));
-				$("#emp_pic").prop("src", "{:get_save_url()}"+$(this).attr("pic"));
+				$img_url=$(this).attr("pic");
+				if($img_url!=""){
+					$("#emp_pic").prop("src", $(this).attr("pic"));
+				}else{
+					$("#emp_pic").prop("src","/Upload/emp_pic/no_avatar.jpg");
+				}
+				
 			});
 		});
 

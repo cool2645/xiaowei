@@ -168,8 +168,8 @@
 		}
 
 		function del() {
-			id = $("li.tbody.selected :checkbox").val();
-			if (id == undefined) {
+			count = $("li.tbody :checked").length;
+			if (count==0) {
 				ui_error("请选择要删除的数据");
 				return false;
 			}

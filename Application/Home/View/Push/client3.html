@@ -1,0 +1,59 @@
+<!DOCTYPE  html>
+<html lang='en'>
+	<head>
+		<meta charset='utf-8' />
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='__STATIC__/jquery/js/jquery-2.1.0.min.js'>" + "<" + "/script>");
+		</script>
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+		window.jQuery || document.write("<script src='__STATIC__/jquery/js/jquery-1.11.0.min.js'>"+"<"+"/script>");</script>
+		<![endif]-->
+		<script type="text/javascript">
+			var timestamp = 0;
+			var url = "{:U('push/server3')}";
+			;
+			var error = false;
+			function connect() {
+				$.ajax({
+					data : {
+						'timestamp' : timestamp
+					},
+					url : url,
+					type : 'get',
+					timeout : 0,
+					success : function(response) {
+						var data = eval('('+response+')');
+						error = false;
+						timestamp = data.timestamp;
+						window.parent.ui_info(data.data.info);
+					},
+					error : function() {
+						error = true;
+						setTimeout(function() {
+							connect();
+						}, 5000);
+					},
+					complete : function() {
+						if (error)
+							// if a connection problem occurs, try to reconnect each 5 seconds
+							setTimeout(function() {
+								connect();
+							}, 5000);
+						else
+							connect();
+					}
+				});
+			}
+
+			$(document).ready(function() {
+				connect();
+			});
+		</script>
+	</head>
+	<body>
+		<input type="button" value="abc" onclick="test()">
+	</body>
+</html>

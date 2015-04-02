@@ -25,7 +25,7 @@
 					<p class="form-control-static">
 						{$vo.emp_no}
 					</p></td>
-					<td rowspan="3" class="col-20"><img class="img-thumbnail col-12" id="emp_pic" src="{:get_save_url()}{$vo.pic}?t={:time()}"></td>
+					<td rowspan="3" class="col-20"><img class="img-thumbnail col-12" id="emp_pic" src="{$vo.id|get_emp_pic}?t={:time()}" onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'"></td>
 				</tr>
 				<tr>
 					<th>姓名</th>
@@ -114,7 +114,6 @@
 			sendForm("form_data", "{:U('save')}", "__CONTROLLER__");
 		}
 	}
-
 
 	$(document).ready(function() {
 		set_return_url();
