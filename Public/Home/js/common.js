@@ -72,7 +72,7 @@ function ui_info(msg) {
 		position : 'bottom-right',
 		text : '<h5>' + msg + '</h5>',
 		sticky : false,
-		time : 3000,
+		time : 5000,
 		class_name : 'gritter-light gritter-info'
 	});
 }
@@ -120,7 +120,7 @@ function ui_error(msg) {
 	$.gritter.add({
 		text : '<h5>' + msg + '</h5>',
 		sticky : false,
-		time : 2000,
+		time : 3000,
 		class_name : 'gritter-light gritter-error gritter-center'
 	});
 }

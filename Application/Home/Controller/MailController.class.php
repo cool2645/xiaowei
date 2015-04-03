@@ -464,7 +464,6 @@ class MailController extends HomeController {
 			$connect = $mail -> connect($mail_account['pop3svr'], '995', $mail_account['mail_id'], $mail_account['mail_pwd'], 'INBOX', 'pop3/ssl/novalidate-cert');
 		}
 		$mail_count = $mail -> mail_total_count();
-
 		if ($connect) {
 			for ($i = 1; $i <= $mail_count; $i++) {
 				$mail_id = $mail_count - $i + 1;
@@ -489,15 +488,18 @@ class MailController extends HomeController {
 						}
 						return;
 					}
+					
 					$new++;
 					$model -> user_id = $user_id;
 					$model -> read = 0;
 					$model -> folder = 1;
 					$model -> is_del = 0;
 					$str = $mail -> get_attach($mail_id);
-					$model -> add_file = $this -> _receive_file($str, $model);
+
+					$model -> add_file = $this -> _receive_file($str, $model);					
 					$this -> _organize($model);
 					$model -> add();
+					
 				} else {
 					if (!$background) {
 						if ($new == 0) {
@@ -532,7 +534,10 @@ class MailController extends HomeController {
 				$files[$key]['name'] = $file_name;
 				$files[$key]['tmp_name'] = $tmp_name;
 				$files[$key]['size'] = filesize($tmp_name);
-
+				$files[$key]['is_mail'] = true;
+				
+				dump($files);
+				
 				if (!empty($files)) {
 					$File = D('File');
 					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');

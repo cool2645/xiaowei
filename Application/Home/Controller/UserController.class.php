@@ -116,8 +116,8 @@ class UserController extends HomeController {
 				M("UserConfig") -> add($data);
 				if (!empty($mobile_tel)) {
 					$agent_id = get_system_config('WEIXIN_AGENT_ID');
-					$weixin = new \ThinkWechat($agent_id);
-					$weixin -> add_user($emp_no,$name,$mobile_tel);
+					//$weixin = new \ThinkWechat($agent_id);
+					//$weixin -> add_user($emp_no,$name,$mobile_tel);
 				}
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('用户添加成功！');
@@ -187,8 +187,8 @@ class UserController extends HomeController {
 			//成功提示
 			if (!empty($mobile_tel)) {
 				$agent_id = get_system_config('WEIXIN_AGENT_ID');
-				$weixin = new \ThinkWechat($agent_id);
-				$weixin -> add_user($emp_no,$name,$mobile_tel);
+				//$weixin = new \ThinkWechat($agent_id);
+				//$weixin -> add_user($emp_no,$name,$mobile_tel);
 			}
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
