@@ -80,22 +80,22 @@ class PushController extends Controller {
 	}
 
 	function server3() {
-		set_time_limit(0);
 		$user_id = get_user_id();
 		session_write_close();
 		$data = $this -> get_data($user_id);
-
+		$start_time = time();
 		while (empty($data))// check if the data file has been modified
 		{
-			if (connection_status() != 0) {
-				exit();
+			if (time() - $start_time > 20) {
+				header('HTTP/1.1 404 Not Found');
+				die;
 			}
-			usleep(10000);
+			usleep(1000000);
 			// sleep 10ms to unload the CPU
 			clearstatcache();
 			$data = $this -> get_data($user_id);
 		}
-
+		$data['info'] = 'test';
 		// return a json array
 		$response = array();
 		$response['status'] = 1;

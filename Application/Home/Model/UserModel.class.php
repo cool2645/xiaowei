@@ -18,7 +18,7 @@ use Think\Model;
 
 class  UserModel extends CommonModel {
 	public $_validate	=	array(
-		array('account','/^[a-z]\w{3,}$/i','帐号格式错误'),
+		array('emp_no','','编号已存在！',0,'unique',1),
 		array('password','require','密码必须'),
 		array('nickname','require','昵称必须'),
 		array('repassword','require','确认密码必须'),

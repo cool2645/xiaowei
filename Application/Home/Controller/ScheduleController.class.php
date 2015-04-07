@@ -83,8 +83,8 @@ class ScheduleController extends HomeController {
 		return;
 	}
 
-	public function down() {
-		$this -> _down();
+	public function down($attach_id) {
+		$this -> _down($attach_id);
 	}
 
 	public function add() {

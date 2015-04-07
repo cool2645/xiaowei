@@ -30,19 +30,7 @@
 						timestamp = data.timestamp;
 						window.parent.ui_info(data.data.info);
 					},
-					error : function() {
-						error = true;
-						setTimeout(function() {
-							connect();
-						}, 5000);
-					},
 					complete : function() {
-						if (error)
-							// if a connection problem occurs, try to reconnect each 5 seconds
-							setTimeout(function() {
-								connect();
-							}, 5000);
-						else
 							connect();
 					}
 				});

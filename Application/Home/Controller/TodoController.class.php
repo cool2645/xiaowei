@@ -65,8 +65,8 @@ class TodoController extends HomeController {
 		$this -> display();
 	}
 
-	public function down() {
-		$this->_down();
+	public function down($attach_id) {
+		$this->_down($attach_id);
 	}
 
 	function del() {

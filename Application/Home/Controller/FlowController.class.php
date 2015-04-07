@@ -215,13 +215,13 @@ class FlowController extends HomeController {
 			
 			$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
 			//	dump($field_list);
-			$k = 0;
+			$k = 'J';
 			if (!empty($field_list)) {
 				foreach ($field_list as $field) {
 					$k++;
 					$field_data = $field['name'] . ":" . $field['val'];
-					$location = get_cell_location("J", $i, $k);
-					$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue($location, $field_data);
+					// $location = get_cell_location("J", $i, $k);
+					$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("$k$i", $field_data);
 				}
 			}
 		}

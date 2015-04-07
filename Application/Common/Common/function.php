@@ -204,14 +204,14 @@ function badge_count_info($id) {
 	$scope_list = M("InfoScope") -> where($where_scope) -> getField('info_id', TRUE);
 
 	if (!empty($scope_list)) {
-		$map['id'] = array('in',$scope_list);
+		$map['id'] = array('in', $scope_list);
 	} else {
 		$map['_string'] = " 1=2";
 	}
 
 	$model = D("InfoView");
 	$info_list = $model -> where($map) -> getField('id', true);
-	
+
 	$readed_info = M("UserConfig") -> where("id=$user_id") -> getField('readed_info');
 	$readed_info = array_filter(explode(',', $readed_info));
 
@@ -392,7 +392,7 @@ function decrypt($data, $key = '') {
 }
 
 function upload_filter($val) {
-	$allow_ext=explode(",",C('UPLOAD_FILE_EXT'));
+	$allow_ext = explode(",", C('UPLOAD_FILE_EXT'));
 	if (in_array($val, $allow_ext)) {
 		return true;
 	} else {
@@ -623,19 +623,19 @@ function get_model_fields($model) {
 	return $arr_field;
 }
 
-function show_udf_field($udf_field){
-	foreach ($udf_field as $key => $val) {				
-		list($show,$class)=explode("|",$val['config']);
-		$html.='<span class="'.$class.'">'.$val['name'].'</span>';		
+function show_udf_field($udf_field) {
+	foreach ($udf_field as $key => $val) {
+		list($show, $class) = explode("|", $val['config']);
+		$html .= '<span class="' . $class . '">' . $val['name'] . '</span>';
 	}
 	return $html;
 }
 
-function show_udf_val($udf_field,$udf_data){	
+function show_udf_val($udf_field, $udf_data) {
 	$field_data = json_decode($udf_data, true);
-	foreach ($udf_field as $key => $val) {				
-		list($show,$class)=explode("|",$val['config']);		
-		$html.='<span class="'.$class.' autocut" title="'.$field_data[$val['id']].'">'.$field_data[$val['id']].'</span>';		
+	foreach ($udf_field as $key => $val) {
+		list($show, $class) = explode("|", $val['config']);
+		$html .= '<span class="' . $class . ' autocut" title="' . $field_data[$val['id']] . '">' . $field_data[$val['id']] . '</span>';
 	}
 	return $html;
 }
@@ -737,7 +737,7 @@ function fix_array_key($list, $key) {
 	return $arr;
 }
 
-function fill_option($list,$data=null) {
+function fill_option($list, $data = null) {
 	$html = "";
 	foreach ($list as $key => $val) {
 		if (is_array($val)) {
@@ -1409,7 +1409,7 @@ function send_push($data, $info, $status, $user_id, $time = null) {
 }
 
 function get_emp_pic($id) {
-	
+
 	$data = M("User") -> where(array(id => $id)) -> getField("pic");
 	//dump($data);
 	if (empty($data)) {
@@ -1481,23 +1481,36 @@ function is_submit($val) {
 	}
 }
 
-
-function array_to_obj($e){
-    if( gettype($e)!='array' ) return;
-    foreach($e as $k=>$v){
-        if( gettype($v)=='array' || getType($v)=='object' )
-            $e[$k]=(object)array_to_obj($v);
-    }
-    return (object)$e;
+function array_to_obj($e) {
+	if (gettype($e) != 'array')
+		return;
+	foreach ($e as $k => $v) {
+		if (gettype($v) == 'array' || getType($v) == 'object')
+			$e[$k] = (object)array_to_obj($v);
+	}
+	return (object)$e;
 }
- 
-function obj_to_array($e){
-    $e=(array)$e;
-    foreach($e as $k=>$v){
-        if( gettype($v)=='resource' ) return;
-        if( gettype($v)=='object' || gettype($v)=='array' )
-            $e[$k]=(array)obj_to_array($v);
-    }
-    return $e;
+
+function obj_to_array($e) {
+	$e = (array)$e;
+	foreach ($e as $k => $v) {
+		if (gettype($v) == 'resource')
+			return;
+		if (gettype($v) == 'object' || gettype($v) == 'array')
+			$e[$k] = (array)obj_to_array($v);
+	}
+	return $e;
+}
+
+function sign_type($val) {
+	if ($val == 'sign_in') {
+		return "签到";
+	}
+	if ($val == 'sign_out') {
+		return "签退";
+	}
+	if ($val == 'outside') {
+		return "外勤";
+	}	
 }
 ?>

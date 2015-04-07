@@ -1390,6 +1390,278 @@ ul.tree_menu i {
 	position: absolute;
 }
 
+
+.Sign table th, .Sign table td {
+	background: #fff;
+}
+
+.Sign ul {
+	list-style: none;
+}
+.Sign #panel {
+	width: 100px;
+	text-align: center;
+}
+
+.Sign #dialog2 {
+	width: 240px;
+	margin: 0;
+	background: #fff;
+	position: absolute;
+}
+.Sign #dialog2 ol, .Sign #dialog2 li, .Sign #dialog2 p {
+	cursor: pointer;
+	line-height: 20px;
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.Sign .rb-n {
+	padding-top: 3px;
+	padding-right: 10px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	border-bottom: 1px solid #fff;
+	white-space: nowrap;
+}
+.Sign .rb-ni {
+	overflow: hidden;
+}
+.Sign.rb-ro-15 {
+	background-repeat: repeat;
+}
+.Sign .st-bg-table {
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	table-layout: fixed;
+}
+.Sign .st-bg {
+	border-left-color: #ddd;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-bottom-color: #ddd;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-right: none;
+	background: #fff;
+	border-bottom: }
+
+	.Sign .st-grid
+	{
+	width: 100%;
+	position: relative;
+	table-layout: fixed;
+}
+
+.Sign  a {
+	color: #222;
+}
+
+.Sign td.st-c {
+	border-left-color: #ddd;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-right: none;
+	line-height: 10px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	vertical-align: top;
+	border-bottom: none;
+	border-top: none;
+	background: none;
+}
+
+.Sign td.st-c ul, .Sign td.st-c li, .Sign td.st-c p {
+	cursor: pointer;
+	line-height: 20px;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.Sign #dialog2 {
+	width: 200px;
+	margin: 0;
+	background: #fff;
+	position: absolute;
+}
+.Sign #dialog2 ol, .Sign #dialog2 li, .Sign #dialog2 p {
+	cursor: pointer;
+	line-height: 20px;
+	float: left;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+.Sign .event_list {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+.Sign .event_list li {
+	width: 100%;
+	float: left;
+	padding-left: 0px;
+	margin-left: 0px;
+	border-bottom: 2px solid #fff;
+}
+.Sign .event_list .event_time {
+	padding-left: 10px;
+	line-height: 32px;
+	display: block;
+	float: left;
+	width: 100px;
+}
+.Sign .event_list .event_msg {
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	line-height: 32px;
+	display: block;
+	float: left;
+}
+
+.Sign .st-dtitle {
+	line-height: 14px;
+	color: #222;
+	overflow: hidden;
+	padding-top: 4px;
+	padding-right: 4px;
+	padding-bottom: 4px;
+	padding-left: 4px;
+	border-top-color: #ddd;
+	border-left-color: #ddd;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-left-style: solid;
+	border-bottom: none;
+	border-right: none;
+	background-image: none;
+	background-attachment: scroll;
+	background-repeat: repeat;
+	background-position-x: 0%;
+	background-position-y: 0%;
+	background-size: auto;
+	background-origin: padding-box;
+	background-clip: border-box;
+	background-color: rgb(255, 255, 255);
+}
+.Sign .day .st-dtitle {
+	text-align: center;
+	line-height: 28px;
+}
+.Sign .day .st-dtitle .right {
+	display: none;
+}
+.Sign .st-dtitle.todayColor {
+	background: #eee;
+}
+
+.Sign .st-c .te, .Sign  .st-c .rb-n {
+	height: 16px;
+	line-height: 1;
+	padding-top: 3px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	cursor: pointer;
+	background-color: #ff99ff;
+}
+
+.Sign .st-c-pos {
+	position: relative;
+}
+.Sign .mv-container {
+	height: 100%;
+	min-height: 617px;
+	white-space: nowrap;
+	position: relative;
+}
+.Sign .mv-container {
+	margin-right: 1px;
+	background-image: none;
+	background-attachment: scroll;
+	background-repeat: repeat;
+	background-position-x: 0%;
+	background-position-y: 0%;
+	background-size: auto;
+	background-origin: padding-box;
+	background-clip: border-box;
+	background-color: rgb(255, 255, 255);
+}
+.Sign .st-contents, .mv-container {
+	line-height: 14px;
+}
+.Sign .mv-daynames-table {
+	width: 100%;
+	color: #555;
+	table-layout: fixed;
+	background-image: none;
+	background-attachment: scroll;
+	background-repeat: repeat;
+	background-position-x: 0%;
+	background-position-y: 0%;
+	background-size: auto;
+	background-origin: padding-box;
+	background-clip: border-box;
+	background-color: rgb(255, 255, 255);
+}
+.Sign .mv-dayname {
+	background: #fff;
+	height: 24px;
+	line-height: 24px;
+	text-align: center;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-bottom: 0px;
+	font-weight: normal;
+}
+
+.Sign .mv-event-container {
+	left: 0px;
+	top: 24px;
+	width: 100%;
+	bottom: 0px;
+	overflow: hidden;
+	border-top-color: #ddd;
+	border-bottom-color: #ddd;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	position: absolute;
+	background-image: none;
+	background-attachment: scroll;
+	background-repeat: repeat;
+	background-position-x: 0%;
+	background-position-y: 0%;
+	background-size: auto;
+	background-origin: padding-box;
+	background-clip: border-box;
+	background-color: white;
+}
+.Sign .mv-event-container {
+	border-right-color: #ddd;
+	border-right-width: 1px;
+	border-right-style: solid;
+}
+.Sign .month-row {
+	left: 0px;
+	width: 100%;
+	overflow: hidden;
+	position: absolute;
+}
+
 .Todo  a {
 	color: #555;
 }

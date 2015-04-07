@@ -28,7 +28,6 @@ class TaskController extends HomeController {
 	}
 
 	public function folder() {
-		D("Role") -> get_auth('Task');
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
 		$this -> assign('auth', $this -> config['auth']);
