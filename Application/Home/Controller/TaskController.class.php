@@ -37,7 +37,13 @@ class TaskController extends HomeController {
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($where);
 		}
-
+		
+		$todo_task_count=badge_count_todo_task();
+		$dept_task_count=badge_count_dept_task();
+		
+		$this->assign('todo_task_count',$todo_task_count);
+		$this->assign('dept_task_count',$dept_task_count);
+		
 		$fid = $_GET['fid'];
 		$this -> assign("fid", $fid);
 

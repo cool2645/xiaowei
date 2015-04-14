@@ -206,7 +206,6 @@ class  RoleModel extends CommonModel {
 		$access_list_write = array_filter(array_combine($module_list, $access_list['write']));
 		$access_list_read = array_filter(array_combine($module_list, $access_list['read']));
 
-		$module_name = strtolower($module_name);
 		$auth['admin'] = array_key_exists($module_name, $access_list_admin) || array_key_exists("##" . $module_name, $access_list_admin);
 
 		$auth['write'] = array_key_exists($module_name, $access_list_write) || array_key_exists("##" . $module_name, $access_list_write);

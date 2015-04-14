@@ -12,10 +12,12 @@
 		window.jQuery || document.write("<script src='__STATIC__/jquery/js/jquery-1.11.0.min.js'>"+"<"+"/script>");</script>
 		<![endif]-->
 		<script type="text/javascript">
+			function test(){
+				$msg="{'type':'邮件','action':'新邮件','title':'标题','content':'内容'}";
+				window.parent.push_info($msg);
+			}
 			var timestamp = 0;
 			var url = "{:U('push/server3')}";
-			;
-			var error = false;
 			function connect() {
 				$.ajax({
 					data : {
@@ -26,9 +28,10 @@
 					timeout : 0,
 					success : function(response) {
 						var data = eval('('+response+')');
-						error = false;
 						timestamp = data.timestamp;
-						window.parent.ui_info(data.data.info);
+						if(data.status){							
+							window.parent.push_info(data.data.data);
+						}
 					},
 					complete : function() {
 							connect();

@@ -484,7 +484,11 @@ class MailController extends HomeController {
 					if ($model -> create_time < strtotime(date('y-m-d h:i:s')) - 86400 * 30) {
 						$mail -> close_mail();
 						if ($new > 0) {
-							send_push($new, "收到" . $new . "封邮件", 1);
+							$push_data['type']='邮件';
+							$push_data['action']='';
+							$push_data['title']='收到'.$new.'封邮件';
+							$push_data['content']='';
+							send_push($push_data,$user_id);
 						}
 						return;
 					}
@@ -503,7 +507,11 @@ class MailController extends HomeController {
 				} else {
 					if (!$background) {
 						if ($new == 0) {
-							send_push($new, "没有新邮件", 1);
+							$push_data['type']='邮件';
+							$push_data['action']='';
+							$push_data['title']='没有新邮件';
+							$push_data['content']='';
+							send_push($push_data,$user_id);
 							return;
 						}
 					}
@@ -512,7 +520,13 @@ class MailController extends HomeController {
 			}
 		}
 		$mail -> close_mail();
-		send_push($new, "收到" . $new . "封邮件", 1);
+		if (!$background) {
+			$push_data['type']='邮件';
+			$push_data['action']='';
+			$push_data['title']='收到'.$new.'封邮件';
+			$push_data['content']='';
+			send_push($push_data,$user_id);
+		}
 		return;
 	}
 
@@ -534,10 +548,8 @@ class MailController extends HomeController {
 				$files[$key]['name'] = $file_name;
 				$files[$key]['tmp_name'] = $tmp_name;
 				$files[$key]['size'] = filesize($tmp_name);
-				$files[$key]['is_mail'] = true;
-				
-				dump($files);
-				
+				$files[$key]['is_move'] = true;
+								
 				if (!empty($files)) {
 					$File = D('File');
 					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
