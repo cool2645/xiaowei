@@ -102,6 +102,49 @@ function is_weixin() {
 	return false;
 }
 
+function badge_count_task(){
+	return badge_count_todo_task()+badge_count_dept_task();
+}
+
+function badge_count_todo_task(){
+	//等我接受的任务
+	$where = array();
+	$where_log['type'] = 1;
+	$where_log['status'] = 0;
+	$where_log['executor'] = get_user_id();
+	$task_list = M("TaskLog") -> where($where_log) -> getField('id',true);
+	
+	if(!empty($task_list)){
+		$where['id'] = array('in', $task_list);
+		$task_todo_count = M("Task") -> where($where) -> count();	
+	}
+	return $task_todo_count;
+}
+
+function badge_count_dept_task(){
+
+	//我部门任务
+	$where = array();
+	$auth = D("Role") -> get_auth("Task");
+	if ($auth['admin']) {
+		$where_log['type'] = 2;
+		$where_log['executor'] = get_dept_id();
+		$where_log['status'] = array('eq','0');
+		$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', TRUE);
+		
+		if(!empty($task_list)){
+			$where['id'] = array('in', $task_list);
+		}else{
+			return 0;
+		}				
+	} else {
+		return 0;
+	}
+
+	$task_dept_count = M("Task") -> where($where) -> count();	
+	return $task_dept_count;
+}
+
 function badge_count_mail_inbox() {
 	$user_id = get_user_id();
 	$where['user_id'] = $user_id;
@@ -1388,11 +1431,9 @@ function get_position_name($id) {
 	return $data['position_name'];
 }
 
-function send_push($data, $info, $status, $user_id, $time = null) {
+function send_push($data,$user_id, $time = null) {
 	$model = M("Push");
-	$model -> data = $data;
-	$model -> info = $info;
-	$model -> status = $status;
+	$model -> data = jsencode($data);
 
 	if (empty($user_id)) {
 		$model -> user_id = get_user_id();
