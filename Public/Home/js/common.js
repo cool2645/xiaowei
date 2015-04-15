@@ -77,6 +77,17 @@ function ui_info(msg) {
 	});
 }
 
+function push_info($msg) {
+	$msg = eval('('+$msg+')');
+	$.gritter.add({
+		position : 'bottom-right',
+		text : '<div class="ul_table"><div class="pull-left col-10 text-center"><span class="bigger-150 ">'+$msg.type+'</span><br>'+$msg.action+'</div><div class="auto"><span style="display:block" class="bigger-125 red bolder autocut">'+ $msg.title +'</span>'+$msg.content+'</div></div>',
+		sticky : true,
+		time : 5000,
+		class_name : 'gritter-light push-info'
+	});
+}
+
 function ui_alert(msg, callback) {
 	bootbox.dialog({
 		message : "<h5>" + msg + "<h5>",

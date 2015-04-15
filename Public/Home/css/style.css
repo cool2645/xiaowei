@@ -8,6 +8,48 @@ body {
 	height:34px;
 	line-height:21px;
 }
+.gritter-item-wrapper.gritter-light.push-info {
+  background: rgba(232, 242, 255, 0.95);
+}
+.gritter-item-wrapper.gritter-light.push-info .gritter-top{
+  height:0px;
+}
+.gritter-item-wrapper.gritter-light.push-info .gritter-bottom{
+  height:0px;
+}
+
+.gritter-item-wrapper.gritter-light.push-info .gritter-item {
+  color: #4A577D;padding:0;
+}
+
+.gritter-item-wrapper .ul_table{
+	padding:0px;
+	margin-right:20px;
+}
+
+#gritter-notice-wrapper .ul_table{
+	padding:0;
+}
+#gritter-notice-wrapper .pull-left{
+	padding-top:15px;
+	border-right:1px solid #ccc;
+	height:90px;
+	background: #478fca;
+	color:#fff;
+}
+#gritter-notice-wrapper .pull-left{
+	padding-top:15px;
+	border-right:1px solid #ccc;
+	height:90px;
+	background: #478fca;
+}
+#gritter-notice-wrapper .auto{
+	padding-top:10px;
+	padding-left:10px;
+	height:75px;
+}
+
+
 input[type=checkbox].ace, input[type=radio].ace {
 	height: 0px;
 	position: relative;
@@ -890,7 +932,6 @@ ul.tree_menu i {
 }
 .Index .ul_table {
 	padding-top: 6px;
-	margin-right: 8px;
 }
 .Index .ul_table li {
 	line-height: 24px;

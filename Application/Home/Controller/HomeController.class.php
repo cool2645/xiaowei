@@ -85,7 +85,7 @@ class HomeController extends Controller {
 				$child_menu = tree_to_list($child_menu);
 				//dump($child_menu);
 				$child_menu_id = rotate($child_menu);
-
+				$count = 0;
 				if (isset($child_menu_id['id'])) {
 					$child_menu_id = $child_menu_id['id'];
 					$count = 0;

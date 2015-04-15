@@ -22,7 +22,7 @@ class RoleController extends HomeController {
 		$map['is_del'] = array('eq', '0');
 		$keyword = I('keyword');
 		if (!empty($keyword)) {
-			$map['User.name|emp_no|Position.name|Rank.name|Dept.name'] = array('like', "%" . $keyword . "%");
+			$map['User.name|emp_no|Position.name|Dept.name'] = array('like', "%" . $keyword . "%");
 		}
 	}
 

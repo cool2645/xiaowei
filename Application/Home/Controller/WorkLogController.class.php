@@ -79,7 +79,7 @@ class WorkLogController extends HomeController {
 			$this -> _search_filter($map);
 		}
 		
-		$model = D("WorkLog");				
+		$model = D("WorkLogView");				
 		if (!empty($model)) {
 			$this -> _list($model,$map);
 		}

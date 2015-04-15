@@ -56,7 +56,7 @@ class MessageController extends HomeController {
 		$model = D('Message');
 
 		$arr_recever = array_filter(explode(";", $_POST['to']));
-
+	
 		foreach ($arr_recever as $val) {
 			$tmp = explode("|", $val);
 			$data['receiver_id'] = $tmp[1];
@@ -67,7 +67,13 @@ class MessageController extends HomeController {
 
 			$data['owner_id'] = $tmp[1];
 			$list = $model -> add($data);
-			send_push("", "您有新的消息, 请注意查收", 1, $tmp[1]);
+			
+			$push_data['type']='消息';
+			$push_data['action']='';
+			$push_data['title']=$data['sender_name'];
+			$push_data['content']=strip_tags($data['content']);
+			
+			send_push($push_data,$tmp[1]);
 		}
 		//保存当前数据对象
 		if ($list !== false) {//保存成功
@@ -127,7 +133,13 @@ class MessageController extends HomeController {
 
 			$data['owner_id'] = $_POST['receiver_id'];
 			$list = $model -> add($data);
-			send_push("", "您有新的消息, 请注意查收", 1, $_POST['receiver_id']);
+			
+			$push_data['type']='消息';
+			$push_data['action']='';
+			$push_data['title']=$data['sender_name'];
+			$push_data['content']=strip_tags($data['content']);
+						
+			send_push($push_data, I('receiver_id'));
 
 			//保存当前数据对象
 			if ($list !== false) {//保存成功

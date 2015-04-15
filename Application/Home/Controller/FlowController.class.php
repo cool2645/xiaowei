@@ -167,80 +167,176 @@ class FlowController extends HomeController {
 
 	private function _folder_export($model, $map) {
 		$list = $model -> where($map) -> select();
-
-		//导入thinkphp第三方类库
-		Vendor('Excel.PHPExcel');
-
-		//$inputFileName = "Public/templete/contact.xlsx";
-		//$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
-		$objPHPExcel = new \PHPExcel();
-
-		$objPHPExcel -> getProperties() -> setCreator("小微OA") -> setLastModifiedBy("小微OA") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
-		// Add some data
-		$i = 1;
-		//dump($list);
-
-		//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
-		$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "编号") -> setCellValue("B$i", "类型") -> setCellValue("C$i", "标题") -> setCellValue("D$i", "登录时间") -> setCellValue("E$i", "部门") -> setCellValue("F$i", "登录人") -> setCellValue("G$i", "状态") -> setCellValue("H$i", "审批") -> setCellValue("I$i", "协商") -> setCellValue("J$i", "抄送") -> setCellValue("J$i", "审批情况");
+		$r= $model -> where($map)->count();
 		$model_flow_field = D("UdfField");
-		foreach ($list as $val) {
-			$i++;
-			//dump($val);
-			$id = $val['id'];
-			$doc_no = $val["doc_no"];
-			//编号
-			$name = $val["name"];
-			//标题
-			$confirm_name = strip_tags($val["confirm_name"]);
-			//审批
-			$consult_name = strip_tags($val["consult_name"]);
-			//协商
-			$refer_name = strip_tags($val["refer_name"]);
-			//协商
-			$type_name = $val["type_name"];
-			//流程类型
-			$user_name = $val["user_name"];
-			//登记人
-			$dept_name = $val["dept_name"];
-			//不美分
-			$create_time = $val["create_time"];
-			$create_time = to_date($val["create_time"], 'Y-m-d H:i:s');
-			//创建时间
-			$step = show_step_type($val["step"]);
-			//
+		if($r<=1000){
+			//导入thinkphp第三方类库
+			Vendor('Excel.PHPExcel');
+
+			//$inputFileName = "Public/templete/contact.xlsx";
+			//$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+			$objPHPExcel = new \PHPExcel();
+
+			$objPHPExcel -> getProperties() -> setCreator("小微OA") -> setLastModifiedBy("小微OA") -> setTitle("Office 2007 XLSX Test Document") -> setSubject("Office 2007 XLSX Test Document") -> setDescription("Test document for Office 2007 XLSX, generated using PHP classes.") -> setKeywords("office 2007 openxml php") -> setCategory("Test result file");
+			// Add some data
+			$i = 1;
+			//dump($list);
 
 			//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
-			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $doc_no) -> setCellValue("B$i", $type_name) -> setCellValue("C$i", $name) -> setCellValue("D$i", $create_time) -> setCellValue("E$i", $dept_name) -> setCellValue("F$i", $user_name) -> setCellValue("G$i", $step) -> setCellValue("H$i", $confirm_name) -> setCellValue("I$i", $consult_name);
-
+			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "编号") -> setCellValue("B$i", "类型") -> setCellValue("C$i", "标题") -> setCellValue("D$i", "登录时间") -> setCellValue("E$i", "部门") -> setCellValue("F$i", "登录人") -> setCellValue("G$i", "状态") -> setCellValue("H$i", "审批") -> setCellValue("I$i", "协商") -> setCellValue("J$i", "抄送") -> setCellValue("K$i", "审批情况");
 			
-			$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
-			//	dump($field_list);
-			$k = 'J';
-			if (!empty($field_list)) {
-				foreach ($field_list as $field) {
-					$k++;
-					$field_data = $field['name'] . ":" . $field['val'];
-					// $location = get_cell_location("J", $i, $k);
-					$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("$k$i", $field_data);
+			foreach ($list as $val) {
+				$i++;
+				//dump($val);
+				$id = $val['id'];
+				$doc_no = $val["doc_no"];
+				//编号
+				$name = $val["name"];
+				//标题
+				$confirm_name = strip_tags($val["confirm_name"]);
+				//审批
+				$consult_name = strip_tags($val["consult_name"]);
+				//协商
+				$refer_name = strip_tags($val["refer_name"]);
+				//协商
+				$type_name = $val["type_name"];
+				//流程类型
+				$user_name = $val["user_name"];
+				//登记人
+				$dept_name = $val["dept_name"];
+				//不美分
+				$create_time = $val["create_time"];
+				$create_time = to_date($val["create_time"], 'Y-m-d H:i:s');
+				//创建时间
+				$step = show_step_type($val["step"]);
+
+
+				//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
+				$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $doc_no) -> setCellValue("B$i", $type_name) -> setCellValue("C$i", $name) -> setCellValue("D$i", $create_time) -> setCellValue("E$i", $dept_name) -> setCellValue("F$i", $user_name) -> setCellValue("G$i", $step) -> setCellValue("H$i", $confirm_name) -> setCellValue("I$i", $consult_name) -> setCellValue("J$i",$refer_name);
+				$result=M("flow_log")->where(array('flow_id' => $id))->select();
+				$field_data='';
+				if (!empty($result)) {
+					foreach ($result as $field) {
+						
+						$field_data = $field_data.$field['user_name'] . ":" . $field['comment']."\n";
+					}
+					$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("K$i", $field_data);
+				}
+				
+				$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
+				//	dump($field_list);
+				$k = 'K';
+				if (!empty($field_list)) {
+					foreach ($field_list as $field) {
+						$k++;
+						$field_data = $field['name'] . ":" . $field['val'];
+						// $location = get_cell_location("J", $i, $k);
+						$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("$k$i", $field_data);
+					}
 				}
 			}
+			// Rename worksheet
+			$objPHPExcel -> getActiveSheet() -> setTitle('流程统计');
+
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$objPHPExcel -> setActiveSheetIndex(0);
+			$file_name = "流程统计.xlsx";
+			// Redirect output to a client’s web browser (Excel2007)
+			header("Content-Type: application/force-download");
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header("Content-Disposition:attachment;filename =" . str_ireplace('+', '%20', URLEncode($file_name)));
+			header('Cache-Control: max-age=0');
+
+			$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			//readfile($filename);
+			$objWriter -> save('php://output');
+			exit ;
+		}else{
+			header('Content-Type: application/vnd.ms-excel;charset=gbk');
+			header('Content-Disposition: attachment;filename="流程统计.csv"');
+			header('Cache-Control: max-age=0');
+		
+			$fp = fopen('php://output', 'a');
+			$title = array('编号','类型','标题','登录时间','部门','登录人','状态','审批','协商','抄送','审批情况','自定义字段');
+			foreach ($title as $i => $v) {
+			    // CSV的Excel支持GBK编码，一定要转换，否则乱码 
+			    $title[$i] = iconv('utf-8', 'gbk', $v);
+			}
+			fputcsv($fp, $title);
+			$cnt=0;
+			foreach ($list as $val) {
+				$cnt++;
+				if (100000 == $cnt) { //刷新一下输出buffer，防止由于数据过多造成问题 
+			        ob_flush();
+			        flush();
+			        $cnt = 0;
+			    }
+				//dump($val);
+				$id = $val['id'];
+				$doc_no = $val["doc_no"];
+				//编号
+				$name = $val["name"];
+				//标题
+				$confirm_name = strip_tags($val["confirm_name"]);
+				//审批
+				$consult_name = strip_tags($val["consult_name"]);
+				//协商
+				$refer_name = strip_tags($val["refer_name"]);
+				//协商
+				$type_name = $val["type_name"];
+				//流程类型
+				$user_name = $val["user_name"];
+				//登记人
+				$dept_name = $val["dept_name"];
+				//不美分
+				
+				$create_time = to_date($val["create_time"], 'Y-m-d H:i:s');
+				//创建时间
+				$step = show_step_type($val["step"]);
+
+
+				
+				$result_list=M("flow_log")->where(array('flow_id' => $id))->select();
+				$field_data='';
+				$result='';
+				if (!empty($result_list)) {
+					foreach ($result_list as $field) {
+						
+						$field_data = $field_data.$field['user_name'] . ":" . $field['comment']."\n";
+					}
+					$result=$field_data;
+					
+				}
+				$r1=array($doc_no,$type_name,$name,$create_time,$dept_name,$user_name,$step,$confirm_name,$consult_name,$refer_name,$result);
+				
+				$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
+				
+				$t=0;
+				$r2=array();
+				if (!empty($field_list)) {
+
+					foreach ($field_list as $field) {
+						$r2[$t++] = $field['name'] . ":" . $field['val'];
+					}
+					
+				}
+				$row=array_merge($r1,$r2);
+				// dump($row);
+				foreach ($row as $i => $v) {
+				    // CSV的Excel支持GBK编码，一定要转换，否则乱码 
+				    $row[$i] = iconv('utf-8', 'gbk', $v);
+				}
+				fputcsv($fp, $row);
+
+
+			}
+			
+			
+			fclose($fp);
+			
+			exit ;
 		}
-		// Rename worksheet
-		$objPHPExcel -> getActiveSheet() -> setTitle('流程统计');
 
-		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-		$objPHPExcel -> setActiveSheetIndex(0);
-		$file_name = "流程统计.xlsx";
-		// Redirect output to a client’s web browser (Excel2007)
-		header("Content-Type: application/force-download");
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header("Content-Disposition:attachment;filename =" . str_ireplace('+', '%20', URLEncode($file_name)));
-		header('Cache-Control: max-age=0');
-
-		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-		//readfile($filename);
-		$objWriter -> save('php://output');
-		exit ;
 	}
 
 	function add() {
@@ -279,8 +375,12 @@ class FlowController extends HomeController {
 			$this -> error("系统错误");
 		}
 
-		$flow_type_id = $vo['type'];
+
+		$this -> assign("emp_no", $vo['emp_no']);
+		$this -> assign("user_name", $vo['user_name']);
 		$this -> assign('vo', $vo);
+		
+		$flow_type_id = $vo['type'];		
 		$model = M("FlowType");
 		$flow_type = $model -> find($flow_type_id);
 		$this -> assign("flow_type", $flow_type);
@@ -413,99 +513,6 @@ class FlowController extends HomeController {
 		}
 	}
 
-	public function mark($action) {
-		switch ($action) {
-			case 'approve' :
-				$model = D("FlowLog");
-				if (false === $model -> create()) {
-					$this -> error($model -> getError());
-				}
-
-				$model -> result = 1;
-
-				$flow_id = $model -> flow_id;
-				$step = $model -> step;
-				//保存当前数据对象
-				$list = $model -> save();
-				$model = D("FlowLog");
-				$model -> where("step=$step and flow_id=$flow_id and result is null") -> delete();
-
-				if ($list !== false) {//保存成功
-					D("Flow") -> next_step($flow_id, $step);
-					$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
-					$this -> success('操作成功!');
-				} else {
-					//失败提示
-					$this -> error('操作失败!');
-				}
-				break;
-			case 'back' :
-				$model = D("FlowLog");
-				if (false === $model -> create()) {
-					$this -> error($model -> getError());
-				}
-
-				$model -> result = 2;
-				if (in_array('user_id', $model -> getDbFields())) {
-					$model -> user_id = get_user_id();
-				};
-				if (in_array('user_name', $model -> getDbFields())) {
-					$model -> user_name = get_user_name();
-				};
-
-				$flow_id = $model -> flow_id;
-				$step = $model -> step;
-				//保存当前数据对象
-				$list = $model -> save();
-				$emp_no = I('emp_no'); ;
-				if ($list !== false) {//保存成功
-					D("Flow") -> next_step($flow_id, $step, $emp_no);
-					$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
-					$this -> success('操作成功!');
-				} else {
-					//失败提示
-					$this -> error('操作失败!');
-				}
-				break;
-			case 'reject' :
-				$model = D("FlowLog");
-				if (false === $model -> create()) {
-					$this -> error($model -> getError());
-				}
-				$model -> result = 0;
-				if (in_array('user_id', $model -> getDbFields())) {
-					$model -> user_id = get_user_id();
-				};
-				if (in_array('user_name', $model -> getDbFields())) {
-					$model -> user_name = get_user_name();
-				};
-
-				$flow_id = $model -> flow_id;
-				$step = $model -> step;
-				//保存当前数据对象
-				$list = $model -> save();
-				//可以裁决的人有多个人的时候，一个人评价完以后，禁止其他人重复裁决。
-				$model = D("FlowLog");
-				$model -> where("step=$step and flow_id=$flow_id and result is null") -> delete();
-
-				if ($list !== false) {//保存成功
-					D("Flow") -> where("id=$flow_id") -> setField('step', 0);
-
-					$user_id = M("Flow") -> where("id=$flow_id") -> getField('user_id');
-					send_push($new, "您有一个流程被否决", 1, $user_id);
-
-					$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
-					$this -> success('操作成功!');
-				} else {
-					//失败提示
-					$this -> error('操作失败!');
-				}
-				break;
-			default :
-				break;
-		}
-	}
-
 	public function approve() {
 		$model = D("FlowLog");
 		if (false === $model -> create()) {
@@ -560,11 +567,17 @@ class FlowController extends HomeController {
 		$model -> where($where) -> setField('is_del', 1);
 
 		if ($list !== false) {//保存成功
-			D("Flow") -> where("id=$flow_id") -> setField('step', 0);
-
-			$user_id = M("Flow") -> where("id=$flow_id") -> getField('user_id');
-			send_push($new, "您有一个流程被否决", 1, $user_id);
-
+			
+			M("Flow") -> where("id=$flow_id") -> setField('step', 0);
+			$flow= M("Flow") ->find($flow_id);
+			
+			$push_data['type']='流程';
+			$push_data['action']='被否决';
+			$push_data['title']=$flow['name'];
+			$push_data['content']='审核人：'+get_user_name();
+			
+			send_push($push_data,$flow['user_id']);			
+			
 			$this -> assign('jumpUrl', U('flow/folder', 'fid=confirm'));
 			$this -> success('操作成功!');
 		} else {

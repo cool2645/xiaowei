@@ -34,7 +34,7 @@ class SystemConfigController extends HomeController {
 
 		$node = M("SystemConfig");
 		$menu = array();
-		$menu = $node -> where($map) -> field('id,pid,name,is_del') -> order('sort desc') -> select();
+		$menu = $node -> where($map) -> field('id,pid,name,is_del') -> order('sort ASC') -> select();
 		
 		if ($eq_pid != "#") {
 			$tree = list_to_tree($menu,$eq_pid);

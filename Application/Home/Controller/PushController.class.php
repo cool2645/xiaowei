@@ -85,9 +85,13 @@ class PushController extends Controller {
 		$data = $this -> get_data($user_id);
 		$start_time = time();
 		while (empty($data))// check if the data file has been modified
-		{
+		{	if (connection_status() != 0) {
+				exit();
+			}
 			if (time() - $start_time > 20) {
-				header('HTTP/1.1 404 Not Found');
+				$response['status'] = 0;
+				$response['timestamp'] = $start_time;
+				echo json_encode($response);
 				die;
 			}
 			usleep(1000000);
@@ -95,12 +99,11 @@ class PushController extends Controller {
 			clearstatcache();
 			$data = $this -> get_data($user_id);
 		}
-		$data['info'] = 'test';
-		// return a json array
+
 		$response = array();
 		$response['status'] = 1;
 		$response['data'] = $data;
-		$response['timestamp'] = $currentmodif;
+		$response['timestamp'] = time();
 		echo json_encode($response);
 		flush();
 	}
@@ -111,8 +114,8 @@ class PushController extends Controller {
 		$where['create_time'] = array('elt', time() - 1);
 		$model = M("Push");
 		$data = $model -> where($where) -> find();
-		if ($data) {
-			$model -> where("id=" . $data['id']) -> delete();
+		if ($data) {			
+			$model -> delete($data['id']);
 		}
 		return $data;
 	}

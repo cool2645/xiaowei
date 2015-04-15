@@ -250,7 +250,7 @@
 						<a onclick="go_return_url();" class="btn btn-sm btn-primary">返回</a>
 					</div>
 					<div class="pull-right">
-						<notempty name="is_edit">
+						<in name="is_edit" value="1,11">
 							<div class="btn-group">
 								<a class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" href="#">退回到<span class="fa fa-caret-down"></span> </a>
 								<ul class="dropdown-menu col-5">
@@ -264,7 +264,7 @@
 									</li>
 								</ul>
 							</div>
-						</notempty>
+						</in>
 						<a onclick="reject();" class="btn btn-sm btn-danger">否决</a>
 						|
 						<a onclick="approve();" class="btn btn-sm btn-primary">同意</a>
