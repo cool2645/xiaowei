@@ -40,9 +40,11 @@ class TaskController extends HomeController {
 		
 		$todo_task_count=badge_count_todo_task();
 		$dept_task_count=badge_count_dept_task();
+		$no_assign_task_count=badge_count_no_assign_task();
 		
 		$this->assign('todo_task_count',$todo_task_count);
 		$this->assign('dept_task_count',$dept_task_count);
+		$this->assign('no_assign_task_count',$no_assign_task_count);		
 		
 		$fid = $_GET['fid'];
 		$this -> assign("fid", $fid);
@@ -94,33 +96,45 @@ class TaskController extends HomeController {
 				$sql = "select id from {$prefix}task task where status=0 and not exists (select * from {$prefix}task_log task_log where task.id=task_log.task_id)";
 				$task_list = M() -> query($sql);
 
-				foreach ($task_list as $key => $val) {
-					$list[] = $val['id'];
-				}
 				if (empty($task_list)) {
 					$where['_string'] = '1=2';
 				} else {
+					foreach ($task_list as $key => $val) {
+						$list[] = $val['id'];
+					}
 					$where['id'] = array('in', $list);
 				}
 
 				break;
 
 			case 'no_finish' :
-				$this -> assign("folder_name", '未完成的任务');
-
+				$this -> assign("folder_name", '我未完成的任务');
+				
 				$where_log['status'] = array('lt', 2);
-				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id id,task_id');
+				$where_log['executor']=get_user_id();
+				$where_log['type']=array('eq',1);
+				
+				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id',true);
 				if (empty($task_list)) {
 					$where['_string'] = '1=2';
-				} else {
+				} else {					
 					$where['id'] = array('in', $task_list);
 				}
 
 				break;
 			case 'finished' :
-				$this -> assign("folder_name", '已完成的任务');
-				$where['status'] = array('eq', 3);
-
+				$this -> assign("folder_name", '我已完成的任务');
+				
+				$where_log['executor']=get_user_id();
+				$where_log['type']=array('eq',1);
+				
+				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id',true);	
+				if (empty($task_list)) {
+					$where['_string'] = '1=2';
+				} else {					
+					$where['id'] = array('in', $task_list);
+					$where['status'] = array('eq', 3);
+				}
 				break;
 			case 'my_task' :
 				$this -> assign("folder_name", '我发布的任务');

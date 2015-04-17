@@ -103,7 +103,7 @@ class  FlowModel extends CommonModel {
 
 	function _after_update($data, $options) {
 		$id = $data['id'];
-		$step=$data['step'];
+		$step = $data['step'];
 
 		if ($data['step'] == 20) {
 			$model = M("Flow");
@@ -124,7 +124,7 @@ class  FlowModel extends CommonModel {
 				$model -> where($where) -> setField('refer', $str_refer);
 			}
 
-			$this -> next_step($data['id'],$step);
+			$this -> next_step($data['id'], $step);
 		}
 	}
 
@@ -203,7 +203,6 @@ class  FlowModel extends CommonModel {
 				$temp = explode("_", $auditor);
 				$emp = $temp[1];
 				$str_auditor .= $emp . "|";
-
 			}
 
 			if (strpos($auditor, "_") == false) {
@@ -229,15 +228,23 @@ class  FlowModel extends CommonModel {
 		$model -> create($data);
 		$model -> add();
 
-		$user_id = M("User") -> where(array(emp_no=>$emp_no)) -> getField("id");
-		send_push($new, "您有一个流程被退回", 1, $user_id);
+		$user_id = M("User") -> where(array(emp_no => $emp_no)) -> getField("id");
+
+		$flow = M("Flow") -> find($flow_id);
+
+		$push_data['type'] = '流程';
+		$push_data['action'] = '被退回';
+		$push_data['title'] = $flow['name'];
+		$push_data['content'] = '审核人：' + get_user_name();
+
+		send_push($push_data, $user_id);
 	}
 
 	public function next_step($flow_id, $step) {
 		$model = D("Flow");
 		if (substr($step, 0, 1) == 2) {
 			if ($this -> is_last_confirm($flow_id)) {
-				$model -> where(array(id=>$flow_id)) -> setField('step', 30);
+				$model -> where(array(id => $flow_id)) -> setField('step', 30);
 				$step = 30;
 			} else {
 				$step++;
@@ -253,12 +260,23 @@ class  FlowModel extends CommonModel {
 		}
 
 		if ($step == 40) {
-			$model -> where(array(id=>$flow_id)) -> setField('step', 40);
+			$model -> where(array(id => $flow_id)) -> setField('step', 40);
 
-			$user_id = $model -> where(array(id=>$flow_id)) -> getField('user_id');
-			send_push($new, "您有一个流程通过审核", 1, $user_id);
+			$flow = M("Flow") -> find($flow_id);
+			$push_data['type'] = '流程';
+			$push_data['action'] = '审核通过';
+			$push_data['title'] = $flow['name'];
+			$push_data['content'] = '审核人：' + get_user_name();
 
-			$this -> send_to_refer($flow_id);
+			send_push($push_data, $flow['user_id']);
+
+			// $refer_list = $model -> where(array(id => $flow_id)) -> getField('refer');
+
+			// if (!empty($refer_list)) {
+				// $refer_list = str_replace("|", ",", $refer_list);
+				// $emp_list = array_filter(explode(",", $refer_list));
+				// $this -> send_to_refer($flow_id, $emp_list);
+			// };
 
 		} else {
 
@@ -283,7 +301,7 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_confirm($flow_id) {
-		$confirm = M("Flow") -> where(array(id=>$flow_id)) -> getField("confirm");
+		$confirm = M("Flow") -> where(array(id => $flow_id)) -> getField("confirm");
 		if (empty($confirm)) {
 			return true;
 		}
@@ -296,7 +314,7 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_consult($flow_id) {
-		$consult = M("Flow") -> where(array(id=>$flow_id)) -> getField("consult");
+		$consult = M("Flow") -> where(array(id => $flow_id)) -> getField("consult");
 		if (empty($consult)) {
 			return true;
 		}
@@ -312,41 +330,39 @@ class  FlowModel extends CommonModel {
 
 	function duty_emp_no($flow_id, $step) {
 		if (substr($step, 0, 1) == 2) {
-			$confirm = M("Flow") -> where(array(id=>$flow_id)) -> getField("confirm");
+			$confirm = M("Flow") -> where(array(id => $flow_id)) -> getField("confirm");
 			$arr_confirm = array_filter(explode("|", $confirm));
 
 			return $arr_confirm[fmod($step, 10) - 1];
 		}
 
 		if (substr($step, 0, 1) == 3) {
-			$consult = M("Flow") -> where(array(id=>$flow_id)) -> getField("consult");
+			$consult = M("Flow") -> where(array(id => $flow_id)) -> getField("consult");
 			$arr_consult = array_filter(explode("|", $consult));
 			return $arr_consult[fmod($step, 10) - 1];
 		}
 	}
 
-	function send_to_refer($flow_id) {
-		$model = M("Flow");
+	function send_to_refer($flow_id, $emp_list) {
 
-		$list = $model -> where(array(id=>$flow_id)) -> getField('refer');
+		$data['flow_id'] = $flow_id;
+		$data['result'] = 1;
+		$data['step'] = 100;
+		$data['create_time'] = time();
+		$data['from'] =get_user_name();
 
-		if (!empty($list)) {
-			$list = str_replace("|", ",", $list);
-			$emp_list = array_filter(explode(",", $list));
+		$flow=M("Flow")->find($flow_id);
+		$push_data['type'] = '流程';
+		$push_data['action'] = '需要您参阅';
+		$push_data['title'] = $flow['name'];
+		$push_data['content'] = '转发人：'.get_user_name().time();
 
-			$data['flow_id'] = $flow_id;
-			$data['result'] = 1;
-
-			foreach ($emp_list as $val) {
-				$data['emp_no'] = $val;
-				$data['step'] = 100;
-				$data['create_time'] = time();
-				D("FlowLog") -> add($data);
-
-				$where['emp_no'] = array('eq', $val);
-				$user_id = M("User") -> where($where) -> getField("id");
-				send_push($new, "收到新的流程", 1, $user_id);
-			}
+		foreach ($emp_list as $val) {
+			$data['emp_no'] = $val;
+			D("FlowLog") -> add($data);
+			$where['emp_no'] = array('eq', $val);
+			$user_id = M("User") -> where($where) -> getField("id");
+			send_push($push_data, $user_id);
 		}
 	}
 }

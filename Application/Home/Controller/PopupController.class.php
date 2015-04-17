@@ -249,6 +249,10 @@ class PopupController extends HomeController {
 		$this -> actor();
 	}
 
+	function refer() {
+		$this -> actor();
+	}
+	
 	function flow() {
 
 		$plugin['jquery-ui'] = true;

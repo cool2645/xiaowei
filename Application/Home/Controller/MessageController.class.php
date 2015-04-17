@@ -70,8 +70,9 @@ class MessageController extends HomeController {
 			
 			$push_data['type']='消息';
 			$push_data['action']='';
-			$push_data['title']=$data['sender_name'];
+			$push_data['title']="来自：".$data['sender_name']."的消息";
 			$push_data['content']=strip_tags($data['content']);
+			send_weixin($msg,$emp_no);
 			
 			send_push($push_data,$tmp[1]);
 		}
@@ -136,7 +137,7 @@ class MessageController extends HomeController {
 			
 			$push_data['type']='消息';
 			$push_data['action']='';
-			$push_data['title']=$data['sender_name'];
+			$push_data['title']="来自：".$data['sender_name']."的消息";
 			$push_data['content']=strip_tags($data['content']);
 						
 			send_push($push_data, I('receiver_id'));

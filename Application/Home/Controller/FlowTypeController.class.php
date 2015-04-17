@@ -177,6 +177,9 @@ class FlowTypeController extends HomeController {
 			}
 		}
 	}
-
+	
+	function upload(){
+		$this->_upload();
+	}
 }
 ?>

@@ -157,7 +157,7 @@ class PushManagerController extends HomeController {
 
 	private function _send_wechat($content, $openid = '', $type = 'text') {
 		import("Weixin.ORG.Util.ThinkWechat");
-		$agent_id=get_system_config('WEIXIN_AGENT_ID');
+		$agent_id=get_system_config('OA_AGENT_ID');
 		$weixin = new \ThinkWechat($agent_id);
 		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
 		$restr = $weixin -> send_msg($content, $openid, $type);		

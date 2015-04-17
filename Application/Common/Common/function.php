@@ -102,26 +102,49 @@ function is_weixin() {
 	return false;
 }
 
-function badge_count_task(){
-	return badge_count_todo_task()+badge_count_dept_task();
+function badge_count_task() {
+	return badge_count_todo_task() + badge_count_dept_task() + badge_count_no_assign_task();
 }
 
-function badge_count_todo_task(){
+function badge_count_todo_task() {
 	//等我接受的任务
 	$where = array();
 	$where_log['type'] = 1;
 	$where_log['status'] = 0;
 	$where_log['executor'] = get_user_id();
-	$task_list = M("TaskLog") -> where($where_log) -> getField('id',true);
-	
-	if(!empty($task_list)){
+	$task_list = M("TaskLog") -> where($where_log) -> getField('id', true);
+
+	if (!empty($task_list)) {
 		$where['id'] = array('in', $task_list);
-		$task_todo_count = M("Task") -> where($where) -> count();	
+		$where['is_del'] = 0;
+		$task_todo_count = M("Task") -> where($where) -> count();
 	}
 	return $task_todo_count;
 }
 
-function badge_count_dept_task(){
+function badge_count_no_assign_task() {
+	//等我接受的任务
+	$prefix = C('DB_PREFIX');
+
+	$assign_list = M("Task") -> getField('id', true);
+
+	$sql = "select id from {$prefix}task task where status=0 and not exists (select * from {$prefix}task_log task_log where task.id=task_log.task_id)";
+	$task_list = M() -> query($sql);
+
+	if (empty($task_list)) {
+		return 0;
+	} else {
+		foreach ($task_list as $key => $val) {
+			$list[] = $val['id'];
+		}
+		$where['id'] = array('in', $list);
+		$where['is_del'] = 0;
+		$task_no_assign_count = M("Task") -> where($where) -> count();
+		return $task_no_assign_count;
+	}
+}
+
+function badge_count_dept_task() {
 
 	//我部门任务
 	$where = array();
@@ -129,19 +152,19 @@ function badge_count_dept_task(){
 	if ($auth['admin']) {
 		$where_log['type'] = 2;
 		$where_log['executor'] = get_dept_id();
-		$where_log['status'] = array('eq','0');
+		$where_log['status'] = array('eq', '0');
 		$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', TRUE);
-		
-		if(!empty($task_list)){
+
+		if (!empty($task_list)) {
 			$where['id'] = array('in', $task_list);
-		}else{
+		} else {
 			return 0;
-		}				
+		}
 	} else {
 		return 0;
 	}
 
-	$task_dept_count = M("Task") -> where($where) -> count();	
+	$task_dept_count = M("Task") -> where($where) -> count();
 	return $task_dept_count;
 }
 
@@ -213,12 +236,10 @@ function badge_count_todo() {
 }
 
 function badge_count_schedule() {
-	$where = array();
-	$user_id = get_user_id();
-	$where['user_id'] = $user_id;
-	$where['is_del'] = 0;
-	$where['start_time'] = array("elt", date("Y-m-d"));
-	$where['end_time'] = array("egt", date("Y-m-d"));
+	$where['user_id'] = get_user_id();
+	$where['is_del'] = array('eq', 0);
+	$where['start_time'] = array("egt", date("Y-m-d"));
+	//$where['end_time'] = array("egt", date("Y-m-d"));
 	$new_schedule_count = M("Schedule") -> where($where) -> count();
 	return $new_schedule_count;
 }
@@ -275,7 +296,6 @@ function badge_count_system_folder($id) {
 		case 'Info' :
 			$count = badge_count_info($id);
 			break;
-
 		default :
 			break;
 	}
@@ -1431,7 +1451,7 @@ function get_position_name($id) {
 	return $data['position_name'];
 }
 
-function send_push($data,$user_id, $time = null) {
+function send_push($data, $user_id, $time = null) {
 	$model = M("Push");
 	$model -> data = jsencode($data);
 
@@ -1441,12 +1461,45 @@ function send_push($data,$user_id, $time = null) {
 		$model -> user_id = $user_id;
 	}
 
+	$msg = $data['type'] . "|" . $data['action'] . "\n" . $data['title'] . "\n" . $data['content'];
+
+	$emp_no = get_user_info($user_id, 'emp_no');
+
+	@send_weixin($msg, $emp_no);
+
 	if (empty($time)) {
 		$model -> time = time();
 	} else {
 		$model -> time = $time;
 	}
 	$model -> add();
+}
+
+function send_weixin($content, $openid = '', $type = 'text') {
+		
+	$url = get_system_config('SITE_URL')."/weixin.php";
+	
+	$params['c'] = "Oa";
+	$params['a'] = "send";
+	$params['content'] = $content;
+	$params['openid'] = $openid;
+
+	$opts[CURLOPT_TIMEOUT_MS] =600;
+	$opts[CURLOPT_RETURNTRANSFER] = 1;
+
+	$opts[CURLOPT_URL] = $url;
+	$opts[CURLOPT_POST] = 1;
+	$opts[CURLOPT_POSTFIELDS] = $params;
+
+	/* 初始化并执行curl请求 */
+	$ch = curl_init();
+	curl_setopt_array($ch, $opts);
+	$data = @curl_exec($ch);
+	$error = curl_error($ch);
+	curl_close($ch);	
+	//if ($error)
+	//	throw new Exception('请求发生错误：' . $error);
+	return $data;
 }
 
 function get_emp_pic($id) {
@@ -1552,6 +1605,6 @@ function sign_type($val) {
 	}
 	if ($val == 'outside') {
 		return "外勤";
-	}	
+	}
 }
 ?>

@@ -18,91 +18,94 @@ class WorkLogController extends HomeController {
 	//过滤查询字段
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
-		if(!empty($_POST['content'])){
-			$where['content']=array('like','%'.$_POST['content'].'%');
-			$where['plan']=array('like','%'.$_POST['content'].'%');
-			$where['_logic']='or';
+		if (!empty($_POST['content'])) {
+			$where['content'] = array('like', '%' . $_POST['content'] . '%');
+			$where['plan'] = array('like', '%' . $_POST['content'] . '%');
+			$where['_logic'] = 'or';
 			$map['_complex'] = $where;
 		}
 	}
 
-	public function index(){
-		$this->assign('user_id',get_user_id());	
+	public function index() {
+		$plugin['date'] = true;
+		$plugin['uploader'] = true;
+		$plugin['editor'] = true;
+		$this -> assign("plugin", $plugin);
+		$this -> assign('user_id', get_user_id());
 
-		$auth=$this -> config['auth'];
-		$this->assign('auth',$auth);		
-		if($auth['admin']){
+		$auth = $this -> config['auth'];
+		$this -> assign('auth', $auth);
+		if ($auth['admin']) {
 			$node = D("Dept");
-			$dept_id=get_dept_id();	
-			$dept_name=get_dept_name();
+			$dept_id = get_dept_id();
+			$dept_name = get_dept_name();
 			$menu = array();
-			$dept_menu = $node -> field('id,pid,name') ->where("is_del=0")-> order('sort asc') -> select();
-			$dept_tree = list_to_tree($dept_menu,$dept_id);			
-			$count=count($dept_tree);
-			if(empty($count)){
-				/*获取部门列表*/				
-				$html ='';
+			$dept_menu = $node -> field('id,pid,name') -> where("is_del=0") -> order('sort asc') -> select();
+			$dept_tree = list_to_tree($dept_menu, $dept_id);
+			$count = count($dept_tree);
+			if (empty($count)) {
+				/*获取部门列表*/
+				$html = '';
 				$html = $html . "<option value='{$dept_id}'>{$dept_name}</option>";
-				$this -> assign('dept_list',$html);			
+				$this -> assign('dept_list', $html);
 				/*获取人员列表*/
-				$where['dept_id']=array('eq',$dept_id);
-				$emp_list=D("User")->where($where)->getField('id,name');
-				$this->assign('emp_list',$emp_list);			
-			}else{
-				/*获取部门列表*/								
+				$where['dept_id'] = array('eq', $dept_id);
+				$emp_list = D("User") -> where($where) -> getField('id,name');
+				$this -> assign('emp_list', $emp_list);
+			} else {
+				/*获取部门列表*/
 				$this -> assign('dept_list', select_tree_menu($dept_tree));
-				$dept_list=tree_to_list($dept_tree);
-				$dept_list=rotate($dept_list);
-				$dept_list=$dept_list['id'];
-				
+				$dept_list = tree_to_list($dept_tree);
+				$dept_list = rotate($dept_list);
+				$dept_list = $dept_list['id'];
+
 				/*获取人员列表*/
-				$where['dept_id']=array('in',$dept_list);
-				$emp_list=D("User")->where($where)->getField('id,name');
-				$this->assign('emp_list',$emp_list);				
+				$where['dept_id'] = array('in', $dept_list);
+				$emp_list = D("User") -> where($where) -> getField('id,name');
+				$this -> assign('emp_list', $emp_list);
 			}
 		}
-				
-		$map = $this -> _search();
-		if($auth['admin']){
-			if(empty($map['dept_id'])){
-				if(!empty($dept_list)){
-					$map['dept_id']=array('in',array_merge($dept_list,array($dept_id)));
-				}else{
-					$map['dept_id']=array('eq',$dept_id);
-				}				
+		$model = D("WorkLogView");
+		$map = $this -> _search($model);
+		if ($auth['admin']) {
+			if (empty($map['dept_id'])) {
+				if (!empty($dept_list)) {
+					$map['dept_id'] = array('in', array_merge($dept_list, array($dept_id)));
+				} else {
+					$map['dept_id'] = array('eq', $dept_id);
+				}
 			}
-		}else{
-			$map['user_id']=get_user_id();
+		} else {
+			$map['user_id'] = get_user_id();
 		}
 
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($map);
 		}
-		
-		$model = D("WorkLogView");				
+
 		if (!empty($model)) {
-			$this -> _list($model,$map);
+			$this -> _list($model, $map);
 		}
 		$this -> display();
 	}
 
-	 function edit($id) {
-		$plugin['date'] = true;	
-		$plugin['uploader'] = true;	
+	function edit($id) {
+		$plugin['date'] = true;
+		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		
-		$this->_edit($id);
+
+		$this -> _edit($id);
 	}
 
 	public function add() {
-		$plugin['date'] = true;	
+		$plugin['date'] = true;
 		$plugin['uploader'] = true;
-		$plugin['editor'] = true;	
-		$this -> assign("plugin", $plugin);		
-		$this->display();
+		$plugin['editor'] = true;
+		$this -> assign("plugin", $plugin);
+		$this -> display();
 	}
-	
+
 	function upload() {
 		$this -> _upload();
 	}
@@ -130,7 +133,7 @@ class WorkLogController extends HomeController {
 		if (in_array('dept_name', $model -> getDbFields())) {
 			$model -> dept_name = get_dept_name();
 		};
-		$model->create_time=time();
+		$model -> create_time = time();
 		/*保存当前数据对象 */
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
@@ -141,4 +144,5 @@ class WorkLogController extends HomeController {
 			//失败提示
 		}
 	}
+
 }

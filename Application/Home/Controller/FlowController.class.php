@@ -14,7 +14,7 @@
 namespace Home\Controller;
 
 class FlowController extends HomeController {
-	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage,back_to,reject');
+	protected $config = array('app_type' => 'common', 'admin' => 'approve,mark,field_manage,back_to,reject,send_refer,refer');
 
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
@@ -25,11 +25,8 @@ class FlowController extends HomeController {
 	}
 
 	function index() {
-
-		$model = D("Flow");
 		$model = D('FlowTypeView');
 		$where['is_del'] = 0;
-
 		$user_id = get_user_id();
 		$role_list = D("Role") -> get_role_list($user_id);
 		$role_list = rotate($role_list);
@@ -56,7 +53,7 @@ class FlowController extends HomeController {
 		$user_id = get_user_id();
 		switch ($folder) {
 			case 'confirm' :
-				$this -> assign("folder_name", '待办');
+				$this -> assign("folder_name", '待审批');
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
 				$where['_string'] = "result is null";
@@ -71,20 +68,20 @@ class FlowController extends HomeController {
 				break;
 
 			case 'darft' :
-				$this -> assign("folder_name", '草稿');
+				$this -> assign("folder_name", '草稿箱');
 				$map['user_id'] = $user_id;
 				$map['step'] = 10;
 				break;
 
 			case 'submit' :
-				$this -> assign("folder_name", '提交');
+				$this -> assign("folder_name", '已提交');
 				$map['user_id'] = array('eq', $user_id);
 				$map['step'] = array( array('gt', 10), array('eq', 0), 'or');
 
 				break;
 
 			case 'finish' :
-				$this -> assign("folder_name", '办理');
+				$this -> assign("folder_name", '已审批');
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
 				$where['_string'] = "result is not null";
@@ -98,7 +95,7 @@ class FlowController extends HomeController {
 				break;
 
 			case 'receive' :
-				$this -> assign("folder_name", '收到');
+				$this -> assign("folder_name", '传阅箱');
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
 				$where['step'] = 100;
@@ -167,9 +164,9 @@ class FlowController extends HomeController {
 
 	private function _folder_export($model, $map) {
 		$list = $model -> where($map) -> select();
-		$r= $model -> where($map)->count();
+		$r = $model -> where($map) -> count();
 		$model_flow_field = D("UdfField");
-		if($r<=1000){
+		if ($r <= 1000) {
 			//导入thinkphp第三方类库
 			Vendor('Excel.PHPExcel');
 
@@ -182,9 +179,9 @@ class FlowController extends HomeController {
 			$i = 1;
 			//dump($list);
 
-			//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
-			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "编号") -> setCellValue("B$i", "类型") -> setCellValue("C$i", "标题") -> setCellValue("D$i", "登录时间") -> setCellValue("E$i", "部门") -> setCellValue("F$i", "登录人") -> setCellValue("G$i", "状态") -> setCellValue("H$i", "审批") -> setCellValue("I$i", "协商") -> setCellValue("J$i", "抄送") -> setCellValue("K$i", "审批情况");
-			
+			//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，传阅，审批情况，自定义字段
+			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "编号") -> setCellValue("B$i", "类型") -> setCellValue("C$i", "标题") -> setCellValue("D$i", "登录时间") -> setCellValue("E$i", "部门") -> setCellValue("F$i", "登录人") -> setCellValue("G$i", "状态") -> setCellValue("H$i", "审批") -> setCellValue("I$i", "协商") -> setCellValue("J$i", "传阅") -> setCellValue("K$i", "审批情况");
+
 			foreach ($list as $val) {
 				$i++;
 				//dump($val);
@@ -210,19 +207,18 @@ class FlowController extends HomeController {
 				//创建时间
 				$step = show_step_type($val["step"]);
 
-
-				//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，抄送，审批情况，自定义字段
-				$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $doc_no) -> setCellValue("B$i", $type_name) -> setCellValue("C$i", $name) -> setCellValue("D$i", $create_time) -> setCellValue("E$i", $dept_name) -> setCellValue("F$i", $user_name) -> setCellValue("G$i", $step) -> setCellValue("H$i", $confirm_name) -> setCellValue("I$i", $consult_name) -> setCellValue("J$i",$refer_name);
-				$result=M("flow_log")->where(array('flow_id' => $id))->select();
-				$field_data='';
+				//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，传阅，审批情况，自定义字段
+				$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $doc_no) -> setCellValue("B$i", $type_name) -> setCellValue("C$i", $name) -> setCellValue("D$i", $create_time) -> setCellValue("E$i", $dept_name) -> setCellValue("F$i", $user_name) -> setCellValue("G$i", $step) -> setCellValue("H$i", $confirm_name) -> setCellValue("I$i", $consult_name) -> setCellValue("J$i", $refer_name);
+				$result = M("flow_log") -> where(array('flow_id' => $id)) -> select();
+				$field_data = '';
 				if (!empty($result)) {
 					foreach ($result as $field) {
-						
-						$field_data = $field_data.$field['user_name'] . ":" . $field['comment']."\n";
+
+						$field_data = $field_data . $field['user_name'] . ":" . $field['comment'] . "\n";
 					}
 					$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("K$i", $field_data);
 				}
-				
+
 				$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
 				//	dump($field_list);
 				$k = 'K';
@@ -251,26 +247,26 @@ class FlowController extends HomeController {
 			//readfile($filename);
 			$objWriter -> save('php://output');
 			exit ;
-		}else{
+		} else {
 			header('Content-Type: application/vnd.ms-excel;charset=gbk');
 			header('Content-Disposition: attachment;filename="流程统计.csv"');
 			header('Cache-Control: max-age=0');
-		
+
 			$fp = fopen('php://output', 'a');
-			$title = array('编号','类型','标题','登录时间','部门','登录人','状态','审批','协商','抄送','审批情况','自定义字段');
+			$title = array('编号', '类型', '标题', '登录时间', '部门', '登录人', '状态', '审批', '协商', '传阅', '审批情况', '自定义字段');
 			foreach ($title as $i => $v) {
-			    // CSV的Excel支持GBK编码，一定要转换，否则乱码 
-			    $title[$i] = iconv('utf-8', 'gbk', $v);
+				// CSV的Excel支持GBK编码，一定要转换，否则乱码
+				$title[$i] = iconv('utf-8', 'gbk', $v);
 			}
 			fputcsv($fp, $title);
-			$cnt=0;
+			$cnt = 0;
 			foreach ($list as $val) {
 				$cnt++;
-				if (100000 == $cnt) { //刷新一下输出buffer，防止由于数据过多造成问题 
-			        ob_flush();
-			        flush();
-			        $cnt = 0;
-			    }
+				if (100000 == $cnt) {//刷新一下输出buffer，防止由于数据过多造成问题
+					ob_flush();
+					flush();
+					$cnt = 0;
+				}
 				//dump($val);
 				$id = $val['id'];
 				$doc_no = $val["doc_no"];
@@ -289,54 +285,46 @@ class FlowController extends HomeController {
 				//登记人
 				$dept_name = $val["dept_name"];
 				//不美分
-				
+
 				$create_time = to_date($val["create_time"], 'Y-m-d H:i:s');
 				//创建时间
 				$step = show_step_type($val["step"]);
 
-
-				
-				$result_list=M("flow_log")->where(array('flow_id' => $id))->select();
-				$field_data='';
-				$result='';
+				$result_list = M("flow_log") -> where(array('flow_id' => $id)) -> select();
+				$field_data = '';
+				$result = '';
 				if (!empty($result_list)) {
 					foreach ($result_list as $field) {
-						
-						$field_data = $field_data.$field['user_name'] . ":" . $field['comment']."\n";
+
+						$field_data = $field_data . $field['user_name'] . ":" . $field['comment'] . "\n";
 					}
-					$result=$field_data;
-					
+					$result = $field_data;
+
 				}
-				$r1=array($doc_no,$type_name,$name,$create_time,$dept_name,$user_name,$step,$confirm_name,$consult_name,$refer_name,$result);
-				
+				$r1 = array($doc_no, $type_name, $name, $create_time, $dept_name, $user_name, $step, $confirm_name, $consult_name, $refer_name, $result);
+
 				$field_list = $model_flow_field -> get_data_list($val["udf_data"]);
-				
-				$t=0;
-				$r2=array();
+
+				$t = 0;
+				$r2 = array();
 				if (!empty($field_list)) {
 
 					foreach ($field_list as $field) {
 						$r2[$t++] = $field['name'] . ":" . $field['val'];
 					}
-					
+
 				}
-				$row=array_merge($r1,$r2);
+				$row = array_merge($r1, $r2);
 				// dump($row);
 				foreach ($row as $i => $v) {
-				    // CSV的Excel支持GBK编码，一定要转换，否则乱码 
-				    $row[$i] = iconv('utf-8', 'gbk', $v);
+					// CSV的Excel支持GBK编码，一定要转换，否则乱码
+					$row[$i] = iconv('utf-8', 'gbk', $v);
 				}
 				fputcsv($fp, $row);
-
-
 			}
-			
-			
 			fclose($fp);
-			
 			exit ;
 		}
-
 	}
 
 	function add() {
@@ -345,8 +333,9 @@ class FlowController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		
-		$type_id = I('type'); ;
+
+		$type_id = I('type');
+		;
 		$model = M("FlowType");
 		$flow_type = $model -> find($type_id);
 		$this -> assign("flow_type", $flow_type);
@@ -362,10 +351,10 @@ class FlowController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-		$fid=I("fid");
+		$fid = I("fid");
 		$this -> _flow_auth_filter($fid, $map);
-		
-		$fid=I('fid');
+
+		$fid = I('fid');
 		$model = D("Flow");
 		$where['id'] = array('eq', $id);
 		$where['_logic'] = 'and';
@@ -375,12 +364,11 @@ class FlowController extends HomeController {
 			$this -> error("系统错误");
 		}
 
-
 		$this -> assign("emp_no", $vo['emp_no']);
 		$this -> assign("user_name", $vo['user_name']);
 		$this -> assign('vo', $vo);
-		
-		$flow_type_id = $vo['type'];		
+
+		$flow_type_id = $vo['type'];
 		$model = M("FlowType");
 		$flow_type = $model -> find($flow_type_id);
 		$this -> assign("flow_type", $flow_type);
@@ -393,12 +381,27 @@ class FlowController extends HomeController {
 		$flow_log = $model -> where($where) -> order("id") -> select();
 		$this -> assign("flow_log", $flow_log);
 
+		$model = M("FlowLog");
+		$where = array();
+		$where['flow_id'] = $id;
+		$where['step'] = array('eq', 100);
+		$refer_flow_log = $model -> where($where) -> order("id") -> select();
+		$this -> assign("refer_flow_log", $refer_flow_log);
+
 		$where = array();
 		$where['flow_id'] = $id;
 		$where['emp_no'] = get_emp_no();
 		$where['_string'] = "result is null";
 		$to_confirm = $model -> where($where) -> find();
 		$this -> assign("to_confirm", $to_confirm);
+
+		$where = array();
+		$where['flow_id'] = $id;
+		$where['emp_no'] = get_emp_no();
+		$where['step'] = array('eq', 100);
+
+		$to_refer = $model -> where($where) -> find();
+		$this -> assign("to_refer", $to_refer);
 
 		if (!empty($to_confirm)) {
 			$is_edit = $flow_type['is_edit'];
@@ -442,7 +445,7 @@ class FlowController extends HomeController {
 		$this -> assign('vo', $vo);
 
 		$field_list = D("UdfField") -> get_data_list($vo['udf_data']);
-		//dump($field_list);		
+		//dump($field_list);
 		$this -> assign("field_list", $field_list);
 
 		$model = M("FlowType");
@@ -479,9 +482,9 @@ class FlowController extends HomeController {
 		if (empty($str_auditor)) {
 			$this -> error('没有找到任何审核人');
 		}
-				
-		$model->udf_data=D('UdfField')->get_field_data();
-		 
+
+		$model -> udf_data = D('UdfField') -> get_field_data();
+
 		$list = $model -> add();
 
 		if ($list !== false) {//保存成功
@@ -501,9 +504,9 @@ class FlowController extends HomeController {
 			$this -> error($model -> getError());
 		}
 		$flow_id = $model -> id;
-		$model->udf_data=D('UdfField')->get_field_data();
+		$model -> udf_data = D('UdfField') -> get_field_data();
 		$list = $model -> save();
-		if (false !== $list) {			
+		if (false !== $list) {
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
 			//成功提示
@@ -567,17 +570,17 @@ class FlowController extends HomeController {
 		$model -> where($where) -> setField('is_del', 1);
 
 		if ($list !== false) {//保存成功
-			
+
 			M("Flow") -> where("id=$flow_id") -> setField('step', 0);
-			$flow= M("Flow") ->find($flow_id);
-			
-			$push_data['type']='流程';
-			$push_data['action']='被否决';
-			$push_data['title']=$flow['name'];
-			$push_data['content']='审核人：'+get_user_name();
-			
-			send_push($push_data,$flow['user_id']);			
-			
+			$flow = M("Flow") -> find($flow_id);
+
+			$push_data['type'] = '流程';
+			$push_data['action'] = '被否决';
+			$push_data['title'] = $flow['name'];
+			$push_data['content'] = '审核人：' + get_user_name();
+
+			send_push($push_data, $flow['user_id']);
+
 			$this -> assign('jumpUrl', U('flow/folder', 'fid=confirm'));
 			$this -> success('操作成功!');
 		} else {
@@ -605,7 +608,7 @@ class FlowController extends HomeController {
 		//保存当前数据对象
 		$list = $model -> save();
 		if ($list !== false) {//保存成功
-			D("Flow") -> back_to($flow_id,$emp_no);
+			D("Flow") -> back_to($flow_id, $emp_no);
 			$this -> assign('jumpUrl', U('flow/folder?fid=confirm'));
 			$this -> success('操作成功!');
 		} else {
@@ -613,6 +616,28 @@ class FlowController extends HomeController {
 			$this -> error('操作失败!');
 		}
 		return;
+	}
+
+	public function refer() {
+		$model = D("FlowLog");
+		if (false === $model -> create()) {
+			$this -> error($model -> getError());
+		}
+		//保存当前数据对象
+		$list = $model -> save();
+		
+		if ($list !== false) {//保存成功			
+			$this -> success('操作成功!');
+		} else {
+			//失败提示
+			$this -> error('操作失败!');
+		}
+	}
+
+	function send_refer($flow_id, $emp_list) {
+		$emp_list = array_filter(explode(",", $emp_list));
+		$model = D("Flow") -> send_to_refer($flow_id, $emp_list);
+		$this -> success('发送成功');
 	}
 
 	function down($attach_id) {

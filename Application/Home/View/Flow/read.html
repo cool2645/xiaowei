@@ -17,6 +17,9 @@
 			</div>
 			<div class="pull-right">
 				<a onclick="winprint();" class="btn btn-sm btn-primary">打印</a>
+				<eq name="vo.step" value="40">
+					<a onclick="popup_refer();" class="btn btn-sm btn-primary">传阅</a>
+				</eq>
 				<in name="is_edit" value="1,11">
 					<a onclick="save();" class="btn btn-sm btn-primary">保存</a>
 				</in>
@@ -98,8 +101,8 @@
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-sm-2 control-label" >抄送：</label>
+			<div class="form-group display-none">
+				<label class="col-sm-2 control-label" >传阅：</label>
 				<div class="col-sm-10">
 					<p id="refer_wrap" class="form-control-static address_list">
 						{$vo.refer_name}
@@ -181,14 +184,14 @@
 					</p>
 				</div>
 			</div>
-			<div class="form-group col-xs-12">
-				<label class="col-sm-2 control-label" >抄送：</label>
+			<div class="form-group col-xs-12 display-none">
+				<label class="col-sm-2 control-label" >传阅：</label>
 				<div class="col-sm-10">
 					<p id="refer_wrap" class="form-control-static address_list">
 						{$vo.refer_name}
 					</p>
 				</div>
-			</div>		
+			</div>
 			{:W('UserDefineField/edit2',array($vo['udf_data']))}
 			<in name="flow_type.is_edit" value="10,11">
 				<div class="form-group">
@@ -237,6 +240,30 @@
 			</volist>
 		</ul>
 	</div>
+	<notempty name="refer_flow_log">
+		{:W('PageHeader/simple',array('name'=>'参阅情况','search'=>'N'))}
+		<div class="ul_table border-bottom">
+			<ul>
+				<li class="thead">
+					<span class="col-9 text-center">发送人</span>
+					<span class="col-12 text-center">发送时间</span>
+					<span class="col-9 text-center">参阅人</span>
+					<span class="auto">参阅人意见</span>
+				</li>
+				<volist name="refer_flow_log" id="item">
+					<li class="tbody">
+						<span class="text-center col-9">{$item.from}</span>
+						<span class="text-center col-12">{$item.create_time|to_date='Y-m-d h:i'}</span>
+						<span style="width:90px;" class="text-center">{$item.user_name}</span>
+						<span class="auto">
+							<div style="overflow:hidden">
+								{$item.comment}
+							</div> </span>
+					</li>
+				</volist>
+			</ul>
+		</div>
+	</notempty>
 	<notempty name="to_confirm">
 		<a id="confirm"></a>
 		{:W('PageHeader/simple',array('name'=>'办理意见','search'=>'N'))}
@@ -279,13 +306,40 @@
 			</div>
 		</form>
 	</notempty>
+	<notempty name="to_refer">
+		{:W('PageHeader/simple',array('name'=>'参阅人意见','search'=>'N'))}
+		<form method="post" action="" name="form_confirm" id="form_confirm">
+			<input type="hidden" name="id" value="{$to_refer.id}">
+			<input type="hidden" name="flow_id" value="{$vo.id}">
+			<div class="operate panel panel-default">
+				<div class="panel-heading clearfix">
+					<div class="pull-left">
+						<a onclick="go_return_url();" class="btn btn-sm btn-primary">返回</a>
+					</div>
+					<div class="pull-right">
+						<a onclick="refer();" class="btn btn-sm btn-primary">保存</a>
+					</div>
+				</div>
+				<div class="form-group panel-body">
+					<label class="col-sm-2 control-label" >参阅人意见：</label>
+					<div class="col-sm-10">
+						<textarea name="comment" class="col-xs-12" style="height:120px">{$to_refer.comment}</textarea>
+					</div>
+				</div>
+			</div>
+		</form>
+	</notempty>
 </block>
 <block name="js">
 	<script type="text/javascript">
-		udf_field.init({$vo['udf_data']});			
+		udf_field.init({$vo['udf_data']});
 		function approve() {
 			sendForm("form_confirm", "{:U('approve')}", "{:U('read','id='.$vo['id'])}");
 		}
+		
+		function refer() {
+			sendForm("form_confirm", "{:U('refer')}","{:U('read','id='.$vo['id'])}");
+		}		
 
 		function reject() {
 			sendForm("form_confirm", "{:U('reject')}", "{:U('read','id='.$vo['id'])}");
@@ -327,6 +381,11 @@
 		function popup_confirm() {
 			winopen("{:U('popup/confirm')}", 730, 574);
 		}
+
+		function popup_refer() {
+			winopen("{:U('popup/refer')}", 730, 574);
+		}
+
 
 		$(document).ready(function() {
 			set_return_url(document.location, 1);
