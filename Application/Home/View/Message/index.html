@@ -24,9 +24,8 @@
 						<div class="user">
 							<eq name="vo.sender_id" value="$owner_id">
 								<img class="img-thumbnail" src="/{$vo.receiver_id|get_emp_pic}"  onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'"/>
-							</eq>
-							<eq name="vo.receiver_id" value="$owner_id">
-								<img class="img-thumbnail" src="/{$vo.sender_id|get_emp_pic}"  onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'"/>
+								<else/>
+								<img class="img-thumbnail" src="/{$vo.sender_id|get_emp_pic}"  onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'"/>							
 							</eq>
 						</div>
 					</div>
@@ -34,9 +33,8 @@
 						<p class="<gt name='vo.unread' value='0'>bold</gt>">
 							<eq name="vo.sender_id" value="$owner_id">
 								发给 {$vo.receiver_name}：{$vo.content}
-							</eq>
-							<eq name="vo.receiver_id" value="$owner_id">
-								{$vo.sender_name}：{$vo.content}
+								<else/>
+								{$vo.sender_name}：{$vo.content}															
 							</eq>
 						</p>
 						<p>
@@ -46,12 +44,12 @@
 									<a href="{:U('read','reply_id='.$vo['receiver_id'])}">共{$vo.count}条对话</a>
 									<a onclick="reply_message({$vo.receiver_id})">回复</a>
 									<a onclick="del_message({$vo.receiver_id})">删除</a>
-								</eq>
-								<eq name="vo.receiver_id" value="$owner_id">
+								<else/>
 									<a href="{:U('read','reply_id='.$vo['sender_id'])}">共{$vo.count}条对话</a>
 									<a onclick="reply_message({$vo.sender_id})">回复</a>
-									<a onclick="del_message({$vo.sender_id})">删除</a>
-								</eq></span>
+									<a onclick="del_message({$vo.sender_id})">删除</a>								
+								</eq>
+							</span>
 						</p>
 					</div>
 				</div>

@@ -67,7 +67,7 @@
 	<script type="text/javascript" src="__STATIC__/jcrop/jquery.Jcrop.min.js"></script>
 	<link rel="stylesheet" href="__STATIC__/jcrop/jquery.Jcrop.css" type="text/css" />
 	<script>
-		var SAVE_URL = "{:get_save_url()}";
+	
 	var uploader = new plupload.Uploader({
 	runtimes : 'html5,flash,html4',
 	browse_button : 'pickfiles', // you can pass in id...
@@ -87,9 +87,9 @@
 	FileUploaded: function(up,file,data) {
 	var myObject = eval('(' + data.response + ')');
 	if(myObject.status){
-	$("#img").val(myObject.path);
-	$("#target").attr("src",myObject.path);
-	$(".preview").attr("src",myObject.path);
+	$("#img").val("."+myObject.path);
+	$("#target").attr("src","."+myObject.path);
+	$(".preview").attr("src","."+myObject.path);
 	$('#target').Jcrop({
 	minSize : [60, 60],
 	setSelect : [0, 0, 120, 120],
@@ -105,7 +105,7 @@
 	// Store the API in the jcrop_api variable
 	jcrop_api = this;
 	});
-	$(".jcrop-holder img").attr("src", SAVE_URL + myObject.savename);
+
 	$(".imgchoose").show(1000);
 	}else{
 	alert(myObject.message);
@@ -167,7 +167,7 @@ function checkCoords() {
 				dataType : "json",
 				success : function(msg) {
 					if (msg.result_code == 1) {
-						$("#emp_pic", parent.document).attr("src", "{:get_save_url()}" + msg.result_des + '?t=' + Math.random());
+						$("#emp_pic", parent.document).attr("src", "__ROOT__" + msg.result_des + '?t=' + Math.random());
 						$("#pic", parent.document).val(msg.result_des);
 					}
 					myclose();

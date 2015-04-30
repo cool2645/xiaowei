@@ -102,6 +102,43 @@ function is_weixin() {
 	return false;
 }
 
+
+function badge_count_work_order() {
+	return badge_count_todo_work_order() + badge_count_doing_work_order() ;
+}
+
+function badge_count_todo_work_order() {
+	//等我接受的任务
+	$where = array();
+	$where_log['type'] = 1;
+	$where_log['status'] = 0;
+	$where_log['executor'] = get_user_id();
+	$work_order_list = M("WorkOrderLog") -> where($where_log) -> getField('task_id', true);
+	if (!empty($work_order_list)) {
+		$where['id'] = array('in', $work_order_list);
+		$where['is_del'] = 0;
+		$work_order_list_todo_count = M("WorkOrder") -> where($where) -> count();
+	}
+	return $work_order_list_todo_count;
+}
+
+
+function badge_count_doing_work_order() {
+	//等我接受的任务
+	$where = array();
+	$where_log['type'] = 1;
+	$where_log['status'] = array('lt', 2);
+	$where_log['executor'] = get_user_id();
+	$work_order_list = M("WorkOrderLog") -> where($where_log) -> getField('task_id', true);
+	if (!empty($work_order_list)) {
+		$where['id'] = array('in', $work_order_list);
+		$where['is_del'] = 0;
+		$work_order_list_doing_count = M("WorkOrder") -> where($where) -> count();
+	}
+	return $work_order_list_doing_count;
+}
+
+
 function badge_count_task() {
 	return badge_count_todo_task() + badge_count_dept_task() + badge_count_no_assign_task();
 }
@@ -352,7 +389,7 @@ function http($url, $params, $method = 'GET', $header = array(), $multi = false)
  * @param array $arr 待编码数组
  * @return string
  */
-function jsencode($arr) {
+function jsencode2($arr) {
 	$str = str_replace("\\/", "/", json_encode($arr));
 	$search = "#\\\u([0-9a-f]+)#ie";
 
@@ -472,11 +509,11 @@ function get_save_path() {
 }
 
 function get_save_url() {
-	$app_path = __APP__;
-	// $save_path = C('SAVE_PATH');
-	$app_path = str_replace("/index.php?s=", "", $app_path);
-	$app_path = str_replace("/index.php", "", $app_path);
-	return $app_path . "/";
+	// $app_path = __APP__;
+	// // $save_path = C('SAVE_PATH');
+	// $app_path = str_replace("/index.php?s=", "", $app_path);
+	// $app_path = str_replace("/index.php", "", $app_path);
+	return __ROOT__;
 }
 
 function _encode($arr) {
@@ -1447,27 +1484,22 @@ function get_sid() {
 
 function get_position_name($id) {
 	$data = D('UserView') -> find($id);
-	//dump($data);
 	return $data['position_name'];
 }
 
 function send_push($data, $user_id, $time = null) {
 	$model = M("Push");
-	$model -> data = jsencode($data);
+	$model -> data = json_encode($data,JSON_UNESCAPED_UNICODE);
 
 	if (empty($user_id)) {
 		$model -> user_id = get_user_id();
 	} else {
 		$model -> user_id = $user_id;
 	}
+	
+	@send_weixin($data,$user_id);
 
-	$msg = $data['type'] . "|" . $data['action'] . "\n" . $data['title'] . "\n" . $data['content'];
-
-	$emp_no = get_user_info($user_id, 'emp_no');
-
-	@send_weixin($msg, $emp_no);
-
-	if (empty($time)) {
+	if (empty($time)){
 		$model -> time = time();
 	} else {
 		$model -> time = $time;
@@ -1475,14 +1507,19 @@ function send_push($data, $user_id, $time = null) {
 	$model -> add();
 }
 
-function send_weixin($content, $openid = '', $type = 'text') {
-		
-	$url = get_system_config('SITE_URL')."/weixin.php";
-	
+function send_weixin($data, $user_id, $type = 'text') {
+	   
+	$msg = $data['type'] . "|" . $data['action'] . "\n" . $data['title'] . "\n" . $data['content'];
+
+	$openid = M('User') ->where(array('id' => $user_id)) ->getField('openid');	
+			
+	$url = get_system_config('WEIXIN_SITE_URL')."/weixin.php";
+
 	$params['c'] = "Oa";
 	$params['a'] = "send";
-	$params['content'] = $content;
+	$params['content'] = $msg;
 	$params['openid'] = $openid;
+	//$params['type'] = $type;
 
 	$opts[CURLOPT_TIMEOUT_MS] =600;
 	$opts[CURLOPT_RETURNTRANSFER] = 1;
@@ -1606,5 +1643,65 @@ function sign_type($val) {
 	if ($val == 'outside') {
 		return "外勤";
 	}
+}
+
+function conv_baidu_map(&$lat,&$lng){
+	$url = "http://api.map.baidu.com/geoconv/v1/?coords=$lng,$lat&from=1&to=5&ak=EE6745c36d96321e90b7015f3de4a4ee";
+	$result = json_decode(file_get_contents($url));
+	$lat=$result->result[0]->x;
+	$lng=$result->result[0]->y;
+}
+
+function get_location($lat,$lng){
+	conv_baidu_map($lat,$lng);
+
+	$url="http://api.map.baidu.com/geocoder/v2/?ak=EE6745c36d96321e90b7015f3de4a4ee&callback=renderReverse&location=$lng,$lat&output=json";
+	$json=file_get_contents($url);
+	$json=str_replace("renderReverse&&renderReverse(",'',$json);
+	$json=substr($json,0,-1);
+	$result = json_decode($json);
+	return $result->result->formatted_address;
+}
+
+function del_html_tag($html){
+	$qian=array(" ","　","\t","\n","\r");$hou=array("","","","","");
+	$html=strip_tags($html);
+    return str_replace($qian,$hou,$html);
+}
+
+function get_work_order($user_id,$date){
+	$where['executor']=get_user_id();
+	$where['request_arrive_time']=array(array('gt',$date." 00:00"),array('lt',$date." 23:59"));
+	$list=D('WorkOrderLogView')->where($where)->select();	
+	//echo(D('WorkOrderLogView')->getLastSql());
+	//dump($list);
+	foreach ($list as $val){
+		//dump($val);
+		$request_arrive_time=$val['request_arrive_time'];
+		//dump($val);		
+		if($request_arrive_time>$date." 12:00:00"){
+			$data_pm_name[]=$val['name'];
+			$data_pm_content[]=utf_str_sub(strip_tags($val['content']),4);			
+		}else{
+			$data_am_name[]=$val['name'];
+			$data_am_content[]=utf_str_sub(del_html_tag($val['content']),4);
+			//dump(utf_str_sub(del_html_tag($val['content']),4));				
+		}
+	}
+	//dump($data_pm_name);
+	//dump($data_am_content);
+	$am_name=$data_am_name[0];
+	$am_content=$data_am_content[0];
+	
+	//$am_name="客户1";
+	
+	$pm_name_1=$data_pm_name[0];
+	$pm_content_1=$data_pm_content[0];
+	
+	$pm_name_2=$data_pm_name[1];
+	$pm_content_2=$data_pm_content[1];
+	
+	$html="<div><div class=\"col-sm-4\"><p>{$am_name}</p><p>{$am_content}</p></div><div class=\"col-sm-4\"><p>{$pm_name_1}</p><p>{$pm_content_1}</p></div><div class=\"col-sm-4\"><p>{$pm_name_2}</p><p>{$pm_content_2}</p></div></div>";
+	return $html;
 }
 ?>

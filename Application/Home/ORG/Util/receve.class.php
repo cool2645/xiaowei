@@ -544,6 +544,5 @@ class receiveMail {
 		}
 		return $new;
 	}
-
 }
 ?>

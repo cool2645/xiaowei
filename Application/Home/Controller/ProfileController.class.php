@@ -17,6 +17,8 @@ class ProfileController extends HomeController {
 	protected $config=array('app_type'=>'personal');
 	
 	function index(){	
+		$plugin['date'] = true;
+		$this -> assign("plugin", $plugin);
 		$user=D("UserView")->find(get_user_id());
 		$this->assign("vo",$user);
 		$this->display();

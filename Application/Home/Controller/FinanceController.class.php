@@ -55,7 +55,10 @@ class FinanceController extends HomeController {
 
 		$customer_list = M("Customer") -> where('is_del=0') -> getField("name id,name");
 		$this -> assign('customer_list', $customer_list);
-
+		
+		$supplier_list = M("Supplier") -> where('is_del=0') -> getField("name id,name");
+		$this -> assign('supplier_list', $supplier_list);
+		
 		$this -> display();
 	}
 
@@ -66,6 +69,9 @@ class FinanceController extends HomeController {
 		$account_list = M("FinanceAccount") -> where('is_del=0') -> getField("id,name");
 		$this -> assign('account_list', $account_list);
 
+		$customer_list = M("Customer") -> where('is_del=0') -> getField("name id,name");
+		$this -> assign('customer_list', $customer_list);
+		
 		$supplier_list = M("Supplier") -> where('is_del=0') -> getField("name id,name");
 		$this -> assign('supplier_list', $supplier_list);
 

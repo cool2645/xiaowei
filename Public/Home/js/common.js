@@ -16,12 +16,7 @@ function click_top_menu(node) {
 	set_cookie("top_menu", node);
 	set_cookie("left_menu", "");
 	set_cookie("current_node", "");
-	form = $("<form></form>");
-	form.attr('action', url);
-	form.attr('method', 'post');
-	form.appendTo("body");
-	form.css('display', 'none');
-	form.submit();
+	location.href=url;
 }
 
 function click_home_list(obj_node) {
@@ -32,13 +27,7 @@ function click_home_list(obj_node) {
 	set_return_url(return_url);
 
 	url = $(obj_node).attr("url");
-
-	form = $("<form></form>");
-	form.attr('action', url);
-	form.attr('method', 'post');
-	form.appendTo("body");
-	form.css('display', 'none');
-	form.submit();
+	location.href=url;
 }
 
 /* 填充时间*/
@@ -82,7 +71,7 @@ function push_info($msg) {
 	$.gritter.add({
 		position : 'bottom-right',
 		text : '<div class="ul_table"><div class="pull-left col-10 text-center"><span class="bigger-150 ">'+$msg.type+'</span><br>'+$msg.action+'</div><div class="auto"><span style="display:block" class="bigger-125 red bolder autocut">'+ $msg.title +'</span>'+$msg.content+'</div></div>',
-		sticky : true,
+		sticky : false,
 		time : 5000,
 		class_name : 'gritter-light push-info'
 	});

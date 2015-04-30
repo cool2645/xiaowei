@@ -80,7 +80,7 @@ class Local {
 			return false;
 		}
 
-		if ($file['is_mail']) {
+		if ($file['is_move']) {
 			if (!rename($file['tmp_name'], $filename)) {
 				$this -> error = '文件上传保存错误！';
 				return false;

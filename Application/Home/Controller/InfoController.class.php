@@ -238,6 +238,7 @@ class InfoController extends HomeController {
 		$model = M('Info');
 		$vo = $model -> find($id);
 		$this -> assign('vo', $vo);
+	//	echo(del_html_tag($vo['content']));
 
 		$where_scope['info_id'] = array('eq', $id);
 		$scope_user = M("InfoScope") -> where($where_scope) -> getField('user_id', true);

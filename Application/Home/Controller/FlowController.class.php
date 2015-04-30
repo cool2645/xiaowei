@@ -95,7 +95,7 @@ class FlowController extends HomeController {
 				break;
 
 			case 'receive' :
-				$this -> assign("folder_name", '传阅箱');
+				$this -> assign("folder_name", '参阅箱');
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
 				$where['step'] = 100;

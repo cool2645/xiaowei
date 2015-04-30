@@ -14,18 +14,32 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class PushController extends Controller {
+class PushController extends HomeController {
 
 	protected $config = array('app_type' => 'asst');
-
-	function _initialize() {
-		$auth_id = session(C('USER_AUTH_KEY'));
-		if (!isset($auth_id)) {
-			//跳转到认证网关
-			die ;
-		}
+	
+	function index(){
+		$this -> redirect('folder', array('type' => 'all'));
 	}
 
+	public function folder($type) {
+		switch ($type) {
+			case 'all':
+				
+				break;
+			case 'mail':
+				$where['type']=array('eq',$mail);
+				break;			
+			default:				
+				break;
+		}
+		$model = D('Push');
+		if (!empty($model)) {
+			$this -> _list($model, $where);
+		}
+		$this -> display();	
+	}
+			
 	function server() {
 		$user_id = $user_id = get_user_id();
 		session_write_close();
@@ -94,7 +108,7 @@ class PushController extends Controller {
 				echo json_encode($response);
 				die;
 			}
-			usleep(1000000);
+			usleep(5000000);
 			// sleep 10ms to unload the CPU
 			clearstatcache();
 			$data = $this -> get_data($user_id);

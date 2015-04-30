@@ -231,6 +231,9 @@ class PopupController extends HomeController {
 		$this -> actor();
 	}
 
+	function work_order() {
+		$this -> actor();
+	}
 	function confirm() {
 
 		$plugin['jquery-ui'] = true;
@@ -296,7 +299,7 @@ class PopupController extends HomeController {
 			$result['result_des'] = "图片不存在";
 		} else {
 
-			$real_img = $_SERVER['DOCUMENT_ROOT'] . $image;
+			$real_img =$image;
 			$info = get_img_info($real_img);
 
 			if (!$info) {

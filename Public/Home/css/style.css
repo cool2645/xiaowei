@@ -21,7 +21,9 @@ body {
 .gritter-item-wrapper.gritter-light.push-info .gritter-item {
   color: #4A577D;padding:0;
 }
-
+.panel-body ul{
+	margin-left:0px; 
+	}
 .gritter-item-wrapper .ul_table{
 	padding:0px;
 	margin-right:20px;

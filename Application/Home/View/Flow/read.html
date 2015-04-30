@@ -12,7 +12,7 @@
 				</eq>
 				<a href="#flow_status"  class="btn btn-sm btn-primary">审批情况</a>
 				<notempty name="to_confirm">
-					<a href="#confirm"  class="btn btn-sm btn-primary">办理意见</a>
+					<a href="#confirm"  class="btn btn-sm btn-primary">审批意见</a>
 				</notempty>
 			</div>
 			<div class="pull-right">
@@ -266,7 +266,7 @@
 	</notempty>
 	<notempty name="to_confirm">
 		<a id="confirm"></a>
-		{:W('PageHeader/simple',array('name'=>'办理意见','search'=>'N'))}
+		{:W('PageHeader/simple',array('name'=>'审批意见','search'=>'N'))}
 		<form method="post" action="" name="form_confirm" id="form_confirm">
 			<input type="hidden" name="id" value="{$to_confirm.id}">
 			<input type="hidden" name="flow_id" value="{$vo.id}">
@@ -298,7 +298,7 @@
 					</div>
 				</div>
 				<div class="form-group panel-body">
-					<label class="col-sm-2 control-label" >办理意见：</label>
+					<label class="col-sm-2 control-label" >审批意见：</label>
 					<div class="col-sm-10">
 						<textarea name="comment" class="col-xs-12" style="height:120px"></textarea>
 					</div>
@@ -385,7 +385,6 @@
 		function popup_refer() {
 			winopen("{:U('popup/refer')}", 730, 574);
 		}
-
 
 		$(document).ready(function() {
 			set_return_url(document.location, 1);

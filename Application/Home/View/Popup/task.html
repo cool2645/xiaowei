@@ -162,9 +162,10 @@
 
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
-				$text = $(this).parents("label").find("span").text();
+				$(this).prop('checked', false);
 				$val = $(this).val();
 				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
+					$text = $(this).parents("label").find("span").text();
 					$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
 					$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
 				};

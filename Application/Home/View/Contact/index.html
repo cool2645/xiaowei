@@ -189,7 +189,7 @@
 				ui_error("请选择数据");
 				return false;
 			}
-			sendForm("form_data", "{:U('set_tag')}", "__CONTROLLER__");
+			sendForm("form_data", "{:U('set_tag')}", "{:U('index')}");
 		}
 
 		function create_new_tag() {

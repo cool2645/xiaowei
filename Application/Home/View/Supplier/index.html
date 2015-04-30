@@ -174,7 +174,7 @@
 		if ($("#form_data .ul_table input:checked").length == 0) {
 			ui_error("请选择数据");
 		}
-		sendForm("form_data", "{:U('set_tag')}", "__CONTROLLER__");
+		sendForm("form_data", "{:U('set_tag')}", "{:U('index')}");
 	}
 
 	function create_new_tag() {

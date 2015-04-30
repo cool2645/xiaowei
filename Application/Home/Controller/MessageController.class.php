@@ -72,8 +72,6 @@ class MessageController extends HomeController {
 			$push_data['action']='';
 			$push_data['title']="来自：".$data['sender_name']."的消息";
 			$push_data['content']=strip_tags($data['content']);
-			send_weixin($msg,$emp_no);
-			
 			send_push($push_data,$tmp[1]);
 		}
 		//保存当前数据对象

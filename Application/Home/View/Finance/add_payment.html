@@ -25,6 +25,7 @@
 			<div class="col-sm-8">
 				<select id="partner" name="partner" class="form-control" check="require" msg="请选择收款帐号">
 					<option value="" >请选择供应商</option>
+					{:fill_option($customer_list)}
 					{:fill_option($supplier_list)}
 					<option value="其他" >其他</option>
 				</select>

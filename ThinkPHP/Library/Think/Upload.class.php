@@ -280,7 +280,7 @@ class Upload {
 			$this -> error = '未知上传错误！';
 		}
 
-		if (!$file['is_mail']) {
+		if (!$file['is_move']) {
 			/* 检查是否合法上传 */
 			if (!is_uploaded_file($file['tmp_name'])) {
 				$this -> error = '非法上传文件！';

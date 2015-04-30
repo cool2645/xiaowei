@@ -73,6 +73,15 @@ class  InfoModel extends CommonModel {
 				$return_user_list[] = $val;
 			}
 		}
+		
+		foreach($return_user_list as $val){
+			$info=D('InfoView')->find($id);
+			$push_data['type']='信息';
+			$push_data['action']=$info['folder_name'];
+			$push_data['title']=$info['name'];
+			$push_data['content']=del_html_tag($info['content']);
+			send_push($push_data,$val);		
+		}		
 
 		if (!empty($return_user_list)) {
 			$return_user_list = implode(",", $return_user_list);
@@ -80,6 +89,7 @@ class  InfoModel extends CommonModel {
 			$sql = 'insert into ' . $this -> tablePrefix . 'info_scope (user_id,info_id) ';
 			$sql .= ' select a.id, b.id from ' . $this -> tablePrefix . 'user a, ' . $this -> tablePrefix . 'info b where ' . $where;
 			$result = $this -> execute($sql);
+
 			if ($result === false) {
 				return false;
 			} else {
