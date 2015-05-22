@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{$title|default=get_system_config("SYSTEM_NAME")}</title>
+		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">
+		<link href="__INS__/font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link href="__INS__/css/animate.css" rel="stylesheet">
+		<link href="__INS__/css/plugins/swiper/css/swiper.min.css" />
+		<link href="__INS__/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+		<include file="Layout:ins_plugin_css"/>
+		<link href="__INS__/css/style.css" rel="stylesheet">
+		<link href="__INS__/css/xiaowei.css" rel="stylesheet">
+		<style>
+			.swiper-container {
+				width: 300px;
+				margin: 0;
+			}
+			.swiper-wrapper {
+				width: 300px;
+			}
+			.swiper-slide {
+				width: 700px;
+			}
+			.panel {
+				width: 700px;
+			}
+		</style>
+	</head>
+	<include file="Layout:page_script"/>
+
+	<body class="{$Think.CONTROLLER_NAME} Popup">
+		<!-- Swiper -->
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<block name="content"></block>
+				</div>
+			</div>
+			<!-- Add Pagination -->
+			<div class="swiper-pagination"></div>
+		</div>
+
+		<!-- Mainly scripts -->
+		<script src="__INS__/js/jquery-2.1.1.js"></script>
+		<script src="__INS__/js/bootstrap.min.js"></script>
+		<script src="__INS__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="__INS__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="__INS__/js/plugins/swiper/swiper.jquery.min.js"></script>
+
+		<!-- Custom and plugin javascript -->
+		<script src="__INS__/js/inspinia.js"></script>
+		<script src="__INS__/js/common.js"></script>
+		<script src="__INS__/js/plugins/pace/pace.min.js"></script>
+
+		<include file="Layout:ins_plugin_js"/>
+		<block name="js"></block>
+		<script>
+			$(document).ready(function() {
+				if (is_mobile()) {
+					$(".swiper-container").width($("#dialog", parent.document).width());
+					$(".swiper-container").height(window.screen.height - 40);
+					var swiper = new Swiper('.swiper-container', {
+						slidesPerView : 'auto',
+						freeMode : true
+					});
+				} else {
+					$(".swiper-container").width(700);
+				}
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{$title|default=get_system_config("SYSTEM_NAME")}</title>
+		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">								
+		<link href="__INS__/css/style.css" rel="stylesheet">
+		<link href="__INS__/css/xiaowei.css" rel="stylesheet">
+	</head>
+	<include file="Layout:page_script"/>
+	<body class="{$Think.CONTROLLER_NAME} white-bg">
+		<block name="content"></block>
+
+		<!-- Mainly scripts -->
+		<script src="__INS__/js/jquery-2.1.1.js"></script>
+		<script src="__INS__/js/bootstrap.min.js"></script>
+		<script src="__INS__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="__INS__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+		<!-- Custom and plugin javascript -->
+		<script src="__INS__/js/inspinia.js"></script>
+		<script src="__INS__/js/common.js"></script>		
+		
+		<block name="js"></block>
+	</body>
+</html>

@@ -1,0 +1,151 @@
+<extend name="Layout/ins_page" />
+<block name="content">
+{:W('PageHeader/simple',array('name'=>'写邮件','search'=>'N'))}
+<div class="operate panel panel-default">
+	<div class="panel-body">
+		<div class="left">
+			<a class="btn btn-sm btn-primary" onclick="send(true);">发送</a>
+			<a class="btn btn-sm btn-primary" onclick="send(false);" >存草稿</a>
+		</div>
+	</div>
+</div>
+<form class="well form-horizontal" method='post' id="form_send" name="form_send" enctype="multipart/form-data">
+	<input type="hidden" id="ajax" name="ajax" value="0">
+	<input type="hidden" id="add_file" name="add_file">
+	<input type="hidden" id="id" name="id" value="{$vo.id}">
+	<input type="hidden" id="to" name="to"/>
+	<input type="hidden" id="cc" name="cc"/>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="recever">收件人*：</label>
+		<div class="col-sm-10">
+			<div class="input-group">
+				<div id="recever" class="inputbox form-control">
+					<div class="wrap" >
+						<span class="address_list">{$vo.to|show_contact="edit"}</span>
+						<span class="text" >
+							<input class="letter" type="text"  >
+						</span>
+					</div>
+					<div class="search dropdown ">
+						<ul class="dropdown-menu"></ul>
+					</div>
+				</div>
+				<span class="input-group-btn"> <a class="btn btn-link" onclick="popup_contact();"> <i class="fa fa-user"></i> </a> </span>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-2 control-label">
+			<label for="carbon_copy"> 抄送*：</label>
+			<a onclick="toggle_bcc();"><i id="toggle_bcc_icon" class="fa fa-chevron-down"></i></a>
+		</div>
+		<div class="col-sm-10">
+			<div id="carbon_copy" class="inputbox">
+				<div class="wrap" >
+					<span class="address_list">{$vo.cc|show_contact}</span>
+					<span class="text" >
+						<input class="letter" type="text"  >
+					</span>
+				</div>
+				<div class="search dropdown ">
+					<ul class="dropdown-menu"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="bcc" class="form-group hidden">
+		<label class="col-sm-2 control-label" for="blind_carbon_copy"> 密送*： </label>
+		<div class="col-sm-10">
+			<div id="blind_carbon_copy" class="inputbox">
+				<div class="wrap" >
+					<span class="address_list">{$vo.bcc|show_contact}</span>
+					<span class="text" >
+						<input class="letter" type="text"  >
+					</span>
+				</div>
+				<div class="search dropdown ">
+					<ul class="dropdown-menu"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="mail_title"> 标题*： </label>
+		<div class="col-sm-10">
+			<input class="form-control"  type="text" name="title" id="mail_title"  check="require" msg="请输入标题" value="{$vo.name}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="mail_title"> 附件*： </label>
+		<div class="col-sm-10">
+			<include file="Widget:uploader" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-xs-12">
+			<textarea  class="editor" id="content" name="content" class="col-xs-12">{$vo.content}</textarea>
+		</div>
+	</div>
+</form>
+</block>
+<block name="js">
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*单击删除已选联系人*/
+		$(document).on("click", ".inputbox .address_list a.del", function() {
+			$(this).parent().parent().remove();
+		});
+	});
+	function send(flag) {
+		window.onbeforeunload=null;
+		$("#to").val("");
+		$("#recever .address_list span").each(function() {
+			$("#to").val($("#to").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";");
+		});
+		$("#cc").val("");
+		$("#carbon_copy .address_list span").each(function() {
+			$("#cc").val($("#cc").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";");
+		});
+
+		$("#bcc").val("");
+		$("#blind_carbon_copy .address_list span").each(function() {
+			$("#cc").val($("#cc").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";");
+		});
+		if ($("#to").val().indexOf("@") < 1) {
+			ui_error("请选择收件人");
+			$("#recever letter").focus();
+			return false;
+		}
+		if (check_form("form_send")) {
+			if (flag) {
+				sendForm("form_send", "{:U('send')}");
+			} else {
+				sendForm("form_send", "{:U('save_darft')}");
+			}
+		}
+	}
+
+	function toggle_bcc() {
+		if ($("#bcc").attr("class").indexOf("hidden") < 0) {
+			$("#bcc").addClass("hidden");
+			$("#toggle_bcc_icon").addClass("fa fa-chevron-down");
+			$("#toggle_bcc_icon").removeClass("fa fa-chevron-up");
+		} else {
+			$("#bcc").removeClass("hidden");
+			$("#toggle_bcc_icon").addClass("fa fa-chevron-up");
+			$("#toggle_bcc_icon").removeClass("fa fa-chevron-down");
+		}
+	}
+
+	function popup_contact() {
+		winopen("{:U('popup/contact')}", 730, 574);
+	}
+</script>
+
+</block>
