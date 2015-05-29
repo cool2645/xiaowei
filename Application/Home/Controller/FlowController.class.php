@@ -54,6 +54,7 @@ class FlowController extends HomeController {
 				$this -> assign("folder_name", '待审批');
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
+				$where['is_del'] = 0;
 				$where['_string'] = "result is null";
 				$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
 
@@ -82,6 +83,7 @@ class FlowController extends HomeController {
 				$this -> assign("folder_name", '已审批');
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
+				$where['is_del'] = 0;
 				$where['_string'] = "result is not null";
 				$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
 				$log_list = rotate($log_list);
@@ -97,6 +99,7 @@ class FlowController extends HomeController {
 				$FlowLog = M("FlowLog");
 				$where['emp_no'] = $emp_no;
 				$where['step'] = 100;
+				$where['is_del'] = 0;
 				$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
 				$log_list = rotate($log_list);
 				if (!empty($log_list)) {

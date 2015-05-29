@@ -72,7 +72,7 @@ class MessageController extends HomeController {
 		
 		$push_data['type'] = '消息';
 		$push_data['action'] = '';
-		$push_data['title'] = "来自：" . $get_dept_name() . "-" . $data['sender_name'] . "的消息";
+		$push_data['title'] = "来自：" . get_dept_name() . "-" . $data['sender_name'] . "的消息";
 		$push_data['content'] = del_html_tag($data['content']);
 		send_push($push_data, $recever_list);
 		//保存当前数据对象

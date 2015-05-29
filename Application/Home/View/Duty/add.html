@@ -1,0 +1,59 @@
+<extend name="Layout/ins_popup" />
+<block name="content">
+	{:W('PageHeader/popup',array('name'=>'添加业务权限','search'=>'N'))}
+	<div class="row">
+		<div class="col-sm-12 last sub_content ">
+			<form id="form_data" name="form_data" method="post" action="">
+				<input type="hidden" name="id" id="id">
+				<input type="hidden" name="ajax" id="ajax" value="1">
+				<input type="hidden" name="opmode" id="opmode" value="add">
+				<table class="table table-bordered">
+					<tr>
+						<th>名称*</th>
+						<td>
+						<input class="form-control col-20" type="text" id="name" name="name"  check="require" msg="请输入名称">
+						</td>
+					</tr>
+					<tr>
+						<th>排序</th>
+						<td>
+						<input class="form-control col-10" type="text" id="sort" name="sort">
+						</td>
+					</tr>
+					<tr>
+						<th>状态</th>
+						<td>
+						<select class="form-control col-10"  name="is_del" id="is_del">
+							<option  value="0">启用</option>
+							<option value="1">禁用</option>
+						</select></td>
+					</tr>
+					<tr>
+						<th>备注</th>
+						<td><textarea id="remark" class="form-control" name="remark" rows="" cols=""></textarea></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</block>
+<block name="js">
+	<script type="text/javascript">
+		function save() {
+			if (check_form("form_data")) {
+				var vars = $("#form_data").serialize();
+				sendAjax("{:U('save')}", vars, function(data) {
+					if (data.status) {
+						ui_alert(data.info, function() {
+							parent.location.reload(true);
+							myclose();
+						});
+					} else {
+						ui_error(data.info);
+					}
+				});
+			}
+		}
+
+	</script>
+</block>

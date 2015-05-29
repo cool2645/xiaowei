@@ -2001,14 +2001,19 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 		min-width: 910px;
 	}
 }
-@media print {
-	#page-wrapper {
-		position:absolute;
+
+#page-wrapper.print {
+		position:absolute!important;
 		left:0px;
 		right:0px;
 		margin:0;
 		padding:0;
 		border:0px;
+}
+
+@media print {
+	body{
+		font-size:62.5%;
 	}
 	.wrapper{
 		margin:0;
@@ -2016,7 +2021,6 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 	}
 	#sidebar {
 		display: none;
-		width: 0px;
 	}
 	.operate {
 		display: none;
@@ -2026,9 +2030,6 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 	}
 	.main-content {
 		margin: 0;
-	}
-	#sidebar {
-		display: none;
 	}
 	.btn {
 		border: 0;

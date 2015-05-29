@@ -56,11 +56,9 @@
 					$(".page-header .title").html("全部");
 				} else {
 					$(".page-header .title").html("搜索结果");
-				}
-				
+				}				
 				count = 0;
 				$(".ibox a.btn").each(function() {
-					alert("y");
 					if ($(this).text().indexOf(val) >= 0) {
 						count++;
 						$(this).parent().show();

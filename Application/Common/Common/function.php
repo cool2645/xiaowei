@@ -17,6 +17,7 @@
  * @return string
  * @author 麦当苗儿 <zuojiazi@vip.qq.com>
  */
+
 function think_encrypt($data, $key = '', $expire = 0) {
 	$key = md5(empty($key) ? C('DATA_AUTH_KEY') : $key);
 	$data = base64_encode($data);
@@ -47,6 +48,7 @@ function think_encrypt($data, $key = '', $expire = 0) {
  * @return string
  * @author 麦当苗儿 <zuojiazi@vip.qq.com>
  */
+
 function think_decrypt($data, $key = '') {
 	$key = md5(empty($key) ? C('DATA_AUTH_KEY') : $key);
 	$data = str_replace(array('-', '_'), array('+', '/'), $data);
@@ -94,8 +96,8 @@ function badge_count_work_order() {
 	return badge_count_todo_work_order() + badge_count_doing_work_order();
 }
 
+//等我接受的任务
 function badge_count_todo_work_order() {
-	//等我接受的任务
 	$work_order_list_todo_count = 0;
 	$where = array();
 	$where_log['type'] = 1;
@@ -219,6 +221,7 @@ function badge_count_flow_todo() {
 
 	$emp_no = get_emp_no();
 	$where['emp_no'] = $emp_no;
+	$where['is_del'] = array('eq', 0);
 	$where['_string'] = "result is null";
 	$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
 
@@ -449,7 +452,7 @@ function get_emp_no($user_id = null) {
 	}
 }
 
-function get_user_name($user_id=null) {
+function get_user_name($user_id = null) {
 	if (empty($user_id)) {
 		$user_name = session('user_name');
 		return isset($user_name) ? $user_name : 0;
@@ -1277,6 +1280,7 @@ function send_push($data, $user_list, $time = null) {
 
 	$model = M("Push");
 	$model -> data = json_encode($data, JSON_UNESCAPED_UNICODE);
+	
 	if (empty($time)) {
 		$model -> time = time();
 	} else {
@@ -1290,16 +1294,26 @@ function send_push($data, $user_list, $time = null) {
 	} else {
 		if (empty($user_list)) {
 			$model -> user_id = get_user_id();
+			$user_list = array(get_user_id());
 		} else {
 			$model -> user_id = $user_list;
+			$user_list = array($user_list);
 		}
 		$model -> add();
+	}
+
+	$ws_push_config = get_system_config('WS_PUSH_CONFIG');
+	if (!empty($ws_push_config)) {
+		$ws_push_config = array_filter(explode(',', $ws_push_config));
+		if (in_array($data['type'], $ws_push_config)) {
+			@send_ws($data, $user_list);
+		}
 	}
 
 	$sms_push_config = get_system_config('SMS_PUSH_CONFIG');
 
 	if (!empty($sms_push_config)) {
-		$sms_push_config = array_filter(explode(',', $sms_push_config));	
+		$sms_push_config = array_filter(explode(',', $sms_push_config));
 		if (in_array($data['type'], $sms_push_config)) {
 			//@send_sms($data, $user_list);
 		}
@@ -1314,11 +1328,24 @@ function send_push($data, $user_list, $time = null) {
 	}
 }
 
+function send_ws($data, $user_list) {
+	$client = stream_socket_client('tcp://127.0.0.1:7273');
+	if (!$client)
+		exit("can not connect");
+	// 模拟超级用户，以文本协议发送数据，注意文本协议末尾有换行符（发送的数据中最好有能识别超级用户的字段），这样在Event.php中的onMessage方法中便能收到这个数据，然后做相应的处理
+	$msg['type'] = "say";
+	$msg['to_client_id'] = "all";
+	$msg['to_client_name'] = $user_list;
+	$msg['content'] = $data;
+	$msg['room_id'] = "1";
+	fwrite($client, json_encode($msg) . "\n");
+}
+
 function send_weixin($data, $user_list, $type = 'text') {
 
 	$msg = $data['type'] . "|" . $data['action'] . "\n" . $data['title'] . "\n" . $data['content'];
-	
-	$where['id']=array('in',$user_list);
+
+	$where['id'] = array('in', $user_list);
 	$openid = M('User') -> where($where) -> getField('openid', true);
 	$openid = implode('|', array_filter($openid));
 
@@ -1346,9 +1373,8 @@ function send_weixin($data, $user_list, $type = 'text') {
 	return $data;
 }
 
-
 function send_sms($data, $user_list, $type = 'text') {
-	$msg = '【' . $data['type'] . "】" . $data['action'] . ':' . $data['title'] . ',' . $data['content'].to_date(time(),"M月d日 h时i分");
+	$msg = '【' . $data['type'] . "】" . $data['action'] . ' ' . $data['title'] . '：' . $data['content'] . to_date(time(), "m-d H:i");
 	header("Content-Type: text/html; charset=utf-8");
 
 	$url = 'http://192.168.100.9:9080/OpenMasService?WSDL';

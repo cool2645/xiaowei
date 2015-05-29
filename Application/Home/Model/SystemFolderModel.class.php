@@ -119,9 +119,9 @@ class  SystemFolderModel extends CommonModel {
 
 	private function get_emp_list_by_dept_id($id) {
 		$list = M("Dept") -> where('is_del=0') -> select();
-		$dept = tree_to_list(list_to_tree($list, $id));
-		$dept = rotate($list);
-		if (!empty($dept)) {
+		if (!empty($list)) {
+			$dept = tree_to_list(list_to_tree($list, $id));
+			$dept = rotate($dept);
 			$dept = $dept['id'];
 			if (!empty($dept)) {
 				$dept = implode(",", $dept) . ",$id";

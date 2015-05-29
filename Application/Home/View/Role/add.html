@@ -1,13 +1,8 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	{:W('PageHeader/popup',array('name'=>'添加'))}
-
-	<!-- 功能操作区域结束 -->
-	<!-- 列表显示区域  -->
-
+	{:W('PageHeader/popup',array('name'=>'添加权限组'))}
 	<div class="col-sm-8 last sub_content">
 		<form id="form_data" name="form_data"method="post" class="well form-horizontal clearfix">
-			
 			<input type="hidden" name="ajax" id="ajax" value="0">
 			<input type="hidden" name="opmode" id="opmode" value="add">
 			<input type="hidden" name="controller" value="{$controller}">
@@ -60,7 +55,6 @@
 				});			
 			}
 		}
-
 		
 	</script>
 </block>

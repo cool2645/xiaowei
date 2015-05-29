@@ -3,7 +3,16 @@ function del_current_node() {
 }
 
 function winprint() {
-	window.print();
+	$("#sidebar").addClass("hidden");
+	$("#page-wrapper").addClass("print");
+	setTimeout(function(){
+		window.print();	
+	},300);	
+	
+	setTimeout(function(){
+		$("#page-wrapper").removeClass("print");
+		$("#sidebar").removeClass("hidden");
+	},700);	
 }
 
 function freshVerify() {
@@ -61,7 +70,7 @@ function ui_info(msg) {
 		"closeButton" : true,
 		"debug" : true,
 		"positionClass" : "toast-bottom-right"
-	}
+	};
 	toastr.info(msg);
 }
 
@@ -70,12 +79,12 @@ function ui_error(msg) {
 		"closeButton" : true,
 		"debug" : true,
 		"positionClass" : "toast-bottom-right"
-	}
+	};
 	toastr.error('', msg);
 }
 
 function push_info($msg) {
-	$msg = eval('(' + $msg + ')');
+	//$msg = eval('(' + $msg + ')');
 	if ($msg.action.length) {
 		$title = '<h3>[' + $msg.type + '] [' + $msg.action + ']</h3>';
 	} else {

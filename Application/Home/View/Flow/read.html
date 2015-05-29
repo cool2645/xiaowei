@@ -20,13 +20,13 @@
 				<eq name="vo.step" value="40">
 					<a onclick="popup_refer();" class="btn btn-sm btn-primary">传阅</a>
 				</eq>
-				<in name="is_edit" value="1,11">
+				<eq name="is_edit" value="1">
 					<a onclick="save();" class="btn btn-sm btn-primary">保存</a>
-				</in>
+				</eq>
 			</div>
 		</div>
 	</div>
-	<in name="is_edit" value="1,11">
+	<eq name="is_edit" value="1">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
 			<input type="hidden" id="id" name="id" value="{$vo.id}">
 			<input type="hidden" id="ajax" name="ajax" value="0">
@@ -117,16 +117,16 @@
 					{:W('UserDefineField/edit2',array($vo['udf_data']))}
 
 				</eq>
-			<else />
+			<else/>
 				{:W('UserDefineField/edit2',array($vo['udf_data']))}
 			</notempty>
-			<in name="flow_type.is_edit" value="10,11">
+			<eq name="flow_type.is_show" value="1">
 				<div class="form-group">
 					<div class="col-xs-12">
 						<textarea class="editor" id="content" name="content" style="width:100%;height:300px;">{$vo.content}</textarea>
 					</div>
 				</div>
-			</in>
+			</eq>
 			<div class="form-group">
 				<label class="col-sm-2 control-label" >附件：</label>
 				<div class="col-sm-10">
@@ -134,8 +134,8 @@
 				</div>
 			</div>
 		</form>
-	</in>
-	<in name="is_edit" value="0,10">
+	</eq>
+	<eq name="is_edit" value="0">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"  class="well form-horizontal">
 			<input type="hidden" id="ajax" name="ajax" value="0">
 			<input type="hidden" id="opmode" name="opmode" value="edit">
@@ -208,7 +208,7 @@
 			{:W('UserDefineField/edit2',array($vo['udf_data']))}
 			</notempty>
 			
-			<in name="flow_type.is_edit" value="10,11">
+			<eq name="flow_type.is_show" value="1">
 				<div class="form-group">
 					<div class="col-xs-12">
 						<div class="content_wrap">
@@ -217,7 +217,7 @@
 						</div>
 					</div>
 				</div>
-			</in>
+			</eq>
 			<notempty name="vo.add_file">
 				<div class="form-group">
 					<label class="col-sm-2 control-label" >附件：</label>
@@ -228,7 +228,7 @@
 			</notempty>
 			<div class="clearfix"></div>
 		</form>
-	</in>
+	</eq>
 
 	<a id="flow_status"></a>
 	{:W('PageHeader/simple',array('name'=>'审批情况','search'=>'N'))}
@@ -292,7 +292,7 @@
 						<a onclick="go_return_url();" class="btn btn-sm btn-primary">返回</a>
 					</div>
 					<div class="pull-right">
-						<in name="is_edit" value="1,11">
+						<eq name="is_edit" value="1">
 							<div class="btn-group">
 								<a class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" href="#">退回到<span class="fa fa-caret-down"></span> </a>
 								<ul class="dropdown-menu col-5">
@@ -306,7 +306,7 @@
 									</li>
 								</ul>
 							</div>
-						</in>
+						</eq>
 						<a onclick="reject();" class="btn btn-sm btn-danger">否决</a>
 						|
 						<a onclick="approve();" class="btn btn-sm btn-primary">同意</a>

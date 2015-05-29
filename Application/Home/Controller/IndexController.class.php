@@ -64,6 +64,7 @@ class IndexController extends HomeController {
 		//带审批的列表
 		$FlowLog = M("FlowLog");
 		$where['emp_no'] = $emp_no;
+		$where['is_del'] = 0;
 		$where['_string'] = "result is null";
 		$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
 		$log_list = rotate($log_list);

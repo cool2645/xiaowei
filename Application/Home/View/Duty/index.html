@@ -71,11 +71,7 @@
 <block name="js">
 <script type="text/javascript">
 	function add() {
-		$("#opmode").val("add");
-		$("#id").val("");
-		if (check_form("form_data")){
-			sendForm("form_data", "{:U('save')}", "{:U('index')}");
-		}
+		winopen("{:U('add')}",704,400);
 	}
 
 	function save() {

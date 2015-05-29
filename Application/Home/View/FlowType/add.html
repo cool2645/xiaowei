@@ -134,20 +134,27 @@
 			</div>
 		</div>
 		<div class="form-group col-sm-6">
-			<label class="col-sm-4 control-label" for="is_edit">默认编辑器：</label>
+			<label class="col-sm-4 control-label" for="is_edit">审批人能否修改：</label>
 			<div class="col-sm-8">
 				<select class="form-control" name="is_edit" id="is_edit">
-					<option value="0">不显示+审核人不能编辑</option>
-					<option value="1">不显示+审批人可以编辑</option>
-					<option value="10">显示+审核人不能编辑</option>					
-					<option value="11">显示+审核人可以编辑</option>
+					<option value="0">不能修改</option>
+					<option value="1">可以修改</option>
 				</select>
 			</div>
 		</div>
 		<div class="form-group col-sm-6">
 			<label class="col-sm-4 control-label" for="udf_tpl">自定义模板：</label>
 			<div class="col-sm-8">
-				<input class="form-control" type="text" id="udf_tpl" name="udf_tpl">
+				<input class="form-control" type="text" id="udf_tpl" name="udf_tpl" value="{$vo.udf_tpl}">
+			</div>
+		</div>
+		<div class="form-group col-sm-6">
+			<label class="col-sm-4 control-label" for="is_show">默认编辑器：</label>
+			<div class="col-sm-8">
+				<select class="form-control" name="is_show" id="is_show">
+					<option value="1">显示</option>	
+					<option value="0">不显示</option>								
+				</select>
 			</div>
 		</div>
 

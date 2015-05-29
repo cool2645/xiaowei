@@ -1,44 +1,27 @@
-<extend name="Layout/ins_page" />
+<extend name="Layout/ins_popup" />
 <block name="content">
-	{:W('PageHeader/simple',array('name'=>$tag_name,'search'=>'N'))}
-	<div class="operate panel panel-default">
-		<div class="panel-body">
-			<div class="pull-left">
-				<a class="btn btn-sm btn-primary" onclick="go_return_url()">返回</a>
-			</div>
-			<div class="pull-right">
-				<a onclick="add()" class="btn btn-sm btn-primary">新增</a>
-				<a onclick="save()" class="btn btn-sm btn-primary">保存</a>
-				&nbsp;|&nbsp;
-				<a onclick="del()" class="btn btn-sm btn-danger">删除</a>
-			</div>
-		</div>
-	</div>
+	{:W('PageHeader/popup',array('name'=>'添加'))}
 	<div class="row">
-		<div class="col-sm-4 sub_left_menu ">
-			<div class="well">
-				<?php echo $menu ?>
-			</div>
-		</div>
-		<div class="col-sm-8 ">
+		<div class="col-xs-12">
 			<form id="form_data" name="form_data" method="post" class="form-horizontal well">
 				<input type="hidden" name="id" id="id">
 				<input type="hidden" name="pid" id="pid" value="0">
 				<input type="hidden" name="ajax" id="ajax" value="0">
-				<input type="hidden" name="opmode" id="opmode" value="">
+				<input type="hidden" name="opmode" id="opmode" value="add">
+				<input type="hidden" name="controller" id="controller" value="{$controller}">
 				<select name="tag_list" id="tag_list" class="hidden">
 					{:fill_option($tag_list)}
 				</select>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="name">名称：</label>
-					<div class="col-sm-8">
+					<label class="col-xs-3 control-label" for="name">名称：</label>
+					<div class="col-xs-9">
 						<input type="text" id="name" name="name" check="require" msg="请输入名称" class="form-control">
 					</div>
 				</div>
 				<if condition="$has_pid">
 					<div class="form-group">
-						<label class="col-sm-4 control-label" for="tag_name">父节点*：</label>
-						<div class="col-sm-8">
+						<label class="col-xs-3 control-label" for="tag_name">父节点*：</label>
+						<div class="col-xs-9">
 							<div class="input-group">
 								<input name="tag_name" class="form-control val" id="tag_name" type="text" msg="请选择父节点" check="require" />
 								<span class="input-group-btn">
@@ -50,14 +33,14 @@
 					</div>
 				</if>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="sort">排序：</label>
-					<div class="col-sm-8">
+					<label class="col-xs-3 control-label" for="sort">排序：</label>
+					<div class="col-xs-9">
 						<input type="text" id="sort" name="sort" class="form-control">
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="is_del">状态：</label>
-					<div class="col-sm-8">
+					<label class="col-xs-3 control-label" for="is_del">状态：</label>
+					<div class="col-xs-9">
 						<select   name="is_del" id="is_del" class="form-control col-10">
 							<option  value="0">启用</option>
 							<option value="1">禁用</option>
@@ -65,8 +48,8 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="remark">备注：</label>
-					<div class="col-sm-8">
+					<label class="col-xs-3 control-label" for="remark">备注：</label>
+					<div class="col-xs-9">
 						<textarea id="remark" name="remark" class="col-xs-12 form-control"></textarea>
 					</div>
 				</div>
@@ -77,7 +60,11 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			winopen("{:U('SystemTag/add',array('controller'=>$controller))}", 704, 400);
+			$("#opmode").val("add");
+			$("#id").val("");
+			if (check_form("form_data")) {
+				sendForm("form_data", "", "__SELF__");
+			}
 		};
 
 		function del() {
@@ -90,13 +77,18 @@
 		}
 
 		function save() {
-			if ($("#opmode").val() == "") {
-				ui_error("请选择文件夹或新增");
-				return false;
-			} else {
-				if (check_form("form_data")) {
-					sendForm("form_data", "", "__SELF__");
-				}
+			if (check_form("form_data")) {
+				var vars = $("#form_data").serialize();
+				sendAjax("{:U('SystemTag/save')}", vars, function(data) {
+					if (data.status) {
+						ui_alert(data.info, function() {
+							parent.location.reload(true);
+							myclose();
+						});
+					} else {
+						ui_error(data.info);
+					}
+				});
 			}
 		};
 
