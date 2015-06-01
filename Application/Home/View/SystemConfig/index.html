@@ -95,16 +95,9 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
-		function add2() {
-			$("#opmode").val("add");
-			$("#id").val("");
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "{:U('index')}");
-			}
-		};
 
 		function add() {
-			winopen("{:U('add')}", 730, 560);
+			winopen("{:U('add')}", 704, 560);
 		}
 
 		function save() {
@@ -131,7 +124,7 @@
 		}
 
 		function select_pid() {
-			winopen("{:U('winpop')}", 730, 500);
+			winopen("{:U('winpop')}", 704, 560);
 		}
 
 		function showdata(result) {

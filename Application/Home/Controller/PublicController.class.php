@@ -9,26 +9,28 @@ class PublicController extends Controller {
 	 * 后台用户登录
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
-	public function login(){
-		$this->assign("is_verify_code",get_system_config("IS_VERIFY_CODE"));
+	public function login() {
+		
+		$this -> assign("is_verify_code", get_system_config("IS_VERIFY_CODE"));
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
 			$this -> display();
 		} else {
-			header('Location: ' .__APP__);
+			header('Location: ' . __APP__);
 		}
 	}
+
 	// 检测输入的验证码是否正确，$code为用户输入的验证码字符串
-	function check_verify($code, $id = ''){
-	    $verify = new \Think\Verify();
-	    return $verify->check($code, $id);
+	function check_verify($code, $id = '') {
+		$verify = new \Think\Verify();
+		return $verify -> check($code, $id);
 	}
 
 	// 登录检测
 	public function check_login() {
 		$is_verify_code = get_system_config("IS_VERIFY_CODE");
 		if (!empty($is_verify_code)) {
-			$check=$this->check_verify($_POST['verify'],1);
+			$check = $this -> check_verify($_POST['verify'], 1);
 			if (!$check) {
 				$this -> error('验证码错误！');
 			}
@@ -116,7 +118,7 @@ class PublicController extends Controller {
 		$map = array();
 		// 支持使用绑定帐号登录
 		$map['emp_no'] = $_POST['emp_no'];
-		$count =M("User")  -> where($map) -> count();
+		$count = M("User") -> where($map) -> count();
 
 		if ($count) {
 			$this -> error('该账户已注册');
@@ -138,13 +140,40 @@ class PublicController extends Controller {
 	}
 
 	public function verify() {
-		$config =    array(
-		    'fontSize'    =>    15,    // 验证码字体大小
-		    'length'      =>    4,     // 验证码位数
-		    'useNoise'    =>    false, // 关闭验证码杂点
+		$config = array('fontSize' => 15, // 验证码字体大小
+		'length' => 4, // 验证码位数
+		'useNoise' => false, // 关闭验证码杂点
 		);
 		$verify = new \Think\Verify($config);
 		$verify -> entry(1);
+	}
+
+	public function recevie_mail(){
+		//linux 
+		//echo 'curl "http://192.168.10.10/index.php?m=&c=public&a=recevie_mail"'>/root/auto_recevie_mail.sh
+		//echo '*/10 * * * * /root/auto_recevie_mail.sh'>> //var/spool/cron/root
+		
+		//windows
+		//server_url="http://xiaowei.localhost/index.php?m=&c=public&a=recevie_mail"
+		//set ie=createobject("internetexplorer.application") 
+		//ie.visible=0 
+		//ie.navigate server_url
+		//wscript.sleep 10*1000 '延迟10秒
+		//ie.quit
+		 
+		$client_ip = $_SERVER["REMOTE_ADDR"]; 
+		$server_ip = gethostbyname(null);
+		if ($client_ip != $server_ip) {
+			session_write_close();
+			set_time_limit(0);
+			$where['is_del'] = array('eq', 0);
+			$mail_account_list = D("MailAccountView") -> where($where) -> select();
+			foreach ($mail_account_list as $account) {
+				R("Mail/receve", array($account['id'], true));
+				sleep(1);
+			}
+			sleep(1);
+		}
 	}
 
 }

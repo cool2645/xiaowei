@@ -1,15 +1,11 @@
 <extend name="Layout/ins_popup" />
-<block name="content">
-	
+<block name="content">	
 	{:W('PageHeader/popup',array('name'=>'新建系统参数','search'=>'N'))}
-	<!-- 功能操作区域结束 -->
-	<!-- 列表显示区域  -->
 	<div class="row">
 		<div class="col-xs-12">
 			<form id="form_data" name="form_data" method="post" class="well form-horizontal clearfix">
 				<input type="hidden" name="ajax" id="ajax" value="1">
-				<input type="hidden" name="opmode" id="opmode" value="add">
-				<input type="hidden" name="pid" id="pid" value="">
+				<input type="hidden" name="opmode" id="opmode" value="add">				
 				<div class="form-group col-xs-12">
 					<label class="col-xs-3 control-label" for="code">编码*：</label>
 					<div class="col-xs-9">
@@ -28,6 +24,19 @@
 						<input class="form-control" type="text" id="val" name="val" check="require" msg="请输入数据">
 					</div>
 				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-xs-3 control-label" for="pid_name">父级*：</label>
+					<div class="col-xs-9">
+						<div class="input-group">
+							<input name="pid_name" class="form-control" id="pid_name" type="text" readonly="readonly" msg="请选择父级" check="require"/>
+							<input name="pid" id="pid" type="hidden" msg="请选择父级" check="require" />
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-primary" onclick="select_pid()" type="button">
+									选择
+								</button> </span>
+						</div>
+					</div>
+				</div>				
 				<div class="form-group col-xs-12">
 					<label class="col-xs-3 control-label" for="sort">排序：</label>
 					<div class="col-xs-9">
@@ -71,7 +80,10 @@
 			}
 		}
 
-
+		function select_pid() {
+			winopen("{:U('winpop')}", 730, 560);
+		}
+		
 		$(document).ready(function() {
 			$pid = $("#id", parent.document).val();
 			$("#pid").val($pid);

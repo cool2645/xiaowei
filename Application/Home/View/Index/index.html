@@ -206,8 +206,8 @@
 				forcePlaceholderSize : true,
 				opacity : 0.8,
 				stop : function(event, ui) {
-					t1_count = $("#t1 .ibox:not(.hidden)").length;
-					t2_count = $("#t2 .ibox:not(.hidden)").length;
+					t1_count = $("#t1 .ibox").length;
+					t2_count = $("#t2 .ibox").length;
 					if ((t1_count == 0) || (t2_count == 0)) {
 						ui_error("至少保留一个");
 						$(element).sortable('cancel');
