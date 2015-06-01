@@ -26,12 +26,13 @@ class  FlowLogModel extends CommonModel {
 		
 		$flow = M("Flow") -> find($data['flow_id']);
 		
-		$push_data['type'] = '审批';
-		$push_data['action'] = '需要审批';
-		$push_data['title'] = $flow['name'];
-		$push_data['content'] = '提交人：'.get_dept_name()."-".get_user_name();
-
-		send_push($push_data,$user_id);
+		if($data['step']!=100){
+			$push_data['type'] = '审批';
+			$push_data['action'] = '需要审批';
+			$push_data['title'] = $flow['name'];
+			$push_data['content'] = '提交人：'.get_dept_name()."-".get_user_name();
+			send_push($push_data,$user_id);	
+		}
 	}
 }
 ?>

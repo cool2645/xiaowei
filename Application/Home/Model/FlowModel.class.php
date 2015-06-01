@@ -349,22 +349,31 @@ class  FlowModel extends CommonModel {
 		$data['step'] = 100;
 		$data['create_time'] = time();
 		$data['from'] = get_user_name();
+		
+		dump($emp_list);
+		
+		foreach ($emp_list as $key=>$val) {
+			$data['emp_no'] = $val;
+			$where_flow_log['flow_id']=array('eq',$flow_id);
+			$where_flow_log['emp_no']=array('eq',$val);
+
+			$flow_log=M("FlowLog")->where($where_flow_log)->select();
+			if(!$flow_log){
+				D("FlowLog") -> add($data);	
+			}else{
+				unset($emp_list[$key]);				
+			}
+		}
 
 		$flow = M("Flow") -> find($flow_id);
 		$push_data['type'] = '审批';
 		$push_data['action'] = '需要您参阅';
 		$push_data['title'] = $flow['name'];
 		$push_data['content'] = '转发人：' . get_dept_name() . "-" . get_user_name();
-
-		foreach ($emp_list as $val) {
-			$data['emp_no'] = $val;
-			D("FlowLog") -> add($data);
-		}
-
-		$where['emp_no'] = array('in', $emp_list);
-		$user_id = M("User") -> where($where) -> getField("id", true);
+				
+		$where_user_list['emp_no'] = array('in', $emp_list);
+		$user_list = M("User") -> where($where_user_list) -> getField("id", true);
 		send_push($push_data, $user_list);
 	}
-
 }
 ?>
