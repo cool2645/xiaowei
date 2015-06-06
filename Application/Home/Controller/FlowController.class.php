@@ -200,9 +200,10 @@ class FlowController extends HomeController {
 				$dept_name = $val["dept_name"];
 				//不美分
 				$create_time = $val["create_time"];
+				
 				$create_time = to_date($val["create_time"], 'Y-m-d H:i:s');
 				//创建时间
-				$step = show_step_type($val["step"]);
+				$step = show_step($val["step"]);
 
 				//编号，类型，标题，登录时间，部门，登录人，状态，审批，协商，传阅，审批情况，自定义字段
 				$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $doc_no) -> setCellValue("B$i", $type_name) -> setCellValue("C$i", $name) -> setCellValue("D$i", $create_time) -> setCellValue("E$i", $dept_name) -> setCellValue("F$i", $user_name) -> setCellValue("G$i", $step) -> setCellValue("H$i", $confirm_name) -> setCellValue("I$i", $consult_name) -> setCellValue("J$i", $refer_name);
@@ -210,7 +211,6 @@ class FlowController extends HomeController {
 				$field_data = '';
 				if (!empty($result)) {
 					foreach ($result as $field) {
-
 						$field_data = $field_data . $field['user_name'] . ":" . $field['comment'] . "\n";
 					}
 					$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("K$i", $field_data);

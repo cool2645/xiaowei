@@ -190,9 +190,11 @@ class  RoleModel extends CommonModel {
 		return result;
 	}
 
-	function get_auth($module_name) {
-
-		$access_list = D("Node") -> access_list();
+	function get_auth($module_name,$user_id) {
+		if(empty($user_id)){
+			$user_id=get_user_id();
+		}
+		$access_list = D("Node") -> access_list($user_id);
 		$access_list = array_filter($access_list, array($this, 'filter_module'));
 		$access_list = rotate($access_list);
 

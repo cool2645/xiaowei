@@ -1,50 +1,122 @@
 <extend name="Layout/ins_page" />
 <block name="content">
-<script type="text/javascript"></script>
-<form method="post" action="" id="form_search" name="form_search">
-	{:W('PageHeader/simple',array('name'=>'系统信息','search'=>'N'))}
-
-</form>
-<div class="row" >
-	<div class="pull-right">
-		<a onclick="save()" class="btn btn-sm btn-primary">保存</a>
-	</div>
-</div>
-<form id="form_data" name="form_data"method="post" action="">
-	<div class="row ">
-		<div class="row form-horizontal">
-			<div class="form-group col-xs-12">
-				<label class="col-sm-2 control-label">域名\主机名：</label>
-				<div class="col-sm-10 "><p class="form-control-static">{$SERVER_NAME}</p>
+	<script type="text/javascript"></script>
+	<form method="post" action="" id="form_search" name="form_search">
+		{:W('PageHeader/simple',array('name'=>'系统信息','search'=>'N'))}
+	</form>
+	<div class="row">
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title text-center">
+					<h2>用户数量</h2>
+				</div>
+				<div class="ibox-content text-center">
+					<h1 class="no-margins">{$user_count}</h1>
 				</div>
 			</div>
-			<div class="form-horizontal">
-				<div class="form-group col-xs-12">
-					<label class="col-sm-2 control-label">授权状态*：</label>
-					<div class="col-sm-10 ">
-						<p class="form-control-static">{$SERVER_NAME}</p>
+		</div>
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title text-center">
+					<h2>部门数</h2>
+				</div>
+				<div class="ibox-content text-center">
+					<h1 class="no-margins">{$dept_count}</h1>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title text-center">
+					<h2>文件数量</h2>
+				</div>
+				<div class="ibox-content text-center">
+					<h1 class="no-margins">{$file_count}</h1>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title text-center">
+					<h2>占用空间</h2>
+				</div>
+				<div class="ibox-content text-center">
+					<h1 class="no-margins">{$file_spage|reunit}</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>Bar Chart Example <small>With custom colors.</small></h5>
+						<div class="ibox-tools">
+							<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a>
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-wrench"></i> </a>
+							<ul class="dropdown-menu dropdown-user">
+								<li>
+									<a href="#">Config option 1</a>
+								</li>
+								<li>
+									<a href="#">Config option 2</a>
+								</li>
+							</ul>
+							<a class="close-link"> <i class="fa fa-times"></i> </a>
+						</div>
+					</div>
+					<div class="ibox-content">
+						<div class="flot-chart">
+							<div class="flot-chart-content" id="flot-bar-chart"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>Line Cahrt Example</h5>
+						<div class="ibox-tools">
+							<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a>
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-wrench"></i> </a>
+							<ul class="dropdown-menu dropdown-user">
+								<li>
+									<a href="#">Config option 1</a>
+								</li>
+								<li>
+									<a href="#">Config option 2</a>
+								</li>
+							</ul>
+							<a class="close-link"> <i class="fa fa-times"></i> </a>
+						</div>
+					</div>
+					<div class="ibox-content">
+
+						<div class="flot-chart">
+							<div class="flot-chart-content" id="flot-line-chart"></div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-</form></block>
+	</div>
+</block>
 <block name="js">
-<script type="text/JavaScript">
-function $(id) { return document.getElementById(id); }
 
-function get_ip() {
-  var XMLHttp, r;
-  XMLHttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-  XMLHttp.onreadystatechange = function() {
-    if (XMLHttp.readyState == 4)
-    {
-      r = XMLHttp.responseText;
-      if (r == 'false') $('ip_r').innerHTML = '获取外网 IP 失败!';
-      else $('ip_r').innerHTML = '此服务器互联网 IP<br /><a href="http://'+r+'" style="color: #999999;">'+r+'</a>';
-    }
-  }
-  XMLHttp.open("GET", "?act=getip", true);
-  XMLHttp.send();
-}
-</script>
+	<!-- Mainly scripts -->
+	<script src="__INS__/js/jquery-2.1.1.js"></script>
+	<script src="__INS__/js/bootstrap.min.js"></script>
+	<script src="__INS__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="__INS__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+	<!-- Flot -->
+	<script src="__INS__/js/plugins/flot/jquery.flot.js"></script>
+	<script src="__INS__/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+	<script src="__INS__/js/plugins/flot/jquery.flot.resize.js"></script>
+	<script src="__INS__/js/plugins/flot/jquery.flot.pie.js"></script>
+	<script src="__INS__/js/plugins/flot/jquery.flot.time.js"></script>
+
+	<!-- Flot demo data -->
+	<script src="__INS__/js/demo/flot-demo.js"></script>
 </block>

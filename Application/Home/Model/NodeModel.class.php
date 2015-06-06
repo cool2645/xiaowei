@@ -17,10 +17,10 @@ use Think\Model;
 
 class  NodeModel extends CommonModel {
 	protected $_validate	=	array(
-		array('name','checkNode','节点已经存在',0,'callback'),
+		array('name','check_node','节点已经存在',0,'callback'),
 	);
 
-	public function checkNode() {
+	public function check_node() {
 		$map['name']	 =	 $_POST['name'];
 		$map['pid']	=	isset($_POST['pid'])?$_POST['pid']:0;
         $map['is_del'] = 1;
@@ -35,12 +35,14 @@ class  NodeModel extends CommonModel {
 		}
 	}
 	
-	public function access_list(){
-		$emp_id=get_user_id();
+	public function access_list($user_id){		
+		if(empty($user_id)){
+			$user_id=get_user_id();	
+		}
 		$sql="		SELECT c.badge_function,c.sort, c.id, c.pid, c.name, c.url,sum(b.admin) as 'admin' ,sum(b.write) as  'write' ,sum(b.read) as 'read',c.icon ";
 		$sql.="		FROM ".$this->tablePrefix."role_user AS a, ".$this->tablePrefix."role_node b, ".$this->tablePrefix."node AS c ";
 		$sql.="		WHERE a.role_id = b.role_id and c.is_del=0 ";
-		$sql.="		AND a.user_id ={$emp_id}";
+		$sql.="		AND a.user_id ={$user_id}";
 		$sql.="		AND c.is_del =0 ";
 		$sql.="		AND c.id = b.node_id ";
 		$sql.="		group by c.id";
@@ -50,11 +52,11 @@ class  NodeModel extends CommonModel {
 	}
 
 	public function get_top_menu(){
-		$emp_id=get_user_id();
+		$user_id=get_user_id();
 		$sql="		SELECT distinct c.id, c.pid, c.name, c.url,c.icon";
 		$sql.="		FROM ".$this->tablePrefix."role_user AS a, ".$this->tablePrefix."role_node b, ".$this->tablePrefix."node AS c ";
 		$sql.="		WHERE a.role_id = b.role_id and c.is_del=0 ";
-		$sql.="		AND a.user_id ={$emp_id}";
+		$sql.="		AND a.user_id ={$user_id}";
 		$sql.="		AND c.is_del =0 ";		
 		$sql.="		AND c.id = b.node_id ";
 		$sql.="		AND c.pid = 0 ";

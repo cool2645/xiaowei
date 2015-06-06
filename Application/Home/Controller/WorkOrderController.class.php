@@ -77,6 +77,7 @@ class WorkOrderController extends HomeController {
 				}
 
 				break;
+				
 			case 'no_finish2' :
 				$this -> assign("folder_name", '所有任务-未完成');
 
@@ -91,6 +92,7 @@ class WorkOrderController extends HomeController {
 				}
 
 				break;
+				
 			case 'finished' :
 				$this -> assign("folder_name", '所有任务-已完成');
 				$where_log['type'] = array('eq', 1);
@@ -103,10 +105,12 @@ class WorkOrderController extends HomeController {
 					$where['status'] = array('eq', 3);
 				}
 				break;
+				
 			case 'my_task' :
 				$this -> assign("folder_name", '我发布的任务');
 				$where['user_id'] = get_user_id();
 				break;
+				
 			case 'my_assign' :
 				$this -> assign("folder_name", '我指派的任务');
 
@@ -117,9 +121,12 @@ class WorkOrderController extends HomeController {
 				} else {
 					$where['id'] = array('in', $task_list);
 				}
+				break;
+				
 			default :
 				break;
 		}
+
 		$model = D('WorkOrder');
 		if (!empty($model)) {
 			$this -> _list($model, $where);

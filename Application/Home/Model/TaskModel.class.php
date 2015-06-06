@@ -28,7 +28,6 @@ class TaskModel extends CommonModel {
 
 	function _after_insert($data, $options) {
 		$executor_list = $data['executor'];
-		//$executor_list="管理部|dept_6;副总1003/副总|1003;经理3001/经理|3001;";
 		$executor_list = array_filter(explode(';', $executor_list));
 
 		if (!empty($executor_list)) {
@@ -39,10 +38,19 @@ class TaskModel extends CommonModel {
 
 				if (strpos($executor, "dept_") !== false) {
 					$type = 2;
-					$executor = str_replace('dept_', '', $executor);
+					$executor = str_replace('dept_', '', $executor);					
+					$where['dept_id']=array('eq',$executor);					
+					$dept_user_list=M('User')->where($where)->getField('id',true);
+
+					foreach($dept_user_list as $val){
+						$auth=D("Role")->get_auth('Task',$val);
+						if($auth['admin']){
+							$user_list[]=$val;
+						}
+					}
 				} else {
 					$type = 1;
-					//$this -> _send_mail($data['id'],$executor);
+					$user_list[] = $executor;
 				}
 
 				$log_data['executor'] = $executor;
@@ -52,7 +60,15 @@ class TaskModel extends CommonModel {
 				$log_data['task_id'] = $data['id'];
 				M("TaskLog") -> add($log_data);
 			}
+			
+			$push_data['type'] = '任务';
+			$push_data['action'] = '需要执行';
+			$push_data['title'] = "来自：" . get_dept_name()."-".get_user_name();
+			$push_data['content'] = "标题：" . $data['name'];
+
+			send_push($push_data, $user_list);
 		}
+		
 	}
 
 	function forword($task_id, $executor_list) {

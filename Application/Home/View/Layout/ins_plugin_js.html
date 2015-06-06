@@ -51,6 +51,7 @@
 				$('#end_date').data("DateTimePicker").minDate(e.date);
 			}
 		});
+		
 		$("#end_date").on("dp.change", function(e) {
 			if ($("#start_date").length > 0) {
 				$('#start_date').data("DateTimePicker").maxDate(e.date);
@@ -69,7 +70,6 @@
 				vertical : 'bottom'
 			},
 		});
-		// format: 'YYYY-MM-DD HH:mm:ss a',
 
 		</notempty>
 

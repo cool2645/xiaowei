@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 namespace Home\Controller;
 
 class TaskController extends HomeController {
@@ -35,15 +35,15 @@ class TaskController extends HomeController {
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($where);
 		}
-		
-		$todo_task_count=badge_count_todo_task();
-		$dept_task_count=badge_count_dept_task();
-		$no_assign_task_count=badge_count_no_assign_task();
-		
-		$this->assign('todo_task_count',$todo_task_count);
-		$this->assign('dept_task_count',$dept_task_count);
-		$this->assign('no_assign_task_count',$no_assign_task_count);		
-		
+
+		$todo_task_count = badge_count_todo_task();
+		$dept_task_count = badge_count_dept_task();
+		$no_assign_task_count = badge_count_no_assign_task();
+
+		$this -> assign('todo_task_count', $todo_task_count);
+		$this -> assign('dept_task_count', $dept_task_count);
+		$this -> assign('no_assign_task_count', $no_assign_task_count);
+
 		$fid = $_GET['fid'];
 		$this -> assign("fid", $fid);
 
@@ -107,33 +107,35 @@ class TaskController extends HomeController {
 
 			case 'no_finish' :
 				$this -> assign("folder_name", '我未完成的任务');
-				
+
 				$where_log['status'] = array('lt', 2);
-				$where_log['executor']=get_user_id();
-				$where_log['type']=array('eq',1);
-				
-				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id',true);
+				$where_log['executor'] = get_user_id();
+				$where_log['type'] = array('eq', 1);
+
+				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', true);
 				if (empty($task_list)) {
 					$where['_string'] = '1=2';
-				} else {					
+				} else {
 					$where['id'] = array('in', $task_list);
 				}
 
 				break;
+
 			case 'finished' :
 				$this -> assign("folder_name", '我已完成的任务');
-				
-				$where_log['executor']=get_user_id();
-				$where_log['type']=array('eq',1);
-				
-				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id',true);	
+
+				$where_log['executor'] = get_user_id();
+				$where_log['type'] = array('eq', 1);
+
+				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', true);
 				if (empty($task_list)) {
 					$where['_string'] = '1=2';
-				} else {					
+				} else {
 					$where['id'] = array('in', $task_list);
 					$where['status'] = array('eq', 3);
 				}
 				break;
+
 			case 'my_task' :
 				$this -> assign("folder_name", '我发布的任务');
 				$where['user_id'] = get_user_id();
@@ -148,6 +150,7 @@ class TaskController extends HomeController {
 				} else {
 					$where['id'] = array('in', $task_list);
 				}
+				break;
 
 			default :
 				break;
@@ -301,8 +304,8 @@ class TaskController extends HomeController {
 			$model -> transactor_name = get_user_name();
 			$model -> finish_time = to_date(time());
 			$list = $model -> save();
-			$status=I('status');
-			$task_id=I('task_id');
+			$status = I('status');
+			$task_id = I('task_id');
 			if ($status > 2) {
 				$where_count['task_id'] = array('eq', $task_id);
 				$total_count = M("TaskLog") -> where($where_count) -> count();
@@ -312,7 +315,17 @@ class TaskController extends HomeController {
 				if ($total_count == $finish_count) {
 					M("Task") -> where("id=$task_id") -> setField('status', 5);
 					$user_id = M('Task') -> where("id=$task_id") -> getField('user_id');
-					//$this -> _send_mail_finish($task_id, $user_id);
+
+					$info = M("Task") -> where("id=$task_id") -> find();
+
+					$transactor_name = get_user_name();
+
+					$push_data['type'] = '任务';
+					$push_data['action'] = '拒绝接受';
+					$push_data['title'] = "{$transactor_name}拒绝接受您发起的[{$info['name']}]任务";
+					$push_data['content'] = "如有问题，请与[{$transactor_name}]进行沟通。";
+
+					send_push($pus_data, $user_id);
 				}
 			}
 			if ($list !== false) {
@@ -378,7 +391,16 @@ class TaskController extends HomeController {
 			if ($total_count == $finish_count) {
 				M("Task") -> where("id=$task_id") -> setField('status', 3);
 				$user_id = M('Task') -> where("id=$task_id") -> getField('user_id');
-				//$this -> _send_mail_finish($task_id, $user_id);
+
+				$info = M("Task") -> where("id=$task_id") -> find();
+
+				$transactor_name = get_user_name();
+
+				$push_data['type'] = '任务';
+				$push_data['action'] = '已完成';
+				$push_data['title'] = "{$transactor_name}已完成您发起的[{$info['name']}]任务";
+				$push_data['content'] = "如有问题，请与[{$transactor_name}]进行沟通。";
+				send_push($push_data, $user_id);
 			}
 		}
 
@@ -438,6 +460,21 @@ class TaskController extends HomeController {
 		$body .= "霞湖世家，感谢有您！</br>";
 
 		send_mail($email, $user_name, $title, $body);
+	}
+
+	function _send_push($task_id, $executor) {
+
+		$info = M("Task") -> where("id=$task_id") -> find();
+
+		$transactor_name = M("TaskLog") -> where("task_id=$task_id") -> getField('transactor_name', true);
+		$transactor_name = implode(",", $transactor_name);
+
+		$push_data['type'] = '任务';
+		$push_data['action'] = '已完成';
+		$push_data['title'] = "{$transactor_name} 完成了您发起的[{$info['name']}]任务";
+		$push_data['content'] = "请及时检查任务执行情况，如有问题，请与[{$transactor_name}]进行沟通。";
+
+		send_push($pus_data, $executor);
 	}
 
 }

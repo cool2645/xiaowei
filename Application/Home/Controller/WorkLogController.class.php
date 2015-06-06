@@ -103,7 +103,7 @@ class WorkLogController extends HomeController {
 		$this -> assign("plugin", $plugin);
 		$this -> display();
 	}
-
+	
 	function upload() {
 		$this -> _upload();
 	}

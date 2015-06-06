@@ -23,17 +23,21 @@ class SystemController extends HomeController {
 		}
 	}
 
-	function check_reg() {
-
-	}
-
-	function save() {
-
-	}
-
 	function index(){
-		$this->get_auth();
-		$this->assign("SERVER_NAME",$this->_SERVER('SERVER_NAME'));
+		$where_user['is_del']=array('eq',0);
+		$user_count=M("User")->where($where_user)->count();
+		$this->assign('user_count',$user_count);
+		
+		$where_dept['is_del']=array('eq',0);
+		$dept_count=M("Dept")->where($where_dept)->count();
+		$this->assign('dept_count',$dept_count);
+							
+		$file_count=M("File")->count();
+		$this->assign('file_count',$file_count);
+				
+		$file_spage=M("File")->sum('size');
+		$this->assign('file_spage',$file_spage);				
+						
 		$this -> display();
 	}
 

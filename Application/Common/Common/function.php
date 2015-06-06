@@ -1279,8 +1279,6 @@ function get_position_name($id) {
 function send_push($data, $user_list, $time = null) {
 
 	$model = M("Push");
-	$model -> data = json_encode($data, JSON_UNESCAPED_UNICODE);
-	
 	if (empty($time)) {
 		$model -> time = time();
 	} else {
@@ -1288,6 +1286,7 @@ function send_push($data, $user_list, $time = null) {
 	}
 	if (is_array($user_list)) {
 		foreach ($user_list as $val) {
+			$model -> data = json_encode($data, JSON_UNESCAPED_UNICODE);
 			$model -> user_id = $val;
 			$model -> add();
 		}
@@ -1299,6 +1298,7 @@ function send_push($data, $user_list, $time = null) {
 			$model -> user_id = $user_list;
 			$user_list = array($user_list);
 		}
+		$model -> data = json_encode($data, JSON_UNESCAPED_UNICODE);
 		$model -> add();
 	}
 
@@ -1311,7 +1311,6 @@ function send_push($data, $user_list, $time = null) {
 	}
 
 	$sms_push_config = get_system_config('SMS_PUSH_CONFIG');
-
 	if (!empty($sms_push_config)) {
 		$sms_push_config = array_filter(explode(',', $sms_push_config));
 		if (in_array($data['type'], $sms_push_config)) {
