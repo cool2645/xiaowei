@@ -4,7 +4,6 @@
 
   Copyright (c) 2013 http://www.smeoa.com All rights reserved.                                             
 
-
   Author:  jinzhu.yin<smeoa@qq.com>                         
 
   Support: https://git.oschina.net/smeoa/xiaowei               
@@ -31,6 +30,7 @@ class  FlowLogModel extends CommonModel {
 			$push_data['action'] = '需要审批';
 			$push_data['title'] = $flow['name'];
 			$push_data['content'] = '提交人：'.get_dept_name()."-".get_user_name();
+			$push_data['url'] = U("Flow/read?id={$data['flow_id']}");
 			send_push($push_data,$user_id);	
 		}
 	}

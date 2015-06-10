@@ -7,77 +7,72 @@
 		<input type="hidden" id="ajax" name="ajax" value="1">
 		<input type="hidden" id="add_file" name="add_file">
 		<input type="hidden" id="opmode" name="opmode" value="add">
-
-		{:W('PageHeader/simple',array('签收人员'))}
-		<div class="ul_table border-bottom">
-			<ul>
-				<li class="thead" style="padding-left:10px">
-					<div class="pull-left">
-						<span class="col-12 ">部门</span>
-						<span class="col-8 ">姓名</span>
-						<span class="col-10">职务</span>
-						<span  class="col-15">邮箱</span>
-						<span  class="col-15">联系方式</span>
-					</div>
-				</li>
-			</ul>
-			<empty name="signed_user_info">
+		<div class="col-xs-12">
+			{:W('PageHeader/simple',array('签收人员'))}
+			<div class="ul_table border-bottom">
 				<ul>
-					<li class="no-data">
-						没找到数据
+					<li class="thead" style="padding-left:10px">
+						<div class="pull-left">
+							<span class="col-12 ">部门</span>
+							<span class="col-8 ">姓名</span>
+							<span class="col-10">职位</span>
+							<span class="col-12">签收时间</span>
+						</div>
 					</li>
 				</ul>
-				<else/>
-				<ul>
-					<foreach name="signed_user_info" item="vo">
-						<li class="tbody">
-							<div class="pull-left">
-								<span class="col-12">{$vo.dept_name}</span>
-								<span class="col-8">{$vo.name}</span>
-								<span class="col-10"> {$vo.position_name}&nbsp;</span>
-								<span class="col-15"> {$vo.email}</span>
-								<span class="col-15">{$vo.mobile_tel}</span>
-							</div>
+				<empty name="signed_user_info">
+					<ul>
+						<li class="no-data">
+							没找到数据
 						</li>
-					</foreach>
-				</ul>
-			</empty>
-		</div>
-		<hr/>
-		{:W('PageHeader/simple',array('未签收人员'))}
-		<div class="ul_table border-bottom">
-			<ul>
-				<li class="thead" style="padding-left:10px">
-					<div class="pull-left">
-						<span class="col-12 ">机构</span>
-						<span class="col-8 ">姓名</span>
-						<span class="col-10">职务</span>
-						<span  class="col-15">邮箱</span>
-						<span  class="col-15">联系方式</span>
-					</div>
-				</li>
-			</ul>
-			<empty name="un_sign_user_info">
+					</ul>
+					<else/>
+					<ul>
+						<foreach name="signed_user_info" item="vo">
+							<li class="tbody">
+								<div class="pull-left">
+									<span class="col-12">{$vo.dept_name}</span>
+									<span class="col-8">{$vo.name}</span>
+									<span class="col-10">{$vo.position_name}&nbsp;</span>
+									<span class="col-12">{$sign_time[$vo['id']]|to_date|substr=0,16}&nbsp;</span>
+								</div>
+							</li>
+						</foreach>
+					</ul>
+				</empty>
+			</div>
+			<hr/>
+			{:W('PageHeader/simple',array('未签收人员'))}
+			<div class="ul_table border-bottom">
 				<ul>
-					<li class="no-data">
-						没找到数据
+					<li class="thead" style="padding-left:10px">
+						<div class="pull-left">
+							<span class="col-12">部门</span>
+							<span class="col-8">姓名</span>
+							<span class="col-10">职位</span>
+						</div>
 					</li>
 				</ul>
-				<else/>
-				<ul>
-					<foreach name="un_sign_user_info" item="vo">
-						<li class="tbody">
-							<div class="pull-left">
-								<span class="col-12">{$vo.dept_name}</span>
-								<span class="col-8">{$vo.name}</span>
-								<span class="col-10"> {$vo.position_name}&nbsp;</span>
-								<span class="col-15"> {$vo.email}</span>
-								<span class="col-15">{$vo.mobile_tel}</span>
-							</div>
+				<empty name="un_sign_user_info">
+					<ul>
+						<li class="no-data">
+							没找到数据
 						</li>
-					</foreach>
-				</ul>
-			</empty>
+					</ul>
+					<else/>
+					<ul>
+						<foreach name="un_sign_user_info" item="vo">
+							<li class="tbody">
+								<div class="pull-left">
+									<span class="col-12">{$vo.dept_name}</span>
+									<span class="col-8">{$vo.name}</span>
+									<span class="col-10"> {$vo.position_name}&nbsp;</span>
+								</div>
+							</li>
+						</foreach>
+					</ul>
+				</empty>
+			</div>
 		</div>
 	</form>
 </block>

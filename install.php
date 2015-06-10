@@ -1,6 +1,7 @@
 <?php
 if (version_compare(PHP_VERSION, '5.4.0', '<'))
 	die('require PHP > 5.4.0 !');
+	unlink("install.php");
 $db_config_files = "Application/Common/Conf/db.php";
 
 if (isset($_POST["install"])) {
@@ -65,7 +66,7 @@ if (isset($_POST["install"])) {
 			mysql_query($val);
 		}
 
-		rename("install.php", "install.lock");
+		unlink("install.php");
 		echo "<meta charset='utf-8' />";
 		echo "<script>\n
 						window.onload=function(){

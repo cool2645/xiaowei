@@ -30,7 +30,7 @@
 					<volist name="list" id="data">
 						<tr id="{$data.id}">
 							<td class="click"><span>{$data.name}</span></td>
-							<td class="click"><span>{$data.is_public|status}</span></td>
+							<td class="click"><span>{$data.is_public|is_public}</span></td>
 							<td class="click"><span>{$data.is_del|status}</span></td>
 							<td><a href="{:U('user',array('id'=>$data['id']))}">管理成员</a></td>
 						</tr>
@@ -61,7 +61,7 @@
 					<label class="col-sm-4 control-label" for="is_del">是否公开：</label>
 					<div class="col-sm-8">
 						<select  class="form-control" name="is_del" id="is_del">
-							<option  value="0">非公开</option>
+							<option  value="0">私有</option>
 							<option value="1">公开</option>
 						</select>
 					</div>
@@ -87,43 +87,47 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-		winopen("{:U('add')}",740,530);
+			winopen("{:U('add')}", 740, 530);
 		}
 		function del() {
-		var vars=$("#form_data").serialize();
-		ui_confirm('确定要删除吗?', function() {
-		sendAjax("{:U('del')}",vars, function(data) {
-		if(data.status) {
-		ui_alert(data.info, function() {
-		location.reload(true);
-		});
+			var vars = $("#form_data").serialize();
+			ui_confirm('确定要删除吗?', function() {
+				sendAjax("{:U('del')}", vars, function(data) {
+					if (data.status) {
+						ui_alert(data.info, function() {
+							location.reload(true);
+						});
+					}
+				});
+			});
 		}
-		});
-		});
-		}
+
 		function save() {
-		if(check_form("form_data")) {
-		sendForm("form_data","{:U('save')}");
-		return false;
+			if (check_form("form_data")) {
+				sendForm("form_data", "{:U('save')}");
+				return false;
+			}
 		}
-		}
+
 		function showdata(result) {
-		for(var s in result.data) {
-		set_val(s,result.data[s]);
+			for (var s in result.data) {
+				set_val(s, result.data[s]);
+			}
+			$("#opmode").val("edit");
 		}
-		$("#opmode").val("edit");
-		}
+
+
 		$(document).ready(function() {
-		set_return_url();
-		$(".sub_left_menu tbody tr td.click").click(function() {
-		$(".sub_left_menu  tr.active").removeClass("active");
-		$tr=$(this).parents('tr');
-		$tr.attr("class","active");
-		sendAjax("{:U('read')}","id="+$tr.attr("id"), function(data) {
-		showdata(data);
-		});
-		return false;
-		});
+			set_return_url();
+			$(".sub_left_menu tbody tr td.click").click(function() {
+				$(".sub_left_menu  tr.active").removeClass("active");
+				$tr = $(this).parents('tr');
+				$tr.attr("class", "active");
+				sendAjax("{:U('read')}", "id=" + $tr.attr("id"), function(data) {
+					showdata(data);
+				});
+				return false;
+			});
 		});
 	</script>
 </block>

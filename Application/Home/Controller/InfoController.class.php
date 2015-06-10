@@ -185,6 +185,10 @@ class InfoController extends HomeController {
 		$signed_user = M("InfoSign") -> where("info_id=$id") -> getField('user_id', true);
 
 		//发布范围
+		$sign_time = M("InfoSign") -> where("info_id=$id") -> getField('user_id,sign_time');
+		$this->assign('sign_time',$sign_time);
+		
+		//发布范围
 		$actor_user = M("InfoScope") -> where("info_id=$id") -> getField('user_id', true);
 
 		//未签收人员

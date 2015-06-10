@@ -23,6 +23,7 @@ class HomeController extends Controller {
 		}
 		$this -> _assign_menu();
 		$this -> _assign_badge_count();
+		$this->_system_log();
 	}
 
 	/**显示top menu及 left menu **/
@@ -103,6 +104,29 @@ class HomeController extends Controller {
 				$total = $badge_count;
 			}						
 			$this -> assign('badge_count', $total);
+		}
+	}
+
+	function _system_log(){
+		$system_log_time=S('system_log_time');
+		if(empty($system_log_time)){
+			$flag=true;
+		}else{
+			$flag=(S('system_log_time')-time())>24*3600;
+		}
+		if($flag){			
+			$time=time();
+			S('system_log_time',$time);
+			$data['time']=$time;
+			$data['type']=1;
+			$data['data']=M("File")->count();
+			
+			M("SystemLog")->add($data);
+			
+			$data['type']=2;
+			$data['data']=M("File") -> sum('size')/1024/1024;
+			
+			M("SystemLog")->add($data);
 		}
 	}
 

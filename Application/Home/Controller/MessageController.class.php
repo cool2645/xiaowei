@@ -17,14 +17,6 @@ class MessageController extends HomeController {
 		$plugin['editor'] = true;
 		$plugin['uploader'] = true;
 		$this -> assign("plugin", $plugin);
-		//$toid=$_REQUEST['toid'];
-		//$toname=$_REQUEST['toname'];
-		//if($toid!='' and $toname!=''){
-		//$this -> assign("to",1);
-		//$this -> assign("toid",$toid);
-		//$this -> assign("toname",$toname);
-		//}
-
 		$this -> display();
 	}
 
@@ -73,8 +65,11 @@ class MessageController extends HomeController {
 		$push_data['type'] = '消息';
 		$push_data['action'] = '';
 		$push_data['title'] = "来自：" . get_dept_name() . "-" . $data['sender_name'] . "的消息";
-		$push_data['content'] = del_html_tag($data['content']);
+		$push_data['content'] = del_html_tag($data['content']);		
+		$push_data['url']=U('Message/index');
+		
 		send_push($push_data, $recever_list);
+		
 		//保存当前数据对象
 		if ($list !== false) {//保存成功
 			$this -> assign('jumpUrl', get_return_url());
@@ -138,7 +133,8 @@ class MessageController extends HomeController {
 			$push_data['action'] = '';
 			$push_data['title'] = "来自：" . get_dept_name() . "-" . $data['sender_name'] . "的消息";
 			$push_data['content'] = strip_tags($data['content']);
-
+			$push_data['url']=U('Message/index');
+		
 			send_push($push_data, I('receiver_id'));
 
 			//保存当前数据对象

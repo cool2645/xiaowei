@@ -57,12 +57,11 @@ class StaffController extends HomeController {
 		}
 
 		$model = D("UserView");
-		$data = $model -> where($where) -> select();
+		$data = $model -> where($where)-> order('emp_no asc') -> select();
 		//echo($model->getLastSql());
 		$return['data'] = $data;
 		$return['status'] = 1;
 		$this -> ajaxReturn($return);
 	}
-
 }
 ?>

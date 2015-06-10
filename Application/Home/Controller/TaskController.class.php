@@ -39,7 +39,7 @@ class TaskController extends HomeController {
 		$todo_task_count = badge_count_todo_task();
 		$dept_task_count = badge_count_dept_task();
 		$no_assign_task_count = badge_count_no_assign_task();
-
+				
 		$this -> assign('todo_task_count', $todo_task_count);
 		$this -> assign('dept_task_count', $dept_task_count);
 		$this -> assign('no_assign_task_count', $no_assign_task_count);
@@ -55,7 +55,7 @@ class TaskController extends HomeController {
 				$this -> assign("folder_name", '等待我接受的任务');
 
 				$where_log['type'] = 1;
-				$where_log['status'] = 0;
+				$where_log['status'] = array('eq', '0');
 				$where_log['executor'] = get_user_id();
 				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', TRUE);
 				if (empty($task_list)) {
@@ -72,6 +72,7 @@ class TaskController extends HomeController {
 
 				if ($auth['admin']) {
 					$where_log['type'] = 2;
+					$where_log['status'] = array('eq', '0');
 					$where_log['executor'] = get_dept_id();
 					$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', TRUE);
 					if (empty($task_list)) {
@@ -324,8 +325,9 @@ class TaskController extends HomeController {
 					$push_data['action'] = '拒绝接受';
 					$push_data['title'] = "{$transactor_name}拒绝接受您发起的[{$info['name']}]任务";
 					$push_data['content'] = "如有问题，请与[{$transactor_name}]进行沟通。";
-
-					send_push($pus_data, $user_id);
+					$push_data['url']=U("Task/read?id={$info['id']}");		
+								
+					send_push($push_data, $user_id);
 				}
 			}
 			if ($list !== false) {
@@ -400,6 +402,8 @@ class TaskController extends HomeController {
 				$push_data['action'] = '已完成';
 				$push_data['title'] = "{$transactor_name}已完成您发起的[{$info['name']}]任务";
 				$push_data['content'] = "如有问题，请与[{$transactor_name}]进行沟通。";
+				$push_data['url']=U("Task/read?id={$info['id']}");	
+				
 				send_push($push_data, $user_id);
 			}
 		}
@@ -461,20 +465,4 @@ class TaskController extends HomeController {
 
 		send_mail($email, $user_name, $title, $body);
 	}
-
-	function _send_push($task_id, $executor) {
-
-		$info = M("Task") -> where("id=$task_id") -> find();
-
-		$transactor_name = M("TaskLog") -> where("task_id=$task_id") -> getField('transactor_name', true);
-		$transactor_name = implode(",", $transactor_name);
-
-		$push_data['type'] = '任务';
-		$push_data['action'] = '已完成';
-		$push_data['title'] = "{$transactor_name} 完成了您发起的[{$info['name']}]任务";
-		$push_data['content'] = "请及时检查任务执行情况，如有问题，请与[{$transactor_name}]进行沟通。";
-
-		send_push($pus_data, $executor);
-	}
-
 }

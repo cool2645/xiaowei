@@ -27,11 +27,13 @@ class WorkLogModel extends CommonModel {
 			}
 		}
 		
-		$push_data['type'] = '工作日报';
+		$push_data['type'] = '日报';
 		$push_data['action'] = '需要查阅';
 		$push_data['title'] = "来自：" . get_dept_name() . "-" . get_user_name();
 		$push_data['content'] = "工作日报：" . $data['start_date']."-".$data['end_date'];
-
+		$user_id=get_user_id();
+		$push_data['url'] = U("WorkLog/index?eq_user_id={$user_id}");
+		
 		send_push($push_data, $user_list);
 	}
 

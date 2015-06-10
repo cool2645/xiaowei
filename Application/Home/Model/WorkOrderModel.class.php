@@ -56,6 +56,7 @@ class WorkOrderModel extends CommonModel {
 			$push_data['action'] = '需要执行';
 			$push_data['title'] = "来自：" . $data['user_name'];
 			$push_data['content'] = "客户：" . $data['name'];
+			$push_data['url'] = U("WorkOrder/read?id={$data['id']}");
 
 			send_push($push_data, $user_list);
 		}
@@ -84,7 +85,8 @@ class WorkOrderModel extends CommonModel {
 			$push_data['action'] = '需要参与';
 			$push_data['title'] = "来自：" . $data['user_name'];
 			$push_data['content'] = "客户：" . $data['name'];
-
+			$push_data['url'] = U("WorkOrder/read?id={$data['id']}");
+			
 			send_push($push_data, $user_list);
 		}
 	}

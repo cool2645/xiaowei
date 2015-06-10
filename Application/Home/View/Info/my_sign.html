@@ -36,9 +36,9 @@
 				<label class="col-sm-4 control-label" for="be_create_time">登录时间：</label>
 				<div class="col-sm-8">
 					<div class="input-daterange input-group" >
-					    <input type="text" class="input-sm form-control text-center" name="be_create_time" />
+					    <input type="text" class="input-sm form-control text-center" name="be_create_time" readonly="readonly"/>
 						<span class="input-group-addon">-</span>
-						<input type="text" class="input-sm form-control text-center" name="en_create_time" />
+						<input type="text" class="input-sm form-control text-center" name="en_create_time" readonly="readonly"/>
 					</div>
 				</div>
 			</div>
@@ -55,7 +55,7 @@
 			<div class="pull-right">
 				<span class="col-6 text-center">发布人</span>
 				<span class="col-6 text-center">部门</span>				
-				<span class="col-9 text-center">时间</span>
+				<span class="col-12 text-center">时间</span>
 
 			</div>
 			<div class="auto autocut">
@@ -77,8 +77,7 @@
 					<div class="pull-right">
 						<span class="col-6 text-center ">{$vo.user_name}</span>
 						<span class="col-6 text-center ">{$vo.dept_name}</span>						
-						<span class="col-9 text-center">{$vo.create_time|to_date='Y-m-d'}</span>
-						
+						<span class="col-12 text-center">{$vo.create_time|to_date='Y-m-d H:i'}</span>						
 					</div>
 						<div class="auto autocut">
 							<a href="{:U('read','id='.$vo['id'])}"> {$vo.name}

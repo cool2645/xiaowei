@@ -137,7 +137,7 @@ function badge_count_todo_task() {
 	$where_log['type'] = 1;
 	$where_log['status'] = 0;
 	$where_log['executor'] = get_user_id();
-	$task_list = M("TaskLog") -> where($where_log) -> getField('id', true);
+	$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', true);
 	$task_todo_count = 0;
 	if (!empty($task_list)) {
 		$where['id'] = array('in', $task_list);
@@ -179,7 +179,6 @@ function badge_count_dept_task() {
 		$where_log['executor'] = get_dept_id();
 		$where_log['status'] = array('eq', '0');
 		$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', TRUE);
-
 		if (!empty($task_list)) {
 			$where['id'] = array('in', $task_list);
 		} else {
@@ -1276,7 +1275,7 @@ function get_position_name($id) {
 	return $data['position_name'];
 }
 
-function send_push($data, $user_list, $time = null) {
+function send_push($data, $user_list, $time = null,$type='text') {
 
 	$model = M("Push");
 	if (empty($time)) {
@@ -1322,15 +1321,17 @@ function send_push($data, $user_list, $time = null) {
 	if (!empty($weixin_push_config)) {
 		$weixin_push_config = array_filter(explode(',', $weixin_push_config));
 		if (in_array($data['type'], $weixin_push_config)) {
-			@send_weixin($data, $user_list);
+			@send_weixin($data, $user_list,$type);
 		}
 	}
 }
 
 function send_ws($data, $user_list) {
 	$client = stream_socket_client('tcp://127.0.0.1:7273');
-	if (!$client)
-		exit("can not connect");
+	if (!$client) {
+		//exit("can not connect");
+		return;
+	}
 	// 模拟超级用户，以文本协议发送数据，注意文本协议末尾有换行符（发送的数据中最好有能识别超级用户的字段），这样在Event.php中的onMessage方法中便能收到这个数据，然后做相应的处理
 	$msg['type'] = "say";
 	$msg['to_client_id'] = "all";
@@ -1340,23 +1341,22 @@ function send_ws($data, $user_list) {
 	fwrite($client, json_encode($msg) . "\n");
 }
 
-function send_weixin($data, $user_list, $type = 'text') {
-
-	$msg = $data['type'] . "|" . $data['action'] . "\n" . $data['title'] . "\n" . $data['content'];
+function send_weixin($data, $user_list) {	
+		// 这样可以按照企业号的发送格式发送图文、文件上、声音等多媒体信息了,curl不支持多维数组，转换成json传递数据|Terry
+	$msg=json_encode($data,JSON_UNESCAPED_UNICODE);
 
 	$where['id'] = array('in', $user_list);
 	$openid = M('User') -> where($where) -> getField('openid', true);
 	$openid = implode('|', array_filter($openid));
+	// 这里$url不加/oa/的话测试图文会传递到weixin的index控制器|Terry
+	$url = get_system_config('WEIXIN_SITE_URL') . "/weixin.php?c=Oa&a=send";
+	$type='news';
 
-	$url = get_system_config('WEIXIN_SITE_URL') . "/weixin.php";
-
-	$params['c'] = "Oa";
-	$params['a'] = "send";
 	$params['content'] = $msg;
-
 	$params['openid'] = $openid;
+	$params['type'] = $type;
 
-	$opts[CURLOPT_TIMEOUT_MS] = 800;
+	$opts[CURLOPT_TIMEOUT_MS] = 1000;
 	$opts[CURLOPT_RETURNTRANSFER] = 1;
 
 	$opts[CURLOPT_URL] = $url;
@@ -1369,7 +1369,8 @@ function send_weixin($data, $user_list, $type = 'text') {
 	$data = @curl_exec($ch);
 	$error = curl_error($ch);
 	curl_close($ch);
-	return $data;
+
+	return $data;	
 }
 
 function send_sms($data, $user_list, $type = 'text') {
@@ -1573,4 +1574,15 @@ function arrToStr($arr) {
 	return $t;
 }
 
+function conv_flot($data) {
+	$return = '[';
+	if (empty($data)) {
+		return "[]";
+	} else {
+		foreach ($data as $key => $val) {
+			$return .= "[{$key}000,{$val}],";
+		}
+	}
+	return substr($return, 0, -1) . ']';
+}
 ?>

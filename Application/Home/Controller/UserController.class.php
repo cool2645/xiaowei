@@ -25,21 +25,14 @@ class UserController extends HomeController {
 	public function index() {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
+		
 		$model = M("Position");
 		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
 		$this -> assign('position_list', $list);
 
-		$model = M("Rank");
-		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
-		$this -> assign('rank_list', $list);
-
 		$model = M("Dept");
 		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
 		$this -> assign('dept_list', $list);
-
-		$model = M("Rank");
-		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
-		$this -> assign('rank_list', $list);
 
 		if (isset($_POST['eq_is_del'])) {
 			$eq_is_del = $_POST['eq_is_del'];
