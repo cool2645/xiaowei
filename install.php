@@ -1,7 +1,6 @@
 <?php
 if (version_compare(PHP_VERSION, '5.4.0', '<'))
 	die('require PHP > 5.4.0 !');
-	unlink("install.php");
 $db_config_files = "Application/Common/Conf/db.php";
 
 if (isset($_POST["install"])) {
@@ -67,13 +66,23 @@ if (isset($_POST["install"])) {
 		}
 
 		unlink("install.php");
-		echo "<meta charset='utf-8' />";
-		echo "<script>\n
-						window.onload=function(){
-						alert('安装成功');
-						location.href='index.php';
-					}
-					</script>";
+		if (file_exists("install.php")) {
+			echo "<meta charset='utf-8' />";
+			echo "<script>\n
+							window.onload=function(){
+							alert('安装成功,请手动删除install.php文件');
+							location.href='index.php';
+						}
+						</script>";
+		} else {
+			echo "<meta charset='utf-8' />";
+			echo "<script>\n
+							window.onload=function(){
+							alert('安装成功,请手动删除install.php文件');
+							location.href='index.php';
+						}
+						</script>";
+		}
 		die ;
 	}
 }
@@ -92,29 +101,18 @@ if (isset($_POST["install"])) {
 		<div class="container">
 			<div class="row">
 				<div class="col-md-offset-2 col-md-8">
-					<div class="page-header">
-						<h1>小微OA系统 <small>让工作更轻松快乐</small></h1>
-					</div>
+					<h1>小微OA系统 <small>让工作更轻松快乐</small></h1>
 					<form   method="POST" class="well form-horizontal">
-						<div class="form-group">
-							<label class="control-label col-md-4" for="name" >安装说明：</label>
-							<div class="col-md-8">
-								<p>
-									<h4 class="text-danger">1. 执行安装程序之前，手动创建数据库<h4>
-								</p>
-								<p>
-									<h4 class="text-danger">2. 安装成功以后，请手动删除 install.php <h4>
-								</p>
-							</div>
-						</div>
+						<h2 class="text-danger text-center">非商业版用户，请保留官方链接 谢谢支持！</h2>
+						<hr>
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name" >安装文件可写：</label>
 							<div class="col-md-8">
 								<?php
 								if (!is_writable("install.php")) {
-									echo "<button type='button' class='btn btn-danger form-con'>Fail</button><p>请检查install.php是否有修改权限</p>";
+									echo "<a class='btn btn-danger'>Fail</a><p>请检查install.php是否有修改权限</p>";
 								} else {
-									echo "<button type='button' class='btn btn-success form-con'>OK</button>";
+									echo "<a class='btn btn-success '>OK</a>";
 								}
 								?>
 							</div>
@@ -124,9 +122,9 @@ if (isset($_POST["install"])) {
 							<div class="col-md-8">
 								<?php
 								if (!is_writable($db_config_files)) {
-									echo "<button type='button' class='btn btn-danger form-con'>Fail</button><p>请检查Application\Common\Conf目录写入权限</p>";
+									echo "<a type='button' class='btn btn-danger form-con'>Fail</a><p>请检查Application\Common\Conf\db.php文件权限</p>";
 								} else {
-									echo "<button type='button' class='btn btn-success form-con'>OK</button>";
+									echo "<a type='button' class='btn btn-success form-con'>OK</a>";
 								}
 								?>
 							</div>
@@ -136,9 +134,9 @@ if (isset($_POST["install"])) {
 							<div class="col-md-8">
 								<?php
 								if (!function_exists('imap_open')) {
-									echo "<button type='button' class='btn btn-danger form-con'>Fail</button><p>无法正常收发邮件</p>";
+									echo "<a class='btn btn-danger form-con'>Fail</a><p>无法正常收发邮件</p>";
 								} else {
-									echo "<button type='button' class='btn btn-success form-con'>OK</button>";
+									echo "<a class='btn btn-success form-con'>OK</a>";
 								}
 								?>
 							</div>
@@ -158,21 +156,22 @@ if (isset($_POST["install"])) {
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name">密　　码：</label>
 							<div class="col-md-8">
-								<input type="text" name="db_pass" value="test" class="form-control"/>
+								<input type="text" name="db_pass" value="admin" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name">数据库名：</label>
 							<div class="col-md-8">
-								<input type="text" name="db_dbname" value="install" class="form-control"/>
+								<input type="text" name="db_dbname" value="xiaowei" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-md-4" for="name">数据前缀：</label>
 							<div class="col-md-8">
-								<input type="text" name="db_tag" value="smeoa_" class="form-control"/>
+								<input type="text" name="db_tag" value="xiaowei_" class="form-control"/>
 							</div>
 						</div>
+						<hr>
 						<div>
 							<label class="control-label col-md-4" for="name"> </label>
 							<div class="col-md-8">
