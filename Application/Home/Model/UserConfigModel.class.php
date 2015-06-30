@@ -16,10 +16,8 @@ namespace Home\Model;
 use Think\Model;
 
 class  UserConfigModel extends CommonModel {
-	function get_config(){
-		
-		$config = session('config'. get_user_id());
-		
+	function get_config(){		
+		$config = session('config'. get_user_id());		
 		if(empty($config)){
 			$id=get_user_id();
 			$config= $this->find($id);

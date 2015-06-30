@@ -466,6 +466,10 @@ class FlowController extends HomeController {
 		$this -> display();
 	}
 
+	function del($id){
+		$this->_del($id);
+	}
+	
 	/** 插入新新数据  **/
 	protected function _insert($name = CONTROLLER_NAME) {
 

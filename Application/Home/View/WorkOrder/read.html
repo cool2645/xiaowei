@@ -11,7 +11,7 @@
 					<a onclick="accept({$task_log_id})" class="btn btn-sm btn-primary">接受</a>
 					<a onclick="reject({$task_log_id});" class="btn btn-sm btn-danger">不接受</a>
 				</eq>
-				<eq name="is_weixin" value="true">
+				<eq name="is_weixin" value="true">							
 				<eq name="task_working.status" value="1">
 					<a onclick="sign({$task_log_id})" class="btn btn-sm btn-primary">签到</a>
 				</eq>
@@ -88,11 +88,9 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="content">任务说明：</label>
 			<div class="col-xs-10">
-				<p class="form-control-static">
 					<div class="task_content">
 						{$vo.content}
 					</div>
-				</p>
 			</div>
 		</div>
 

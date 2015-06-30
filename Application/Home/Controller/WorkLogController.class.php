@@ -37,6 +37,7 @@ class WorkLogController extends HomeController {
 			$node = D("Dept");
 			$dept_id = get_dept_id();
 			$dept_name = get_dept_name();
+			
 			$menu = array();
 			$dept_menu = $node -> field('id,pid,name') -> where("is_del=0") -> order('sort asc') -> select();
 			$dept_tree = list_to_tree($dept_menu, $dept_id);
@@ -63,6 +64,7 @@ class WorkLogController extends HomeController {
 				$this -> assign('emp_list', $emp_list);
 			}
 		}
+
 		$model = D("WorkLogView");
 		$map = $this -> _search($model);
 		if ($auth['admin']) {

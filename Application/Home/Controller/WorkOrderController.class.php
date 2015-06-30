@@ -11,13 +11,13 @@
 namespace Home\Controller;
 
 class WorkOrderController extends HomeController {
-	protected $config = array('app_type' => 'common', 'read' => 'let_me_do,accept,reject,save_log,sign,finish', 'admin' => 'report');
+	protected $config = array('app_type' => 'common', 'read' => 'let_me_do,accept,reject,save_log,sign,finish,edit2', 'admin' => 'report');
 
 	//过滤查询字段
 	function _search_filter(&$map) {
 		$map['is_del'] = array('eq', '0');
 		if (!empty($_REQUEST['keyword']) && empty($map['64'])) {
-			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
+			$map['executor'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 	}
 
@@ -173,7 +173,7 @@ class WorkOrderController extends HomeController {
 		$this -> display();
 	}
 
-	public function edit($id) {
+	public function edit($id){
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$plugin['date'] = true;
@@ -186,6 +186,10 @@ class WorkOrderController extends HomeController {
 		$this -> _edit($id);
 	}
 
+	public function edit2($id){
+		$this->edit($id);
+	}
+	
 	public function del($id) {
 		$this -> _del($id);
 	}
@@ -203,8 +207,7 @@ class WorkOrderController extends HomeController {
 		$this -> display();
 	}
 
-	public function read($id) {
-
+	public function read($id) {		
 		vendor('WeiXin.jssdk');
 		$corp_id = get_system_config('WEIXIN_CORP_ID');
 		$secret = get_system_config('WEIXIN_SECRET');
@@ -222,23 +225,20 @@ class WorkOrderController extends HomeController {
 		$where_log['task_id'] = array('eq', $id);
 		$task_log = M("WorkOrderLog") -> where($where_log) -> select();
 
-		//foreach ($task_log as $key => $val) {
-		//	$task_log[$key]['arrive_location'] = get_location($val['arrive_lat'], $val['arrive_lng']);
-		//	$task_log[$key]['finish_location'] = get_location($val['finish_lat'], $val['finish_lng']);
-		//}
 		$this -> assign('task_log', $task_log);
 		$where_accept['status'] = 0;
 		$where_accept['task_id'] = $id;
 		$where_accept['type'] = 1;
 		$where_accept['executor'] = array('eq', get_user_id());
 		$task_accept = M("WorkOrderLog") -> where($where_accept) -> find();
-		trace($task_accept);
+
 		if (!empty($task_accept)) {
 			$this -> assign('is_accept', 1);
 			$this -> assign('task_log_id', $task_accept['id']);
 		} else {
 			$this -> assign('is_accept', 0);
 		}
+		
 		$where_working['status'] = array('in', '1,2');
 		$where_working['task_id'] = $id;
 		$where_working['transactor'] = array('eq', get_user_id());

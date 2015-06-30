@@ -135,6 +135,5 @@ class PushController extends HomeController {
 		$where['create_time'] = array('elt', time() - 1);
 		return M("Push")->where($where)->count();;
 	}
-
 }
 ?>

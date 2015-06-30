@@ -20,15 +20,22 @@ class UserDefineControlWidget extends Controller {
 
 	function conv_data($val) {
 		$new = array();
+		if(strpos($val,'SYSTEM_CONFIG:')!==false){
+			$new=get_system_config(substr($val,14));
+			return $new;	
+		}
+		
 		if (strpos($val, "|") !== false) {
 			$arr_tmp = explode(",", $val);
 			foreach ($arr_tmp as $item) {
 				$tmp = explode("|", $item);
 				$new[$tmp[0]] = $tmp[1];
 			}
-		} else {
-			$new = $val;
-		}
+			return $new;
+		} 
+		
+		$new = $val;
+		
 		return $new;
 	}
 

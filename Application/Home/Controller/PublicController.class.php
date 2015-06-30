@@ -41,6 +41,7 @@ class PublicController extends Controller {
 		} elseif (empty($_POST['password'])) {
 			$this -> error('密码必须！');
 		}
+		
 		if ($_POST['emp_no'] == 'admin') {
 			$is_admin = true;
 			session(C('ADMIN_AUTH_KEY'), true);
@@ -83,9 +84,7 @@ class PublicController extends Controller {
 	public function logout() {
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (isset($auth_id)) {
-			session(C('USER_AUTH_KEY'), null);
-
-			session('user_pic', null);
+			session(null);
 			$this -> assign("jumpUrl", __APP__);
 			$this -> success('退出成功！');
 		} else {
@@ -149,9 +148,10 @@ class PublicController extends Controller {
 	}
 
 	public function recevie_mail(){
+		
 		//linux 
-		//echo 'curl "http://192.168.10.10/index.php?m=&c=public&a=recevie_mail"'>/root/auto_recevie_mail.sh
-		//echo '*/10 * * * * /root/auto_recevie_mail.sh'>> //var/spool/cron/root
+		//echo 'wget -o /dev/null  "http://192.168.1.231/index.php?m=&c=public&a=recevie_mail"'>/root/auto_recevie_mail.sh
+		//echo '*/10 * * * * sh /root/auto_recevie_mail.sh'>> //var/spool/cron/root
 		
 		//windows
 		//server_url="http://xiaowei.localhost/index.php?m=&c=public&a=recevie_mail"
@@ -163,17 +163,20 @@ class PublicController extends Controller {
 		 
 		$client_ip = $_SERVER["REMOTE_ADDR"]; 
 		$server_ip = gethostbyname(null);
+	 	session(C('USER_AUTH_KEY'),true);
 		if ($client_ip != $server_ip) {
 			session_write_close();
 			set_time_limit(0);
 			$where['is_del'] = array('eq', 0);
 			$mail_account_list = D("MailAccountView") -> where($where) -> select();
-			foreach ($mail_account_list as $account) {
-				R("Mail/receve", array($account['id'], true));
+			foreach ($mail_account_list as $account) {				
+				R("Mail/receve", array($account['id'], true));				
 				sleep(1);
 			}
 			sleep(1);
 		}
+		session_start();
+		session(null);
+		die;
 	}
-
 }

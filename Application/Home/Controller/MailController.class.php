@@ -475,7 +475,7 @@ class MailController extends HomeController {
 				if ($count == 0) {
 					$model = M("Mail");
 					$model -> create($mail -> mail_header($mail_id));
-					if ($model -> create_time < strtotime(date('y-m-d h:i:s')) - 86400 * 30) {
+					if ($model -> create_time < strtotime(date('y-m-d H:i:s')) - 86400 * 30) {
 						$mail -> close_mail();
 						if ($new > 0) {
 							$push_data['type']='邮件';
@@ -524,7 +524,9 @@ class MailController extends HomeController {
 			$push_data['url']=U("Mail/folder?fid=inbox");
 			send_push($push_data,$user_id);
 		}
-		return;
+		if (!$background) {
+			return;	
+		}		
 	}
 
 	//--------------------------------------------------------------------

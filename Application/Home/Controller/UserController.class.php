@@ -257,9 +257,10 @@ class UserController extends HomeController {
 
 				$import_file = $info['uploadfile']["path"];
 				$import_file = substr($import_file, 1);
-
+				
 				//$import_file=realpath($import_file);
-
+				//dump($import_file);
+				//die;
 				$objPHPExcel = \PHPExcel_IOFactory::load($import_file);
 				//$objPHPExcel = \PHPExcel_IOFactory::load('Uploads/Download/Org/2014-12/547e87ac4b0bf.xls');
 				$dept = M("Dept") -> getField('name,id');

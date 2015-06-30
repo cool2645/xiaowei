@@ -27,6 +27,7 @@ class WorkOrderModel extends CommonModel {
 		} else {
 			$data['task_no'] = date('Y') . "-0001";
 		}
+		$data['status']=1;
 	}
 
 	function _after_insert($data, $options) {
@@ -40,22 +41,29 @@ class WorkOrderModel extends CommonModel {
 				$tmp = explode('|', $val);
 				$executor_name = $tmp[0];
 				$executor = $tmp[1];
-
 				$type = 1;
 
 				$user_list[] = $executor;
 
 				$log_data['executor'] = $executor;
 				$log_data['executor_name'] = $executor_name;
+				
+				$log_data['transactor'] = $executor;
+				$log_data['transactor_name'] = $executor;
+				
 				$log_data['type'] = $type;
+				$log_data['status']=1;
 				$log_data['assigner'] = $data['user_id'];
 				$log_data['task_id'] = $data['id'];
+				
 				M("WorkOrderLog") -> add($log_data);
 			}
+			
 			$push_data['type'] = '工单';
 			$push_data['action'] = '需要执行';
 			$push_data['title'] = "来自：" . $data['user_name'];
-			$push_data['content'] = "客户：" . $data['name'];
+			$push_data['content'] = "客户：{$data['name']}</br>
+			要求到达时间：{$data['request_arrive_time']}";
 			$push_data['url'] = U("WorkOrder/read?id={$data['id']}");
 
 			send_push($push_data, $user_list);
@@ -77,6 +85,7 @@ class WorkOrderModel extends CommonModel {
 				$log_data['executor'] = $executor;
 				$log_data['executor_name'] = $executor_name;
 				$log_data['type'] = $type;
+				$log_data['status']=1;
 				$log_data['assigner'] = $data['user_id'];
 				$log_data['task_id'] = $data['id'];
 				M("WorkOrderLog") -> add($log_data);
@@ -84,7 +93,8 @@ class WorkOrderModel extends CommonModel {
 			$push_data['type'] = '工单';
 			$push_data['action'] = '需要参与';
 			$push_data['title'] = "来自：" . $data['user_name'];
-			$push_data['content'] = "客户：" . $data['name'];
+			$push_data['content'] = "客户：{$data['name']}</br>
+			要求到达时间：{$data['request_arrive_time']}";
 			$push_data['url'] = U("WorkOrder/read?id={$data['id']}");
 			
 			send_push($push_data, $user_list);

@@ -130,7 +130,11 @@
 							<span class="col-6 text-center hidden-xs">
 								<if condition="($vo.status lt 3) and ($vo.user_id eq $user_id)">
 									<a href="{:U('edit','id='.$vo['id'])}">修改</a>&nbsp;<a href="{:U('del','id='.$vo['id'])}">删除</a>
-								</if></span>
+								</if>
+								<if condition="($vo.status lt 3) and (strpos($vo['executor'],$user_id)!==false)">
+									<a href="{:U('edit2','id='.$vo['id'])}">修改</a>&nbsp;<a href="{:U('del','id='.$vo['id'])}">删除</a>
+								</if>								
+								</span>
 						</div>
 						<div class="auto autocut ">
 							<a href="{:U('read','id='.$vo['id'])}">{$vo.name}</a>

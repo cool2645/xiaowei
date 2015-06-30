@@ -112,9 +112,9 @@ class HomeController extends Controller {
 		if(empty($system_log_time)){
 			$flag=true;
 		}else{
-			$flag=(S('system_log_time')-time())>24*3600;
+			$flag=(time()-S('system_log_time'))>24*3600;
 		}
-		if($flag){			
+		if($flag){
 			$time=time();
 			S('system_log_time',$time);
 			$data['time']=$time;

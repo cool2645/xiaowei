@@ -50,13 +50,6 @@ class PopupController extends HomeController {
 				$data = $model -> where($where) -> select();
 				break;
 
-			case "rank" :
-				$model = D("UserView");
-				$where['rank_id'] = array('eq', $id);
-				$where['is_del'] = array('eq', 0);
-				$data = $model -> where($where) -> select();
-				break;
-
 			case "group" :
 				$user_list = D("Group") -> get_user_list($id);
 

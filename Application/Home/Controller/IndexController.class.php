@@ -21,7 +21,7 @@ class IndexController extends HomeController {
 
 		cookie("current_node", null);
 		cookie("top_menu", null);
-
+		 
 		$config = D("UserConfig") -> get_config();
 		$this -> assign("home_sort", $config['home_sort']);
 

@@ -39,10 +39,9 @@ class  UserModel extends CommonModel {
 
 	function get_user_list($keyword='')
 	{		
-		$sql= " SELECT user .* , dept.name AS dept_name, position.name AS position_name, rank.name AS rank_name";
+		$sql= " SELECT user .* , dept.name AS dept_name, position.name AS position_name";
 		$sql.= " FROM ".$this->tablePrefix."user AS user";
-		$sql.= " LEFT JOIN ".$this->tablePrefix."position AS position ON user.position_id = position.id";
-		$sql.= " LEFT JOIN ".$this->tablePrefix."rank AS rank ON user.rank_id = rank.id";
+		$sql.= " LEFT JOIN ".$this->tablePrefix."position AS position ON user.position_id = position.id";		
 		$sql.= " LEFT JOIN ".$this->tablePrefix."dept dept ON user.dept_id = dept.id";
 		$sql.= " WHERE user.is_del=0 ";
 		if(!empty($keyword)){
