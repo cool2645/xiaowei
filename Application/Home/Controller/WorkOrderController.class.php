@@ -217,6 +217,7 @@ class WorkOrderController extends HomeController {
 		$this -> assign('signPackage', $signPackage);
 		$this -> assign('is_weixin', is_weixin());
 		$this -> assign('task_id', $id);
+		
 		$model = M("WorkOrder");
 		$vo = $model -> find($id);
 

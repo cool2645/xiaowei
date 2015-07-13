@@ -1321,7 +1321,7 @@ function send_push($data, $user_list, $time = null,$type='text') {
 	if (!empty($weixin_push_config)) {
 		$weixin_push_config = array_filter(explode(',', $weixin_push_config));
 		if (in_array($data['type'], $weixin_push_config)) {
-			@send_weixin($data, $user_list,$type);
+			@send_weixin($data, $user_list);
 		}
 	}
 }
@@ -1354,7 +1354,7 @@ function send_weixin($data, $user_list) {
 
 	$params['content'] = $msg;
 	$params['openid'] = $openid;
-	$params['type'] = $type;
+	//$params['type'] = $type;
 
 	$opts[CURLOPT_TIMEOUT_MS] = 1000;
 	$opts[CURLOPT_RETURNTRANSFER] = 1;
@@ -1373,8 +1373,9 @@ function send_weixin($data, $user_list) {
 	return $data;	
 }
 
-function send_sms($data, $user_list, $type = 'text') {
-	$msg = '【' . $data['type'] . "】" . $data['action'] . ' ' . $data['title'] . '：' . $data['content'] . to_date(time(), "m-d H:i");
+function send_sms($data, $user_list, $type = 'text'){
+	$sms_max=get_system_config('SMS_MAX');
+	$msg = '【' . $data['type'] . "】" . $data['action'] . ' ' . $data['title'] . '：' . utf_str_sub($data['content'],$sms_max) . to_date(time(), "m-d H:i");
 	header("Content-Type: text/html; charset=utf-8");
 
 	$url = 'http://192.168.100.9:9080/OpenMasService?WSDL';
@@ -1390,6 +1391,7 @@ function send_sms($data, $user_list, $type = 'text') {
 	} else {
 		$where['id'] = array('eq', $user_list);
 	}
+	
 	$mobile_list = M("User") -> where($where) -> getField('mobile_tel', true);
 	$destinationAddresses = $mobile_list;
 
@@ -1537,7 +1539,7 @@ function get_work_order($user_id, $date) {
 	$where['executor'] = array('eq', $user_id);
 	$where['request_arrive_time'] = array( array('gt', $date . " 00:00"), array('lt', $date . " 23:59"));
 	$where['is_del'] = array('eq', 0);
-	$where['status'] = array('eq', 3);
+	//$where['status'] = array('eq', 3);
 	$list = D('WorkOrderLogView') -> where($where) -> select();
 
 	foreach ($list as $val) {
@@ -1585,4 +1587,26 @@ function conv_flot($data) {
 	}
 	return substr($return, 0, -1) . ']';
 }
+
+function is_public($id){
+	if($id==1){
+		return "公开";
+	}
+	if($id==0){
+		return "私有";
+	}
+}
+
+function get_push_agent_id($type) {
+	$msg_push_config = array_filter(explode(";", get_system_config('MSG_PUSH_CONFIG')));
+	foreach ($msg_push_config as $val) {
+		$tmp = explode("=", $val);
+		list($msg_type, $push_agent_id) = $tmp;
+		if($msg_type==$type){
+			return $push_agent_id;
+		}
+	}
+	return get_system_config('OA_AGENT_ID');
+}
+
 ?>

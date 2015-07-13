@@ -402,6 +402,14 @@ class MailController extends HomeController {
 
 		$this -> display();
 	}
+	
+	public function edit($id){
+		$plugin['editor']=true;
+		$plugin['uploader']=true;
+		$this->assign("plugin",$plugin);
+		
+		$this->_edit($id);
+	}
 
 	//--------------------------------------------------------------------
 	//   回复，转发邮件内容

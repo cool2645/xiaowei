@@ -17,6 +17,12 @@ function editor_init() {
 			filterMode : true,
 			uploadJson : upload_url,
 			width : '100%',
+			items:['undo', 'redo', '|','plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+        'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+        'superscript', 'clearhtml', 'quickformat','|', 'fullscreen', '/',
+        'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+       'table', 'hr','link', 'unlink',],
 			afterBlur : function() {
 				this.sync();
 			}

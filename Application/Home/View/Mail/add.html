@@ -110,7 +110,20 @@
 				inputbox.find(".search ul").hide();
 				inputbox.find(".search").hide();
 			});
-
+			
+			$(".inputbox .letter").blur(function(e) {
+				email = $(this).val();
+				if (validate(email, 'email')) {
+					name = email;
+					html = conv_inputbox_item(name, email);
+					$(this).parents(".inputbox").find("span.address_list").append(html);
+					$(this).val("");
+				} else {
+					$(this).val("");
+					//ui_error("邮件格式错误");
+					return false;
+				}
+			});
 			/* 查找联系人input 功能*/
 			$(".inputbox .letter").keyup(function(e) {
 				switch(e.keyCode) {

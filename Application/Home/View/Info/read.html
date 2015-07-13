@@ -18,7 +18,7 @@
 						<a onclick="sign_info()" class="btn btn-sm btn-primary">已签收</a>
 					</empty>
 				</if>
-				<a onclick="winprint()" class="btn btn-sm btn-primary ">打印</a>
+				<a onclick="winprint()" class="btn btn-sm btn-primary hidden-xs">打印</a>
 				<if condition="$auth['write'] and ($vo.user_id eq $user_id)">
 					<a onclick="edit();" class="btn btn-sm btn-primary">修改</a>
 				</if>

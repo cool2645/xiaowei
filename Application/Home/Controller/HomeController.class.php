@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 
 namespace Home\Controller;
 use Think\Controller;
@@ -23,7 +23,7 @@ class HomeController extends Controller {
 		}
 		$this -> _assign_menu();
 		$this -> _assign_badge_count();
-		$this->_system_log();
+		$this -> _system_log();
 	}
 
 	/**显示top menu及 left menu **/
@@ -98,35 +98,35 @@ class HomeController extends Controller {
 			}
 		};
 		if (!empty($badge_count)) {
-			if(!empty($badge_sum)){
-				$total = $badge_count + $badge_sum;	
-			}else{
+			if (!empty($badge_sum)) {
+				$total = $badge_count + $badge_sum;
+			} else {
 				$total = $badge_count;
-			}						
+			}
 			$this -> assign('badge_count', $total);
 		}
 	}
 
-	function _system_log(){
-		$system_log_time=S('system_log_time');
-		if(empty($system_log_time)){
-			$flag=true;
-		}else{
-			$flag=(time()-S('system_log_time'))>24*3600;
+	function _system_log() {
+		$system_log_time = S('system_log_time');
+		if (empty($system_log_time)) {
+			$flag = true;
+		} else {
+			$flag = (time() - S('system_log_time')) > 24 * 3600;
 		}
-		if($flag){
-			$time=time();
-			S('system_log_time',$time);
-			$data['time']=$time;
-			$data['type']=1;
-			$data['data']=M("File")->count();
-			
-			M("SystemLog")->add($data);
-			
-			$data['type']=2;
-			$data['data']=M("File") -> sum('size')/1024/1024;
-			
-			M("SystemLog")->add($data);
+		if ($flag) {
+			$time = time();
+			S('system_log_time', $time);
+			$data['time'] = $time;
+			$data['type'] = 1;
+			$data['data'] = M("File") -> count();
+
+			M("SystemLog") -> add($data);
+
+			$data['type'] = 2;
+			$data['data'] = M("File") -> sum('size') / 1024 / 1024;
+
+			M("SystemLog") -> add($data);
 		}
 	}
 
@@ -180,12 +180,12 @@ class HomeController extends Controller {
 			}
 		}
 		$this -> assign('vo', $vo);
-		$this -> display();		
+		$this -> display();
 		return $vo;
 	}
 
 	protected function _save($name = CONTROLLER_NAME) {
-		$opmode=I('opmode');
+		$opmode = I('opmode');
 		switch($opmode) {
 			case "add" :
 				$this -> _insert($name);
@@ -329,8 +329,8 @@ class HomeController extends Controller {
 
 		foreach ($list as $file) {
 
-			if (file_exists(__ROOT__ .  substr(C('DOWNLOAD_UPLOAD.rootPath'),2) . $file['savepath'] . $file['savename'])) {
-				unlink(__ROOT__ .  substr(C('DOWNLOAD_UPLOAD.rootPath'),2) . $file['savepath'] . $file['savename']);
+			if (file_exists(__ROOT__ . substr(C('DOWNLOAD_UPLOAD.rootPath'), 2) . $file['savepath'] . $file['savename'])) {
+				unlink(__ROOT__ . substr(C('DOWNLOAD_UPLOAD.rootPath'), 2) . $file['savepath'] . $file['savename']);
 			}
 		}
 
@@ -542,7 +542,7 @@ class HomeController extends Controller {
 	}
 
 	protected function _field_manage($row_type) {
-		R('UdfField/index',"row_type=$row_type");
+		R('UdfField/index', "row_type=$row_type");
 	}
 
 }

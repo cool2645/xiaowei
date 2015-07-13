@@ -15,7 +15,6 @@ use Think\Model;
 class  FlowModel extends CommonModel {
 	// 自动验证设置
 	protected $_validate = array( array('name', 'require', '标题必须', 1), array('content', 'require', '内容必须'), );
-	// 自动填充设置
 
 	function _before_insert(&$data, $options) {
 		$type = $data["type"];
@@ -243,12 +242,22 @@ class  FlowModel extends CommonModel {
 		$push_data['title'] = $flow['name'];
 		$push_data['content'] = '审核人：' . get_dept_name() . "-" . get_user_name();
 		$push_data['url'] = U("Flow/read?id={$flow_id}");
-		
+
 		$user_id = M("User") -> where(array(emp_no => $emp_no)) -> getField("id");
 		send_push($push_data, $user_id);
 	}
 
 	public function next_step($flow_id, $step) {
+		$confirm = M("Flow") -> where(array(id => $flow_id)) -> getField("confirm");
+		
+		if (!empty($confirm)&&($step==20)){
+			$confirm_list = array_filter(explode("|", $confirm));
+			$is_include_presenter = array_search(get_emp_no(), $confirm_list);
+			if ($is_include_presenter !== false) {
+				$step = $step + $is_include_presenter + 1;
+			}
+		}
+		
 		$model = D("Flow");
 		if (substr($step, 0, 1) == 2) {
 			if ($this -> is_last_confirm($flow_id)) {
@@ -275,12 +284,11 @@ class  FlowModel extends CommonModel {
 			$push_data['action'] = '审核通过';
 			$push_data['title'] = $flow['name'];
 			$push_data['content'] = '审核人：' . get_dept_name() . "-" . get_user_name();
-		    $push_data['url'] = U("Flow/read?id={$flow_id}");
-			
+			$push_data['url'] = U("Flow/read?id={$flow_id}");
+
 			send_push($push_data, $flow['user_id']);
 
 		} else {
-
 			$data['flow_id'] = $flow_id;
 			$data['step'] = $step;
 			$data['emp_no'] = $this -> duty_emp_no($flow_id, $step);
@@ -306,8 +314,8 @@ class  FlowModel extends CommonModel {
 		if (empty($confirm)) {
 			return true;
 		}
-		$last_confirm = array_filter(explode("|", $confirm));
-		$last_confirm_emp_no = end($last_confirm);
+		$confirm_list = array_filter(explode("|", $confirm));
+		$last_confirm_emp_no = end($confirm_list);
 		if (strpos($last_confirm_emp_no, get_emp_no()) !== false) {
 			return true;
 		}
@@ -320,9 +328,9 @@ class  FlowModel extends CommonModel {
 			return true;
 		}
 
-		$last_consult = array_filter(explode("|", $consult));
-		$last_consult_emp_no = end($last_consult);
-
+		$consult_list = array_filter(explode("|", $consult));
+		$last_consult_emp_no = end($consult_list);
+			
 		if (strpos($last_consult_emp_no, get_emp_no()) !== false) {
 			return true;
 		}
@@ -351,19 +359,17 @@ class  FlowModel extends CommonModel {
 		$data['step'] = 100;
 		$data['create_time'] = time();
 		$data['from'] = get_user_name();
-		
-		dump($emp_list);
-		
-		foreach ($emp_list as $key=>$val) {
-			$data['emp_no'] = $val;
-			$where_flow_log['flow_id']=array('eq',$flow_id);
-			$where_flow_log['emp_no']=array('eq',$val);
 
-			$flow_log=M("FlowLog")->where($where_flow_log)->select();
-			if(!$flow_log){
-				D("FlowLog") -> add($data);	
-			}else{
-				unset($emp_list[$key]);				
+		foreach ($emp_list as $key => $val) {
+			$data['emp_no'] = $val;
+			$where_flow_log['flow_id'] = array('eq', $flow_id);
+			$where_flow_log['emp_no'] = array('eq', $val);
+
+			$flow_log = M("FlowLog") -> where($where_flow_log) -> select();
+			if (!$flow_log) {
+				D("FlowLog") -> add($data);
+			} else {
+				unset($emp_list[$key]);
 			}
 		}
 
@@ -373,10 +379,11 @@ class  FlowModel extends CommonModel {
 		$push_data['title'] = $flow['name'];
 		$push_data['content'] = '转发人：' . get_dept_name() . "-" . get_user_name();
 		$push_data['url'] = U("Flow/read?id={$flow_id}");
-				
+
 		$where_user_list['emp_no'] = array('in', $emp_list);
 		$user_list = M("User") -> where($where_user_list) -> getField("id", true);
 		send_push($push_data, $user_list);
 	}
+
 }
 ?>

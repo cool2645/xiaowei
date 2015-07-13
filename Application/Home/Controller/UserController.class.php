@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 
 // 后台用户模块
 namespace Home\Controller;
@@ -25,7 +25,7 @@ class UserController extends HomeController {
 	public function index() {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
-		
+
 		$model = M("Position");
 		$list = $model -> where('is_del=0') -> order('sort asc') -> getField('id,name');
 		$this -> assign('position_list', $list);
@@ -78,8 +78,7 @@ class UserController extends HomeController {
 		}
 		$User = M("User");
 		// 检测用户名是否冲突
-		$name = I('emp_no');
-		;
+		$name = I('emp_no'); ;
 		$result = $User -> getByAccount($name);
 		if ($result) {
 			$this -> error('该编码已经存在！');
@@ -90,7 +89,7 @@ class UserController extends HomeController {
 	}
 
 	// 插入数据
-	public function _insert($name="User") {
+	protected function _insert($name = "User") {
 		// 创建数据对象
 		$model = D("User");
 		if (!$model -> create()) {
@@ -102,14 +101,17 @@ class UserController extends HomeController {
 			$emp_no = $model -> emp_no;
 			$name = $model -> name;
 			$mobile_tel = $model -> mobile_tel;
+			$model -> open_id = $model -> emp_no;
+			$model -> westatus = 1;
 			if ($result = $model -> add()) {
 				$data['id'] = $result;
 				M("UserConfig") -> add($data);
+
 				if (!empty($mobile_tel)) {
-					import("Weixin.ORG.Util.ThinkWechat");
-					$agent_id = get_system_config('OA_AGENT_ID');
-					$weixin = new \ThinkWechat($agent_id);
-					$weixin -> add_user($emp_no,$name,$mobile_tel);
+					import("Weixin.ORG.Util.Weixin");
+					$weixin = new \Weixin();
+					$mobile_tel = trim($mobile_tel, '+-');
+					$weixin -> add_user($emp_no, $name, $mobile_tel);
 				}
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('用户添加成功！');
@@ -119,51 +121,7 @@ class UserController extends HomeController {
 		}
 	}
 
-	public function weixin_sync() {
-
-		import("Weixin.ORG.Util.ThinkWechat");
-		$agent_id = get_system_config('OA_AGENT_ID');
-		$weixin = new \ThinkWechat($agent_id);
-		$user_list = M("User") -> getField('emp_no', true);
-
-		$weixin_user_list = $weixin -> get_user_list();
-		foreach ($weixin_user_list as $key => $val) {
-			$data[] = $val -> userid;
-		}
-		//$where['emp_no']=array('in',$data);
-
-		$weixin -> del_user_list($data);
-
-		$user_list = M("User") -> where(array('is_del' => 0)) -> getField('emp_no,name,mobile_tel');
-
-		$error_code_desc = C('WEIXIN_ERROR_CODE');
-		foreach ($user_list as $key => $val) {
-			$error_code =     json_decode($weixin -> add_user($val['emp_no'], $val['name'], $val['mobile_tel'])) -> errcode;
-			$list[$key]['error_code'] = $error_code;
-			$list[$key]['desc'] = $error_code_desc[$error_code];
-			$list[$key]['emp_no'] = $key;
-		}
-		$this -> assign('list', $list);
-		$this -> display();
-	}
-
-	private function _add_weixin_user($user_id, $name, $mobile) {
-		import("Weixin.ORG.Util.ThinkWechat");
-		$weixin = new \ThinkWechat(2);
-		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
-		$restr = $weixin -> add_user($id, $name, $mobile);
-		return $restr;
-	}
-
-	private function _del_weixin_user($user_id, $name, $mobile) {
-		import("Weixin.ORG.Util.ThinkWechat");
-		$weixin = new \ThinkWechat(2);
-		// $openid = 'o0ehLt1pOAIEFZtPD4ghluvjamf0';
-		$restr = $weixin -> add_user($id, $name, $mobile);
-		return $restr;
-	}
-
-	function _update($name="User") {
+	protected function _update($name = "User") {
 		$model = D($name);
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
@@ -177,10 +135,10 @@ class UserController extends HomeController {
 		if (false !== $list) {
 			//成功提示
 			if (!empty($mobile_tel)) {
-				import("Weixin.ORG.Util.ThinkWechat");
-				$agent_id = get_system_config('OA_AGENT_ID');
-				$weixin = new \ThinkWechat($agent_id);
-				$weixin -> add_user($emp_no,$name,$mobile_tel);
+				import("Weixin.ORG.Util.Weixin");
+				$weixin = new \Weixin();
+				$mobile_tel = trim($mobile_tel, '+-');
+				$weixin -> update_user($emp_no, $name, $mobile_tel);
 			}
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
@@ -188,6 +146,50 @@ class UserController extends HomeController {
 			//错误提示
 			$this -> error('编辑失败!');
 		}
+	}
+
+	private function _weixin_sync() {
+
+		import("Weixin.ORG.Util.Weixin");
+		$weixin = new \Weixin($agent_id);
+		$user_list = M("User") -> getField('emp_no', true);
+
+		$weixin_user_list = $weixin -> get_user_list();
+		foreach ($weixin_user_list as $key => $val) {
+			$data[] = $val['userid'];
+		}
+
+		$weixin -> del_user_list($data);
+
+		$user_list = M("User") -> where(array('is_del' => 0)) -> getField('emp_no,name,mobile_tel');
+
+		$error_code_desc = C('WEIXIN_ERROR_CODE');
+		foreach ($user_list as $key => $val) {
+			$emp_no = $val['emp_no'];
+			$name = $val['name'];
+			$mobile_tel = trim($val['mobile_tel'], '+-');
+
+			$error_code =        json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+			$list[$key]['error_code'] = $error_code;
+			$list[$key]['desc'] = $error_code_desc[$error_code];
+			$list[$key]['emp_no'] = $key;
+		}
+		$this -> assign('list', $list);
+		$this -> display();
+	}
+
+	private function _add_weixin_user($user_id, $name, $mobile) {
+		import("Weixin.ORG.Util.Weixin");
+		$weixin = new \Weixin();
+		$restr = $weixin -> add_user($id, $name, $mobile);
+		return $restr;
+	}
+
+	private function _del_weixin_user($user_id, $name, $mobile) {
+		import("Weixin.ORG.Util.Weixin");
+		$weixin = new \Weixin();
+		$restr = $weixin -> add_user($id, $name, $mobile);
+		return $restr;
 	}
 
 	protected function add_default_role($user_id) {
@@ -257,10 +259,7 @@ class UserController extends HomeController {
 
 				$import_file = $info['uploadfile']["path"];
 				$import_file = substr($import_file, 1);
-				
-				//$import_file=realpath($import_file);
-				//dump($import_file);
-				//die;
+
 				$objPHPExcel = \PHPExcel_IOFactory::load($import_file);
 				//$objPHPExcel = \PHPExcel_IOFactory::load('Uploads/Download/Org/2014-12/547e87ac4b0bf.xls');
 				$dept = M("Dept") -> getField('name,id');
@@ -272,7 +271,6 @@ class UserController extends HomeController {
 					$data = array();
 
 					$data_user['emp_no'] = $sheetData[$i]["A"];
-					$data_user['userid'] = $sheetData[$i]["A"];
 					$data_user['name'] = $sheetData[$i]["B"];
 
 					$data_user['dept_id'] = $dept[$sheetData[$i]["C"]];
@@ -283,6 +281,8 @@ class UserController extends HomeController {
 					$data_user['mobile_tel'] = $sheetData[$i]["G"];
 					$data_user['sex'] = $sheetData[$i]["H"];
 					$data_user['birthday'] = $sheetData[$i]["I"];
+					$data_user['open_id'] = $sheetData[$i]["A"];
+					$data_user['westatus'] = 1;
 
 					$role_list = explode($sheetData[$i]["E"]);
 					foreach ($role_list as $key => $val) {
@@ -292,7 +292,8 @@ class UserController extends HomeController {
 
 					$this -> add_role($user_id, $data_role);
 				}
-				//dump($sheetData);
+
+				$this -> _weixin_sync();
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('导入成功！');
 			}
@@ -311,5 +312,6 @@ class UserController extends HomeController {
 			$RoleUser -> add();
 		}
 	}
+
 }
 ?>

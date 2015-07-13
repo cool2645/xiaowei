@@ -3,6 +3,7 @@
 	{:W('PageHeader/simple',array('name'=>'新建收入','search'=>'N'))}
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"   class="well form-horizontal">
 		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="account_name" name="account_name" value="">
 		<input type="hidden" id="add_file" name="add_file">
 		<input type="hidden" id="doc_type" name="doc_type" value="1">
 		<input type="hidden" id="opmode" name="opmode" value="add">
@@ -92,23 +93,25 @@
 <block name="js">
 	<script>
 		function save() {
-		window.onbeforeunload=null;
-		if(check_form("form_data")) {
-		sendForm("form_data","{:U('save')}");
+			window.onbeforeunload = null;
+			if (check_form("form_data")) {
+				sendForm("form_data", "{:U('save')}");
+			}
 		}
-		}
+
+
 		$(document).ready(function() {
-		$("#account_id").change(function() {
-		$account_name=$('#account_id option:selected').text();
-		$("#account_name").val($account_name);
-		$.getJSON("{:U('Finance/read_account')}", {
-		account_id:$(this).val()
-		}, function(data) {
-		if(data.status==1) {
-		$("#balance").val(data.data.balance);
-		}
-		});
-		});
+			$("#account_id").change(function() {
+				$account_name = $('#account_id option:selected').text();
+				$("#account_name").val($account_name);
+				$.getJSON("{:U('Finance/read_account')}", {
+					account_id : $(this).val()
+				}, function(data) {
+					if (data.status == 1) {
+						$("#balance").val(data.data.balance);
+					}
+				});
+			});
 		});
 	</script>
 

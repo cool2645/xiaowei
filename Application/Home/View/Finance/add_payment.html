@@ -94,23 +94,25 @@
 <block name="js">
 	<script>
 		function save() {
-		window.onbeforeunload=null;
-		if(check_form("form_data")) {
-		sendForm("form_data","{:U('save')}");
+			window.onbeforeunload = null;
+			if (check_form("form_data")) {
+				sendForm("form_data", "{:U('save')}");
+			}
 		}
-		}
+
+
 		$(document).ready(function() {
-		$("#account_id").change(function() {
-		$account_name=$('#account_id option:selected').text();
-		$("#account_name").val($account_name);
-		$.getJSON("{:U('Finance/read_account')}", {
-		account_id:$(this).val()
-		}, function(data) {
-		if(data.status==1) {
-		$("#balance").val(data.data.balance);
-		}
-		});
-		});
+			$("#account_id").change(function() {
+				$account_name = $('#account_id option:selected').text();
+				$("#account_name").val($account_name);
+				$.getJSON("{:U('Finance/read_account')}", {
+					account_id : $(this).val()
+				}, function(data) {
+					if (data.status == 1) {
+						$("#balance").val(data.data.balance);
+					}
+				});
+			});
 		});
 	</script>
 

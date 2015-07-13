@@ -11,19 +11,19 @@
 	display: none;
 }
 .input-daterange {
-	width:260px;
+	width: 260px;
 }
-.input-daterange .input-date{
-	width:120px;
+.input-daterange .input-date {
+	width: 120px;
 }
 .pace .pace-progress {
-  background: #f2f2f2;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  right: 100%;
-  width: 100%;
-  height: 2px;
+	background: #f2f2f2;
+	position: fixed;
+	z-index: 2000;
+	top: 0;
+	right: 100%;
+	width: 100%;
+	height: 2px;
 }
 .nav > li.active {
 	border-left: 4px solid #19aa8d;
@@ -854,8 +854,9 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 	display: block;
 	position: relative;
 	color: #616161;
-	padding: 7px 0 9px 37px;
-	margin: 0;
+	padding: 0px 10px 9px 37px;
+	line-height: 38px;
+	height: 38px;
 	border-top: 1px dotted #e4e4e4;
 }
 .nav-list li.current > a::after {
@@ -1255,14 +1256,14 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 .Flow .ibox {
 	border: 1px solid #ccc;
 }
-.Flow .ibox .ibox-content{
-	padding-top:15px;
-	padding-bottom:15px;
+.Flow .ibox .ibox-content {
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 
-.Flow .ibox .btn{
-	margin-top:10px;
-	margin-bottom:10px;
+.Flow .ibox .btn {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 .Flow .page-header .title {
 	font-size: 22px;
@@ -1971,6 +1972,12 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 }
 
 @media only screen and (max-width: 768px) {
+	.hidden_xs{
+		display:none;
+	}
+	#page-wrapper {
+		padding: 0px;
+	}
 	.body-small .navbar-static-side {
 		display: block;
 		position: static;
@@ -2003,21 +2010,21 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 }
 
 #page-wrapper.print {
-		position:absolute!important;
-		left:0px;
-		right:0px;
-		margin:0;
-		padding:0;
-		border:0px;
+	position: absolute !important;
+	left: 0px;
+	right: 0px;
+	margin: 0;
+	padding: 0;
+	border: 0px;
 }
 
 @media print {
-	body{
-		font-size:62.5%;
+	body {
+		font-size: 62.5%;
 	}
-	.wrapper{
-		margin:0;
-		padding:0;
+	.wrapper {
+		margin: 0;
+		padding: 0;
 	}
 	#sidebar {
 		display: none;
