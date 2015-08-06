@@ -45,6 +45,7 @@ class FileModel extends Model {
 		$setting['exts'] = array_filter(explode(",", get_system_config('UPLOAD_FILE_EXT')), 'upload_filter');
 
 		$Upload = new Upload($setting, $driver, $config);
+		
 		$info = $Upload -> upload($files);
 
 		/* 设置文件保存位置 */

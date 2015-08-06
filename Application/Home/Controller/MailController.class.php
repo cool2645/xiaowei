@@ -469,15 +469,6 @@ class MailController extends HomeController {
 			$connect = $mail -> connect($mail_account['pop3svr'], '995', $mail_account['mail_id'], $mail_account['mail_pwd'], 'INBOX', 'pop3/ssl/novalidate-cert');
 		}
 		$mail_count = $mail -> mail_total_count();
-		$unread_list = $mail -> get_unread_list();
-		dump($unread_list);
-		
-		dump($mail->mail_readed(1));
-		dump($mail->mail_readed(2));
-		
-		$unread_list = $mail -> get_unread_list();
-		dump($unread_list);
-		die;
 		if ($connect) {
 			for ($i = 1; $i <= $mail_count; $i++) {
 				$mail_id = $mail_count - $i + 1;
@@ -516,7 +507,6 @@ class MailController extends HomeController {
 					$model -> folder = 1;
 					$model -> is_del = 0;
 					$str = $mail -> get_attach($mail_id);
-
 					$model -> add_file = $this -> _receive_file($str, $model);
 					$this -> _organize($model);
 					$model -> add();
@@ -567,11 +557,11 @@ class MailController extends HomeController {
 				$file_name = $ar2[2];
 				$tmp_name = $ar2[3];
 
-				$files[$key]['name'] = $file_name;
-				$files[$key]['tmp_name'] = $tmp_name;
-				$files[$key]['size'] = filesize($tmp_name);
-				$files[$key]['is_move'] = true;
-
+				$files[0]['name'] = $file_name;
+				$files[0]['tmp_name'] = $tmp_name;
+				$files[0]['size'] = filesize($tmp_name);
+				$files[0]['is_move'] = true;
+				
 				if (!empty($files)) {
 					$File = D('File');
 					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');

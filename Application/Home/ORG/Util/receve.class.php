@@ -126,9 +126,9 @@ class receiveMail {
 	 * @return int
 	 */
 	public function mail_total_count() {
-		//$check = imap_check($this -> _connect);
-		//$this -> _total_count = $check -> Nmsgs;
-		//return $this -> _total_count;		
+		$check = imap_check($this -> _connect);
+		$this -> _total_count = $check -> Nmsgs;
+		return $this -> _total_count;		
 	}
 	
 	public function get_unread_list(){

@@ -252,10 +252,10 @@ class PublicController extends Controller {
 				$file_name = $ar2[2];
 				$tmp_name = $ar2[3];
 
-				$files[$key]['name'] = $file_name;
-				$files[$key]['tmp_name'] = $tmp_name;
-				$files[$key]['size'] = filesize($tmp_name);
-				$files[$key]['is_move'] = true;
+				$files[0]['name'] = $file_name;
+				$files[0]['tmp_name'] = $tmp_name;
+				$files[0]['size'] = filesize($tmp_name);
+				$files[0]['is_move'] = true;
 				if (!empty($files)) {
 					$File = D('File');
 					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
