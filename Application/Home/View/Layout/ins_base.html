@@ -4,12 +4,14 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{$title|default=get_system_config("SYSTEM_NAME")}</title>
-		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">								
+		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">
+		<link href="__INS__/font-awesome/css/font-awesome.css" rel="stylesheet">
+
 		<link href="__INS__/css/style.css" rel="stylesheet">
 		<link href="__INS__/css/xiaowei.css" rel="stylesheet">
 	</head>
 	<include file="Layout:page_script"/>
-	<body class="{$Think.CONTROLLER_NAME} white-bg">
+	<body class="white-bg">
 		<block name="content"></block>
 
 		<!-- Mainly scripts -->
@@ -20,7 +22,7 @@
 
 		<!-- Custom and plugin javascript -->
 		<script src="__INS__/js/inspinia.js"></script>
-		<script src="__INS__/js/common.js"></script>				
+		<script src="__INS__/js/common.js"></script>
 		<block name="js"></block>
 	</body>
 </html>

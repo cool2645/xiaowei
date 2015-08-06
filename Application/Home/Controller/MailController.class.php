@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 namespace Home\Controller;
 
 class MailController extends HomeController {
@@ -51,7 +51,7 @@ class MailController extends HomeController {
 		$this -> _get_mail_account(get_user_id());
 		$this -> _assign_mail_folder_list();
 
-		$folder_id =$fid;
+		$folder_id = $fid;
 		$mail_system_folder = array('receve', 'inbox', 'outbox', 'darftbox', 'delbox', 'spambox', 'unread', 'all');
 		if (in_array($folder_id, $mail_system_folder)) {
 			$folder = $folder_id;
@@ -180,7 +180,7 @@ class MailController extends HomeController {
 	}
 
 	function folder_manage() {
-		$this -> _user_folder_manage('邮件自定义文件夹',false);
+		$this -> _user_folder_manage('邮件自定义文件夹', false);
 	}
 
 	function upload() {
@@ -194,7 +194,7 @@ class MailController extends HomeController {
 	//--------------------------------------------------------------------
 	//  写邮件
 	//--------------------------------------------------------------------
-	function add() {		
+	function add() {
 		$this -> _get_mail_account();
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
@@ -319,8 +319,8 @@ class MailController extends HomeController {
 				$files = array_filter(explode(';', $add_file));
 				foreach ($files as $file) {
 					$file_id = think_decrypt($file);
-					$vo=M("File")->find($file_id);						
-					$mail -> AddAttachment(__ROOT__ . C('DOWNLOAD_UPLOAD.rootPath') . $vo['savepath'].$vo['savename'],$vo['name']);
+					$vo = M("File") -> find($file_id);
+					$mail -> AddAttachment(__ROOT__ . C('DOWNLOAD_UPLOAD.rootPath') . $vo['savepath'] . $vo['savename'], $vo['name']);
 				}
 			}
 
@@ -402,13 +402,13 @@ class MailController extends HomeController {
 
 		$this -> display();
 	}
-	
-	public function edit($id){
-		$plugin['editor']=true;
-		$plugin['uploader']=true;
-		$this->assign("plugin",$plugin);
-		
-		$this->_edit($id);
+
+	public function edit($id) {
+		$plugin['editor'] = true;
+		$plugin['uploader'] = true;
+		$this -> assign("plugin", $plugin);
+
+		$this -> _edit($id);
 	}
 
 	//--------------------------------------------------------------------
@@ -419,7 +419,8 @@ class MailController extends HomeController {
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
 
-		$type = I('type'); ;
+		$type = I('type');
+		;
 		$this -> assign('type', $type);
 
 		if ($type == "reply") {
@@ -450,7 +451,9 @@ class MailController extends HomeController {
 	//--------------------------------------------------------------------
 	//   接收邮件
 	//--------------------------------------------------------------------
-	public function receve($user_id = null, $background = false) {
+
+	public function receve($user_id = null) {
+		set_time_limit(0);
 		if (empty($user_id)) {
 			$user_id = get_user_id();
 		}
@@ -466,10 +469,20 @@ class MailController extends HomeController {
 			$connect = $mail -> connect($mail_account['pop3svr'], '995', $mail_account['mail_id'], $mail_account['mail_pwd'], 'INBOX', 'pop3/ssl/novalidate-cert');
 		}
 		$mail_count = $mail -> mail_total_count();
+		$unread_list = $mail -> get_unread_list();
+		dump($unread_list);
+		
+		dump($mail->mail_readed(1));
+		dump($mail->mail_readed(2));
+		
+		$unread_list = $mail -> get_unread_list();
+		dump($unread_list);
+		die;
 		if ($connect) {
 			for ($i = 1; $i <= $mail_count; $i++) {
 				$mail_id = $mail_count - $i + 1;
 				$item = $mail -> mail_list($mail_id);
+
 				$where = array();
 				$where['user_id'] = $user_id;
 				if (empty($item[$mail_id])) {
@@ -486,17 +499,17 @@ class MailController extends HomeController {
 					if ($model -> create_time < strtotime(date('y-m-d H:i:s')) - 86400 * 30) {
 						$mail -> close_mail();
 						if ($new > 0) {
-							$push_data['type']='邮件';
-							$push_data['action']='';
-							$push_data['title']='收到'.$new.'封邮件';
-							$push_data['content']='';
-							$push_data['url']=U("Mail/folder?fid=inbox");
-							
-							send_push($push_data,$user_id);
+							$push_data['type'] = '邮件';
+							$push_data['action'] = '';
+							$push_data['title'] = '收到' . $new . '封邮件';
+							$push_data['content'] = '';
+							$push_data['url'] = U("Mail/folder?fid=inbox");
+
+							send_push($push_data, $user_id);
 						}
 						return;
 					}
-					
+
 					$new++;
 					$model -> user_id = $user_id;
 					$model -> read = 0;
@@ -504,37 +517,39 @@ class MailController extends HomeController {
 					$model -> is_del = 0;
 					$str = $mail -> get_attach($mail_id);
 
-					$model -> add_file = $this -> _receive_file($str, $model);					
+					$model -> add_file = $this -> _receive_file($str, $model);
 					$this -> _organize($model);
 					$model -> add();
-					
+
 				} else {
-					if (!$background) {
-						if ($new == 0) {
-							$push_data['type']='邮件';
-							$push_data['action']='';
-							$push_data['title']='没有新邮件';
-							$push_data['content']='';
-							send_push($push_data,$user_id);
-							return;
-						}
+					if ($new == 0) {
+						$push_data['type'] = '邮件';
+						$push_data['action'] = '';
+						$push_data['title'] = '没有新邮件';
+						$push_data['content'] = '';
+						send_push($push_data, $user_id);
+						return;
 					}
 					$mail -> close_mail();
 				}
 			}
 		}
 		$mail -> close_mail();
-		if (!$background) {
-			$push_data['type']='邮件';
-			$push_data['action']='';
-			$push_data['title']='收到'.$new.'封邮件';
-			$push_data['content']='';
-			$push_data['url']=U("Mail/folder?fid=inbox");
-			send_push($push_data,$user_id);
+		if ($new == 0) {
+			$push_data['type'] = '邮件';
+			$push_data['action'] = '';
+			$push_data['title'] = '没有新邮件';
+			$push_data['content'] = '';
+			send_push($push_data, $user_id);
+			return;
+		} else {
+			$push_data['type'] = '邮件';
+			$push_data['action'] = '';
+			$push_data['title'] = '收到' . $new . '封邮件';
+			$push_data['content'] = '';
+			$push_data['url'] = U("Mail/folder?fid=inbox");
+			send_push($push_data, $user_id);
 		}
-		if (!$background) {
-			return;	
-		}		
 	}
 
 	//--------------------------------------------------------------------
@@ -556,7 +571,7 @@ class MailController extends HomeController {
 				$files[$key]['tmp_name'] = $tmp_name;
 				$files[$key]['size'] = filesize($tmp_name);
 				$files[$key]['is_move'] = true;
-								
+
 				if (!empty($files)) {
 					$File = D('File');
 					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
@@ -710,7 +725,7 @@ class MailController extends HomeController {
 	//--------------------------------------------------------------------
 	//  读取邮箱用户数据
 	//--------------------------------------------------------------------
-	private function _get_mail_account($user_id=null) {
+	private function _get_mail_account($user_id = null) {
 		if (empty($user_id)) {
 			$user_id = get_user_id();
 		}

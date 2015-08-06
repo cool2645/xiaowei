@@ -109,9 +109,7 @@
 		winopen("{:U('popup/avatar')}?id="+$("#id").val(),730,500);
 		}
 		function save() {
-		if(check_form("form_data")) {
-		sendForm("form_data","{:U('save')}","{:U('index')}");
-		}
+			sendForm("form_data","{:U('save')}","{:U('index')}");
 		}
 		$(document).ready(function() {
 		set_return_url();

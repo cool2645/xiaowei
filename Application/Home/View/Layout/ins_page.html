@@ -7,7 +7,7 @@
 		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">
 		<link href="__INS__/font-awesome/css/font-awesome.css" rel="stylesheet">
 		<link href="__INS__/css/animate.css" rel="stylesheet">
-	    <link href="__INS__/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+		<link href="__INS__/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 		<link href="__INS__/css/plugins/gritter/jquery.gritter.css" />
 		<include file="Layout:ins_plugin_css"/>
 		<link href="__INS__/css/style.css" rel="stylesheet">
@@ -32,7 +32,8 @@
 			<div class="collapse navbar-collapse" id="navbar-collapse-6">
 				<ul class="nav navbar-nav navbar-right">
 					<foreach name="top_menu" item="top_menu_vo">
-						<a class="nav-app" href="#" url="{:U($top_menu_vo['url'])}" node="{$top_menu_vo.id}" onclick="click_top_menu(this)" ><i class="{$top_menu_vo.icon}"></i>{$top_menu_vo.name}<php>
+						<a class="nav-app" href="#" url="{:U($top_menu_vo['url'])}" node="{$top_menu_vo.id}" onclick="click_top_menu(this)" ><i class="{$top_menu_vo.icon}"></i>{$top_menu_vo.name}
+						<php>
 							if(!empty($badge_count[$top_menu_vo['id']])){
 							$html='';
 							$html='<span class="label label-danger">'.$badge_count[$top_menu_vo['id']].'</span>';
@@ -40,7 +41,8 @@
 							}
 						</php></a>
 					</foreach>
-					<a class="nav-app btn-danger" href="{:U('public/logout')}"><i class="fa fa-sign-out"></i>退出</a></ul>
+					<a class="nav-app btn-danger" href="{:U('public/logout')}"><i class="fa fa-sign-out"></i>退出</a>
+				</ul>
 			</div><!-- /.navbar-collapse -->
 		</nav>
 		<div id="wrapper">
@@ -68,8 +70,8 @@
 						</ul><!-- .breadcrumb -->
 					</div>
 				</div>
-				<div class="wrapper wrapper-content">					
-					<block name="content"></block>					
+				<div class="wrapper wrapper-content">
+					<block name="content"></block>
 				</div>
 			</div>
 		</div>

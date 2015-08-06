@@ -1,6 +1,6 @@
 <extend name="Layout/ins_base" />
 <block name="content">
-	<div class="container">
+	<div class="Public container">
 		<!-- /container -->
 		<div class="row">
 			<div class="col-xs-12 hidden-xs" style="margin-top:120px;"></div>
@@ -65,8 +65,9 @@
 				</p>
 			</div>
 		</div>
+		
 		<!-- 开源版不允许删除版权链接 谢谢支持  -->
-		<div class="row text-right">
+		<div class="row text-right">			
 			版权所有：<a href="http://www.smeoa.com">小微OA</a>
 		</div>
 	</div>
@@ -74,9 +75,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function login() {
-			if (check_form("form_login")) {
-				sendForm("form_login", "{:U('public/check_login')}");
-			}
+			sendForm("form_login", "{:U('public/check_login')}");
 		}
 
 		$(document).ready(function() {

@@ -88,27 +88,22 @@
 		function add() {
 			$("#opmode").val("add");
 			$("#id").val("");
-			if (check_form("form_data")) {
-				sendForm("form_data", "", "__SELF__");
-			}
+			sendForm("form_data", "", "__SELF__");
 		};
 
 		function del() {
 			ui_confirm('真的要删除吗?', function() {
 				$("#opmode").val("del");
-				if (check_form("form_data")) {
-					sendForm("form_data", "", "__SELF__");
-				}
+				sendForm("form_data", "", "__SELF__");
 			});
 		};
+
 		function save() {
 			if ($("#opmode").val() == "") {
 				ui_error("请选择要修改的数据");
 				return false;
 			} else {
-				if (check_form("form_data")) {
-					sendForm("form_data", "", "__SELF__");
-				}
+				sendForm("form_data", "", "__SELF__");
 			}
 		};
 

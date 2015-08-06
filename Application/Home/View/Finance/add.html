@@ -63,9 +63,7 @@
 <script>
 	function save() {
 		window.onbeforeunload=null;
-		if (check_form("form_data")) {
-			sendForm("form_data", "{:U('save')}");
-		}
+		sendForm("form_data", "{:U('save')}");
 	}
 </script>
 

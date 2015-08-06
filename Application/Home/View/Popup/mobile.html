@@ -1,0 +1,112 @@
+<extend name="Layout/ins_base" />
+<block name="content">
+	<div class="page-header clearfix">
+		<h1 class="col-xs-6">选择人员</h1>
+		<div class="col-xs-6 text-right">
+			<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+			<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+		</div>
+	</div>
+	<div>
+		<div class="col-sm-12 sub_left_menu">
+			<div class="row">
+				<div class="col-xs-3">
+					<a onclick="go_back()" class="btn btn-primary"><i class="fa fa-reply"></i></a>
+				</div>
+				<div class="col-xs-6 text-center">
+					<h4 id="dept_name"></h4>
+				</div>
+				<div class="col-xs-3 text-right">
+					已选：<span id="data_count">0</span>
+				</div>
+			</div>
+			<div class="well">
+				<?php echo $menu ?>
+			</div>
+		</div>
+		<select class="hidden" id="data"></select>
+	</div>
+</block>
+<block name="js">
+	<script type="text/javascript">
+		var $return_dept_id;
+
+		function save() {
+			$("#data option").each(function(i) {
+				emp_no = $(this).val();
+				name = jQuery.trim($(this).text());
+				name = name.replace(/<.*>/, '');
+				html_string = conv_inputbox_item(name, emp_no);
+				$("#actor_wrap .address_list", parent.document).append(html_string);
+			});
+			myclose();
+		}
+
+		function go_back() {
+			if ($dept_pid_id != undefined) {
+				$return_dept_id = $dept_pid_id;
+				$("ul.tree_menu li").hide();
+				$("ul.tree_menu li.dept_pid_" + $return_dept_id).show();
+				$dept_name = $("ul.tree_menu li.dept_" + $return_dept_id + "> a").text();
+				$dept_pid_id = $("ul.tree_menu li.dept_" + $return_dept_id).attr('dept_pid_id');
+				$("#dept_name").text($dept_name);
+			}
+		}
+
+		function btn_local_search() {
+			$(".sub_left_menu .tree_menu a").each(function() {
+				$(this).attr("class", "");
+			});
+			sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
+				showdata(data);
+			});
+			return false;
+		}
+
+		function key_local_search() {
+			$(".sub_left_menu .tree_menu a").each(function() {
+				$(this).attr("class", "");
+			});
+			if (event.keyCode == 13) {
+				sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
+					showdata(data);
+				});
+			}
+			return false;
+		}
+
+
+		$(document).ready(function() {
+			$("ul.tree_menu li").hide();
+			$("ul.tree_menu li.level_1").show();
+
+			$("ul.tree_menu li.dept").click(function() {
+				$("ul.tree_menu li").hide();
+				$dept_id = $(this).attr("dept_id");
+				$dept_name = $(this).text();
+				$dept_pid_id = $(this).attr("dept_pid_id");
+				$return_dept_id = $dept_pid_id;
+				$('#dept_name').text($dept_name);
+				$("ul.tree_menu li.dept_pid_" + $dept_id).show();
+			});
+
+			$("ul.tree_menu li.emp").click(function() {
+				if ($("a", this).hasClass('active')) {
+					$("a", this).removeClass('active');
+					$val = $(this).attr('user_id');
+					$("#data  option[value='" + $val + "']").remove();
+					$("#data_count").text($("#data option").length);
+				} else {
+					$("a", this).addClass('active');
+					$text = $(this).text();
+					$val = $(this).attr('user_id');
+					if ($("#data  option[value='" + $val + "']").val() == undefined) {
+						$("<option></option>").val($val).text($text).appendTo("#data");
+						$("#data_count").text($("#data option").length);
+					};
+				}
+			});
+		});
+
+	</script>
+</block>

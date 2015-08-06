@@ -113,11 +113,11 @@
 				<eq name="vo.step" value="40">
 					{:W('UserDefineField/udf_read',array($vo['udf_data'],$flow_type['udf_tpl']))}
 
-				<else/>
+					<else/>
 					{:W('UserDefineField/edit2',array($vo['udf_data']))}
 
 				</eq>
-			<else/>
+				<else/>
 				{:W('UserDefineField/edit2',array($vo['udf_data']))}
 			</notempty>
 			<eq name="flow_type.is_show" value="1">
@@ -203,11 +203,11 @@
 				</div>
 			</div>
 			<notempty name="flow_type.udf_tpl">
-			{:W('UserDefineField/udf_read',array($vo['udf_data'],$flow_type['udf_tpl']))}
-			<else />
-			{:W('UserDefineField/edit2',array($vo['udf_data']))}
+				{:W('UserDefineField/udf_read',array($vo['udf_data'],$flow_type['udf_tpl']))}
+				<else />
+				{:W('UserDefineField/edit2',array($vo['udf_data']))}
 			</notempty>
-			
+
 			<eq name="flow_type.is_show" value="1">
 				<div class="form-group">
 					<div class="col-xs-12">
@@ -351,17 +351,17 @@
 		function approve() {
 			sendForm("form_confirm", "{:U('approve')}", "{:U('read','id='.$vo['id'])}");
 		}
-		
+
 		function refer() {
-			sendForm("form_confirm", "{:U('refer')}","{:U('read','id='.$vo['id'])}");
-		}		
+			sendForm("form_confirm", "{:U('refer')}", "{:U('read','id='.$vo['id'])}");
+		}
 
 		function reject() {
-			sendForm("form_confirm", "{:U('reject')}", "{:U('read','id='.$vo['id'])}");
+			sendForm("form_confirm", "{:U('reject')}", "{:U('read','id='.$vo['id'])}");			
 		}
 
 		function back_to(emp_no) {
-			sendForm("form_confirm", fix_url("{:U('back_to')}?emp_no=" + emp_no), "{:U('read','id='.$vo['id'])}");
+			sendForm("form_confirm", fix_url("{:U('back_to')}?emp_no=" + emp_no), "{:U('read','id='.$vo['id'])}");			
 		}
 
 		function save() {
@@ -388,9 +388,7 @@
 				ui_error('请选择审批流程');
 				return false;
 			}
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}");
-			}
+			sendForm("form_data", "{:U('save')}");
 		}
 
 		function popup_confirm() {

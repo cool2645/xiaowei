@@ -140,34 +140,6 @@
 				$(this).find("option:selected").remove();
 				$("#rc_count").text("(" + $("#rc select option").length + ")");
 			});
-
-			$("#addr_list").on("mouseover", function() {
-				$("#addr_list label").draggable({
-					appendTo : "body",
-					helper : "clone"
-				});
-			});
-
-			$("#rc select").droppable({
-				activeClass : "ui-state-default",
-				hoverClass : "ui-state-hover",
-				accept : ":not(.ui-sortable-helper)",
-				drop : function(event, ui) {
-					$text = ui.draggable.text();
-					$val = ui.draggable.find("input").val();
-					if ($("#rc select option[value='" + $val + "']").val() == undefined) {
-						$option = $("<option></option>");
-						$option.val($val);
-						$option.text($text).appendTo(this);
-						$("#rc_count").text("(" + $("#rc select option").length + ")");
-					};
-				},
-			}).sortable({
-				items : "option:not(.placeholder)",
-				sort : function() {
-					$(this).removeClass("ui-state-default");
-				}
-			});
 		});
 		//最终确认
 

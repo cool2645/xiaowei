@@ -25,12 +25,6 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
-		function sav2e() {
-			window.onbeforeunload = null;
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('reply')}");
-			}
-		}
 		function save() {
 			window.onbeforeunload = null;
 			if (check_form("form_data")) {

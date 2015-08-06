@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 
 namespace Home\Controller;
 
@@ -34,6 +34,7 @@ class StaffController extends HomeController {
 		$menu = array();
 		$menu = $node -> field('id,pid,name') -> where("is_del=0") -> order('sort asc') -> select();
 		$tree = list_to_tree($menu);
+		$list = tree_to_list($tree);
 		$this -> assign('menu', popup_tree_menu($tree));
 		$this -> display();
 	}
@@ -52,16 +53,17 @@ class StaffController extends HomeController {
 		$keyword = I('keyword');
 		if (!empty($keyword)) {
 			$where['name'] = array('like', "%$keyword%");
-			$where['emp_no'] = array('like',"%$keyword%");
-			$where['_logic']="OR";
+			$where['emp_no'] = array('like', "%$keyword%");
+			$where['_logic'] = "OR";
 		}
 
 		$model = D("UserView");
-		$data = $model -> where($where)-> order('emp_no asc') -> select();
+		$data = $model -> where($where) -> order('emp_no asc') -> select();
 		//echo($model->getLastSql());
 		$return['data'] = $data;
 		$return['status'] = 1;
 		$this -> ajaxReturn($return);
 	}
+
 }
 ?>

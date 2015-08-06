@@ -101,11 +101,8 @@
 			$("#actor_wrap span.address_list span").each(function() {
 				$("#actor").val($("#actor").val() + $(this).text().replace(';', '') + '|' + $(this).attr("title") + ";");
 			});
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}");
-			}
+			sendForm("form_data", "{:U('save')}");
 		}
-
 
 		$(document).ready(function() {
 			$(document).on("click", ".inputbox .address_list a.del", function() {

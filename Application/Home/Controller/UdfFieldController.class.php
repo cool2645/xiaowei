@@ -17,11 +17,12 @@ class UdfFieldController extends HomeController {
 	function add($controller) {
 		$this -> assign('controller', $controller);
 		$row_type = I('row_type');
-		$this -> assign('row_type',$row_type);
+		$this -> assign('row_type', $row_type);
 		$this -> display();
 	}
 
 	function index() {
+	
 		$row_type = I('row_type');
 		if (IS_POST) {
 			$opmode = I("opmode");

@@ -103,10 +103,7 @@
 		}
 
 		function save() {
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}");
-				return false;
-			}
+			sendForm("form_data", "{:U('save')}");
 		}
 
 		function showdata(result) {

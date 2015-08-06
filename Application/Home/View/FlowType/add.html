@@ -197,9 +197,7 @@
 			$("#refer_name").val("");
 			$("#refer_name").val($("#refer_wrap span.address_list").html());
 
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "{:U('index')}");
-			}
+			sendForm("form_data", "{:U('save')}", "{:U('index')}");
 		};
 
 		function popup_flow() {

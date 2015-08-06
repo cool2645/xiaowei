@@ -32,7 +32,7 @@ class UserDefineControlWidget extends Controller {
 				$new[$tmp[0]] = $tmp[1];
 			}
 			return $new;
-		} 
+		}
 		
 		$new = $val;
 		

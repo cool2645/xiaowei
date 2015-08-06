@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 
 namespace Home\Controller;
 
@@ -21,7 +21,7 @@ class IndexController extends HomeController {
 
 		cookie("current_node", null);
 		cookie("top_menu", null);
-		 
+
 		$config = D("UserConfig") -> get_config();
 		$this -> assign("home_sort", $config['home_sort']);
 
@@ -30,7 +30,116 @@ class IndexController extends HomeController {
 		$this -> _schedule_list();
 		$this -> _info_list();
 
+		//$this -> _udf_sales_list();
+		//$this -> _udf_renew_list();
+
 		$this -> display();
+	}
+
+	public function _udf_sales_list() {
+
+		$node_model = M("UdfShop");
+		$node_list = $node_model -> order('sort asc') -> select();
+
+		$node_list = tree_to_list(list_to_tree($node_list));
+
+		$start_date = date("Y-m-d", mktime(0, 0, 0, date("m"), 1, date("Y")));
+
+		$end_date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+
+		$target_list = D('UdfSales') -> get_target($start_date, $end_date);
+
+		$present_list = D('UdfSales') -> get_sumary($start_date, $end_date);
+
+		foreach ($node_list as $key => $val) {
+
+			$shop_no = rotate(tree_to_list(list_to_tree($node_list, $val['id'])));
+			if (!empty($shop_no)) {
+				$shop_no = $val['shop_no'] . "," . implode(',', $shop_no['shop_no']);
+			} else {
+				$shop_no = $val['shop_no'];
+			}
+
+			$t = date('t');
+			$d = date('d') - 1;
+			$target_rate = $d / $t;
+
+			$target = $this -> _get_filter_data($target_list, $shop_no);
+			$present_month = $this -> _get_filter_data($present_list, $shop_no);
+
+			$node_list[$key]['A1'] = round($present_month / $target, 4) * 100;
+			$node_list[$key]['A2'] = $target_rate - $present_month / $target;
+		}
+
+		foreach ($node_list as $key => $val) {
+			if ($val['level'] == 0) {
+				$new[] = $val;
+			}
+		}
+
+		$this -> assign('sales_node_list', $new);
+
+		$target_sum = array_sum($target_list);
+
+		$present_sum = array_sum($present_list);
+
+		$sum['A1'] = round($present_sum / $target_sum, 4) * 100;
+		$sum['A2'] = $target_rate - $present_sum / $target_sum;
+
+		$this -> assign('sales_sum', $sum);
+	}
+
+	public function _udf_renew_list() {
+		
+		$node_model = M("UdfShop");
+		$node_list = $node_model -> order('sort asc') -> select();
+
+		$node_list = tree_to_list(list_to_tree($node_list));
+
+		$start_date = date("Y-m-d", mktime(0, 0, 0, date("m"), 1, date("Y")));
+
+		$end_date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+
+		$target_list = D('UdfRenew') -> get_target($start_date, $end_date);
+		
+		$present_list = D('UdfRenew') -> get_sumary($start_date, $end_date);
+		
+		foreach ($node_list as $key => $val) {
+
+			$shop_no = rotate(tree_to_list(list_to_tree($node_list, $val['id'])));
+			if (!empty($shop_no)) {
+				$shop_no = $val['shop_no'] . "," . implode(',', $shop_no['shop_no']);
+			} else {
+				$shop_no = $val['shop_no'];
+			}
+
+			$t = date('t');
+			$d = date('d') - 1;
+			$target_rate = $d / $t;
+
+			$target = $this -> _get_filter_data($target_list, $shop_no);
+			$present_month = $this -> _get_filter_data($present_list, $shop_no);
+
+			$node_list[$key]['A1'] = round($present_month / $target, 4) * 100;
+			$node_list[$key]['A2'] = $target_rate - $present_month / $target;
+		}
+
+		foreach ($node_list as $key => $val) {
+			if ($val['level'] == 0) {
+				$new[] = $val;
+			}
+		}
+
+		$this -> assign('renew_node_list', $new);
+
+		$target_sum = array_sum($target_list);
+
+		$present_sum = array_sum($present_list);
+
+		$sum['A1'] = round($present_sum / $target_sum, 4) * 100;
+		$sum['A2'] = $target_rate - $present_sum / $target_sum;
+
+		$this -> assign('renew_sum', $sum);
 	}
 
 	public function set_sort() {
@@ -90,7 +199,7 @@ class IndexController extends HomeController {
 	protected function _info_list() {
 		$user_id = get_user_id();
 		$dept_id = get_dept_id();
-		
+
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
 		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id', true);
@@ -132,5 +241,18 @@ class IndexController extends HomeController {
 		$todo_list = M("Todo") -> where($where) -> order('priority desc,sort asc') -> limit(8) -> select();
 		$this -> assign("todo_list", $todo_list);
 	}
+
+	private function _get_filter_data($data, $shop_no) {
+		$shop_no = array_filter(explode(",", $shop_no));
+		$res = 0;
+
+		foreach ($data as $key => $val) {
+			if (in_array($key, $shop_no)) {
+				$res += $val;
+			}
+		}
+		return $res;
+	}
+
 }
 ?>

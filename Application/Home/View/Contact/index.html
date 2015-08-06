@@ -187,11 +187,10 @@
 		}
 
 		function apply() {
-
 			if ($("#form_data .ul_table input:checked").length == 0) {
 				ui_error("请选择数据");
 				return false;
-			}
+			}			
 			sendForm("form_data", "{:U('set_tag')}", "{:U('index')}");
 		}
 

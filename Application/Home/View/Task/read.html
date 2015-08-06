@@ -67,10 +67,10 @@
 
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="content">任务说明：</label>
-			<div class="col-xs-10">				
-					<div class="task_content">
-						{$vo.content}
-					</div>				
+			<div class="col-xs-10">
+				<div class="task_content form-control-static">
+					{$vo.content}
+				</div>
 			</div>
 		</div>
 
@@ -100,12 +100,12 @@
 					<span class="col-9 text-center">&nbsp;{$item.transactor_name}</span>
 					<span class="col-15 text-center">&nbsp;{$item.plan_time|substr=0,16}</span>
 					<span class="col-15 text-center"> &nbsp;
-						<eq name='item.status' value='2'>
+						<eq name='item.status' value='10'>
 							{$item.finish_rate|finish_rate}
 						</eq>
-						<gt name='item.status' value='2'>
+						<egt name='item.status' value='20'>
 							{$item.finish_time|substr=0,16}
-						</gt></span>
+						</egt></span>
 					<span class="auto">
 						<div style="overflow:hidden">
 							{$item.feed_back}
@@ -121,13 +121,13 @@
 				<div class="ibox-tools no-border">
 					<ul class="nav nav-tabs" id="myTab">
 						<li class="active">
-							<a href="#working" data-toggle="tab">进行中</a>
+							<a href="#working" data-toggle="tab">执行情况</a>
 						</li>
 						<li>
-							<a href="#finish" data-toggle="tab">已完成</a>
+							<a href="#forword" data-toggle="tab">转交任务</a>
 						</li>
 						<li>
-							<a href="#forword" data-toggle="tab">转交</a>
+							<a href="#reject" data-toggle="tab">拒绝接受</a>
 						</li>
 					</ul>
 				</div>
@@ -136,7 +136,7 @@
 				<div class="tab-content">
 					<div class="tab-pane active" id="working">
 						<form method='post' id="form_data_working" name="form_data_working" >
-							<input type="hidden" name="status" value="2">
+							<input type="hidden" name="status" value="10">
 							<input type="hidden" name="id" value="{$task_working.id}">
 							<div class="form-group col-sm-6">
 								<label class="col-sm-4 control-label" >计划完成时间：</label>
@@ -166,26 +166,6 @@
 							</div>
 						</form>
 					</div>
-
-					<div class="tab-pane" id="finish">
-						<form method='post' id="form_data_finish" name="form_data_finish" >
-							<input type="hidden" name="status" value="3">
-							<input type="hidden" name="id" value="{$task_working.id}">
-							<div class="form-group col-sm-12">
-								<label class="col-sm-2 control-label" >任务完成时间：</label>
-								<div class="col-sm-10 ">
-									<input class="input-date-time form-control" name="finish_time" id="finish_time" value="{$task_working.finish_time|substr=0,16}" check="require" msg="请输入实际完成时间" readonly="readonly">
-								</div>
-							</div>
-							<div class="form-group panel-body">
-								<label class="col-sm-2 control-label" >执行内容：</label>
-								<div class="col-sm-10">
-									<textarea id="feed_back" name="feed_back" class="col-xs-12 simple" style="height:120px" >{$task_working.feed_back}</textarea>
-								</div>
-							</div>
-						</form>
-					</div>
-
 					<div class="tab-pane" id="forword">
 						<form method='post' id="form_data_forword" name="form_data_forword" >
 							<input type="hidden" name="id" value="{$task_working.id}">
@@ -217,9 +197,27 @@
 							</div>
 						</form>
 					</div>
+					<div class="tab-pane" id="reject">
+						<form method='post' id="form_data_reject" name="form_data_reject" >
+							<input type="hidden" name="status" value="22">
+							<input type="hidden" name="id" value="{$task_working.id}">
+							<div class="form-group col-sm-12">
+								<label class="col-sm-2 control-label" >任务完成时间：</label>
+								<div class="col-sm-10 ">
+									<input class="input-date-time form-control" name="finish_time" id="finish_time" value="{$task_working.finish_time|substr=0,16}" check="require" msg="请输入实际完成时间" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group panel-body">
+								<label class="col-sm-2 control-label" >执行内容：</label>
+								<div class="col-sm-10">
+									<textarea id="feed_back" name="feed_back" class="col-xs-12 simple" style="height:120px" >{$task_working.feed_back}</textarea>
+								</div>
+							</div>
+						</form>
+					</div>
 				</div>
-				<div class="widget-toolbox padding-8 clearfix">
-					<div class="pull-left">
+				<div class="widget-toolbox clearfix">
+					<div class="pull-left col-sm-8 col-sm-offset-2">
 						<a onclick="save_log();" class="btn btn-sm btn-primary col-6">提交</a>
 						<a onclick="go_return_url();" class="btn btn-sm btn-default">取消</a>
 					</div>
@@ -258,10 +256,6 @@
 			});
 		}
 
-		function reject() {
-			winopen("{:U('reject','task_id='.$vo['id'])}", 730, 540);
-		}
-
 		function save_log() {
 			$status_name = $(".task_todo .tab-pane.active").attr('id');
 			if ($status_name == "forword") {
@@ -275,6 +269,7 @@
 					});
 				}
 			}
+
 			$form_name = "form_data_" + $status_name;
 			var vars = $("#" + $form_name).serialize();
 			if (check_form($form_name)) {
@@ -327,7 +322,7 @@
 			});
 
 			$("#basic_slider").noUiSlider({
-				start : {$task_working.finish_rate|default=0},
+				start : parseInt('{$task_working.finish_rate|default=0}'),
 				step : 1,
 				behaviour : 'tap',
 				connect : 'upper',
@@ -338,7 +333,7 @@
 			});
 			$("#basic_slider").on('slide', function() {
 				$("#finish_rate").val($(this).val());
-				$("div.slider_box .right").text(Math.abs($(this).val())+ "%");
+				$("div.slider_box .right").text(Math.abs($(this).val()) + "%");
 			});
 
 			set_val('status', '{$task_working.finish_rate}');

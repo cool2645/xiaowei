@@ -126,9 +126,7 @@
 				return false;
 			}
 			$("#step").val(step);
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}","{:U('index')}");
-			}
+			sendForm("form_data", "{:U('save')}","{:U('index')}");
 		}
 
 		function popup_confirm() {

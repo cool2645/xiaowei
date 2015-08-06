@@ -42,7 +42,7 @@
 				<div class="checkbox col-sm-2">
 					<label>
 						<input name="is_public" class="ace is_public" type="checkbox" value="1">
-						<span class="lbl">是否公开</span> </label>
+						<span class="lbl">信息公开</span> </label>
 				</div>
 				<div class="checkbox col-sm-2">
 					<label>
@@ -90,11 +90,8 @@
 				$("#scope_user_id").val($("#scope_user_id").val() + $(this).attr("data") + ",");
 			});
 
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}");
-			}
+			sendForm("form_data", "{:U('save')}");
 		}
-
 
 		$(document).on("click", ".inputbox .address_list a.del", function() {
 			$(this).parent().parent().remove();

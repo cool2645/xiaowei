@@ -153,6 +153,16 @@ class PopupController extends HomeController {
 		return;
 	}
 
+	function mobile() {
+		$node = D("Dept");
+		$menu = array();
+		$menu = $node -> field('id,pid,name') -> where("is_del=0") -> order('sort asc') -> select();
+		$tree = list_to_tree($menu);
+		$list = tree_to_list($tree);
+		$this -> assign('menu', popup_tree_menu2($tree));
+		$this -> display('mobile');
+	}
+	
 	function auth() {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
@@ -208,7 +218,11 @@ class PopupController extends HomeController {
 	}
 
 	function task() {
-		$this -> actor();
+		if(is_weixin()){
+			$this->mobile();			
+		}else{
+			$this -> actor();
+		}		
 	}
 
 	function work_order() {

@@ -84,17 +84,14 @@
 <block name="js">
 	<script>
 		function save() {
-		window.onbeforeunload=null;
-		if(check_form("form_data")) {
-		sendForm("form_data","{:U('save_transfer')}");
-		}
+			sendForm("form_data","{:U('save_transfer')}");
 		}
 		$(document).ready(function() {
-		$("#account_id_payment").change(function() {
-		$account_name_payment=$('#account_id_payment option:selected').text();
-		$("#account_name_payment").val($account_name_payment);
-		$.getJSON("{:U('Finance/read_account')}", {
-		account_id:$(this).val()
+			$("#account_id_payment").change(function() {
+			$account_name_payment=$('#account_id_payment option:selected').text();
+			$("#account_name_payment").val($account_name_payment);
+			$.getJSON("{:U('Finance/read_account')}", {
+			account_id:$(this).val()
 		}, function(data) {
 		if(data.status==1) {
 		$("#balance_payment").val(data.data.balance);

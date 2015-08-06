@@ -19,8 +19,8 @@ class SidebarWidget extends Controller {
 		$level++;
 		$html = "";
 		if (is_array($tree)) {
-			if ($level > 1) {				
-				$html = "<ul class='submenu collapse'>\r\n";					
+			if ($level > 1) {
+				$html = "<ul class='submenu collapse'>\r\n";
 			} else {
 				$html = "<ul id='side-menu' class='nav nav-list'>\r\n";
 			}
@@ -28,7 +28,13 @@ class SidebarWidget extends Controller {
 				if (isset($val["name"])) {
 					$title = $val["name"];
 					if (!empty($val["url"])) {
-						$url = U($val['url']);
+						if (strpos($val['url'], "##") !== false) {
+							$url = "#";
+						} else if (strpos($val['url'], 'http') !== false) {
+							$url = $val['url'];
+						} else {
+							$url = U($val['url']);
+						}
 					} else {
 						$url = "#";
 					}

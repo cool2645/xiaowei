@@ -10,7 +10,7 @@ class PublicController extends Controller {
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
 	public function login() {
-		
+
 		$this -> assign("is_verify_code", get_system_config("IS_VERIFY_CODE"));
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
@@ -41,7 +41,7 @@ class PublicController extends Controller {
 		} elseif (empty($_POST['password'])) {
 			$this -> error('密码必须！');
 		}
-		
+
 		if ($_POST['emp_no'] == 'admin') {
 			$is_admin = true;
 			session(C('ADMIN_AUTH_KEY'), true);
@@ -134,7 +134,6 @@ class PublicController extends Controller {
 				$this -> error('注册失败!');
 				//失败提示
 			}
-
 		}
 	}
 
@@ -147,36 +146,206 @@ class PublicController extends Controller {
 		$verify -> entry(1);
 	}
 
-	public function recevie_mail(){
-		
-		//linux 
-		//echo 'wget -o /dev/null  "http://192.168.1.231/index.php?m=&c=public&a=recevie_mail"'>/root/auto_recevie_mail.sh
-		//echo '*/10 * * * * sh /root/auto_recevie_mail.sh'>> //var/spool/cron/root
-		
-		//windows
-		//server_url="http://xiaowei.localhost/index.php?m=&c=public&a=recevie_mail"
-		//set ie=createobject("internetexplorer.application") 
-		//ie.visible=0 
-		//ie.navigate server_url
-		//wscript.sleep 10*1000 '延迟10秒
-		//ie.quit
-		 
-		$client_ip = $_SERVER["REMOTE_ADDR"]; 
+	public function recevie_mail() {
+		$client_ip = $_SERVER["REMOTE_ADDR"];
 		$server_ip = gethostbyname(null);
-	 	session(C('USER_AUTH_KEY'),true);
 		if ($client_ip != $server_ip) {
-			session_write_close();
 			set_time_limit(0);
 			$where['is_del'] = array('eq', 0);
 			$mail_account_list = D("MailAccountView") -> where($where) -> select();
-			foreach ($mail_account_list as $account) {				
-				R("Mail/receve", array($account['id'], true));				
+			foreach ($mail_account_list as $account) {
+				$this -> receve($account['id']);
 				sleep(1);
 			}
 			sleep(1);
 		}
-		session_start();
-		session(null);
-		die;
+		die ;
 	}
+
+	//--------------------------------------------------------------------
+	//   接收邮件
+	//--------------------------------------------------------------------
+	private function receve($user_id) {
+		$mail_account = $this -> _get_mail_account($user_id);
+
+		$new = 0;
+		import("@.ORG.Util.receve");
+		$mail_list = array();
+		$mail = new \receiveMail();
+		$connect = $mail -> connect($mail_account['pop3svr'], '110', $mail_account['mail_id'], $mail_account['mail_pwd'], 'INBOX', 'pop3/novalidate-cert');
+		if (!$connect) {
+			$connect = $mail -> connect($mail_account['pop3svr'], '995', $mail_account['mail_id'], $mail_account['mail_pwd'], 'INBOX', 'pop3/ssl/novalidate-cert');
+		}
+		$mail_count = $mail -> mail_total_count();
+		if ($connect) {
+			for ($i = 1; $i <= $mail_count; $i++) {
+				$mail_id = $mail_count - $i + 1;
+				$item = $mail -> mail_list($mail_id);
+				$where = array();
+				$where['user_id'] = $user_id;
+				if (empty($item[$mail_id])) {
+					$temp_mail_header = $mail -> mail_header($mail_id);
+					$where['mid'] = $temp_mail_header['mid'];
+				} else {
+					$where['mid'] = $item[$mail_id];
+				}
+				$count = M('Mail') -> where($where) -> count();
+
+				if ($count == 0) {
+					$model = M("Mail");
+					$model -> create($mail -> mail_header($mail_id));
+					if ($model -> create_time < strtotime(date('y-m-d H:i:s')) - 86400 * 30) {
+						$mail -> close_mail();
+						if ($new > 0) {
+							$push_data['type'] = '邮件';
+							$push_data['action'] = '';
+							$push_data['title'] = '收到' . $new . '封邮件';
+							$push_data['content'] = '';
+							$push_data['url'] = U("Mail/folder?fid=inbox");
+
+							send_push($push_data, $user_id);
+						}
+						return;
+					}
+
+					$new++;
+					$model -> user_id = $user_id;
+					$model -> read = 0;
+					$model -> folder = 1;
+					$model -> is_del = 0;
+					$str = $mail -> get_attach($mail_id);
+
+					$model -> add_file = $this -> _receive_file($str, $model);
+					$this -> _organize($model,$user_id);
+					$model -> add();
+
+				} else {
+					$mail -> close_mail();
+				}
+			}
+			if ($new > 0) {
+				$push_data['type'] = '邮件';
+				$push_data['action'] = '';
+				$push_data['title'] = '收到' . $new . '封邮件';
+				$push_data['content'] = '';
+				$push_data['url'] = U("Mail/folder?fid=inbox");
+
+				send_push($push_data, $user_id);
+			}
+		}
+		$mail -> close_mail();
+	}
+
+	//--------------------------------------------------------------------
+	//   接收邮件附件
+	//--------------------------------------------------------------------
+	private function _receive_file($str, &$model) {
+
+		$ar = array_filter(explode("?", $str));
+		dump($ar);
+		$files = array();
+		if (!empty($ar)) {
+			foreach ($ar as $key => $value) {
+				$ar2 = explode("|", $value);
+				$cid = $ar2[0];
+				$inline = $ar2[1];
+				$file_name = $ar2[2];
+				$tmp_name = $ar2[3];
+
+				$files[$key]['name'] = $file_name;
+				$files[$key]['tmp_name'] = $tmp_name;
+				$files[$key]['size'] = filesize($tmp_name);
+				$files[$key]['is_move'] = true;
+				if (!empty($files)) {
+					$File = D('File');
+					$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+					$info = $File -> upload($files, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
+					if ($inline == "INLINE") {
+						$model -> content = str_replace("cid:" . $cid, $info[0]['path'], $model -> content);
+					} else {
+						$add_file = $add_file . think_encrypt($info[0]['id']) . ';';
+					}
+				}
+			}
+		}
+		return $add_file;
+	}
+
+	private function _organize(&$model,$user_id) {
+		$where['user_id'] = array('eq',$user_id);
+		$where['is_del'] = array('eq',0);
+		$list = M("MailOrganize") -> where($where) -> order('sort') -> select();
+
+		foreach ($list as $val) {
+			//包含
+
+			if (($val['sender_check'] == 1) && ($val['sender_option'] == 1) && (strpos($model -> from, $val['sender_key']) !== false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+			//不包含
+			if (($val['sender_check'] == 1) && ($val['sender_option'] == 0) && (strpos($model -> from, $val['sender_key']) == false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+
+			//包含
+			if (($val['domain_check'] == 1) && ($val['domain_option'] == 1) && (strpos($model -> from, $val['domain_key']) !== false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+
+			//不包含
+			if (($val['domain_check'] == 1) && ($val['domain_option'] == 0) && (strpos($model -> from, $val['domain_key']) == false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+
+			//包含
+			if (($val['recever_check'] == 1) && ($val['recever_option'] == 1) && (strpos($model -> to, $val['recever_key']) !== false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+			//不包含
+			if (($val['recever_check'] == 1) && ($val['recever_option'] == 0) && (strpos($model -> to, $val['recever_key']) == false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+
+			//包含
+			if (($val['title_check'] == 1) && ($val['title_option'] == 1) && (strpos($model -> name, $val['title_key']) !== false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+			//不包含
+			if (($val['title_check'] == 1) && ($val['title_option'] == 0) && (strpos($model -> name, $val['title_key']) == false)) {
+				$model -> folder = $val['to'];
+				return;
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------
+	//  读取邮箱用户数据
+	//--------------------------------------------------------------------
+	private function _get_mail_account($user_id = null) {
+		if (empty($user_id)) {
+			$user_id = get_user_id();
+		}
+		$model = M('MailAccount');
+		$list = $model -> field('mail_name,email,pop3svr,smtpsvr,mail_id,mail_pwd') -> find($user_id);
+		if (empty($list['mail_name']) || empty($list['email']) || empty($list['pop3svr']) || empty($list['smtpsvr']) || empty($list['mail_id']) || empty($list['mail_pwd'])) {
+			$this -> assign('jumpUrl', U('MailAccount/index'));
+			cookie('current_node', null);
+			$this -> error("请设置邮箱帐号");
+			die ;
+		} else {
+			return $list;
+		}
+	}
+
+	function test() {
+		echo 'yyyyy';
+	}
+
 }

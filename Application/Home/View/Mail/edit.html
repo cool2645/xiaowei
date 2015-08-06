@@ -212,12 +212,10 @@
 				$("#recever letter").focus();
 				return false;
 			}
-			if (check_form("form_send")) {
-				if (flag) {
-					sendForm("form_send", "{:U('send')}");
-				} else {
-					sendForm("form_send", "{:U('save_darft')}");
-				}
+			if (flag) {
+				sendForm("form_send", "{:U('send')}");
+			} else {
+				sendForm("form_send", "{:U('save_darft')}");
 			}
 		}
 

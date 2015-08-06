@@ -83,9 +83,7 @@
 		}
 
 		function save() {
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "__SELF__");
-			}
+			sendForm("form_data", "{:U('save')}", "__SELF__");
 		}
 
 		function showdata(result) {

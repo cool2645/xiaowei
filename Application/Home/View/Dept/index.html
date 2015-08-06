@@ -102,9 +102,7 @@
 		};
 
 		function save() {
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('save')}", "{:U('index')}");
-			}
+			sendForm("form_data", "{:U('save')}", "{:U('index')}");
 		}
 
 		function del() {

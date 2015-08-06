@@ -64,10 +64,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-			window.onbeforeunload = null;
-			if (check_form("form_data")) {
-				sendForm("form_data", '{:U("reply")}');
-			}
+			sendForm("form_data", '{:U("reply")}');
 		}
 	</script>
 </block>

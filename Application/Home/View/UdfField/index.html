@@ -139,11 +139,6 @@
 		});
 
 		function add() {
-			// $("#opmode").val("add");
-			// $("#id").val("");
-			// if (check_form("form_data")) {
-				// sendForm("form_data", "", "__SELF__");
-			// }
 			winopen("{:U('UdfField/add',array('controller'=>$controller,'row_type'=>$row_type))}",704,570);
 		};
 
@@ -166,9 +161,7 @@
 				ui_error("请选择要修改的数据");
 				return false;
 			} else {
-				if (check_form("form_data")) {
-					sendForm("form_data", "", "__SELF__");
-				}
+				sendForm("form_data", "", "__SELF__");
 			}
 		};
 
@@ -181,7 +174,6 @@
 
 		$(document).ready(function() {
 			uploader.init();
-			udf_field.init();			
 			$(".sub_left_menu .tree_menu  a").click(function() {
 				$(".sub_left_menu .tree_menu  a").removeClass("active");
 				$(this).addClass("active");

@@ -59,14 +59,13 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-		if(check_form("form_data")) {
-		sendForm("form_data","{:U('save')}");
-		}
+			sendForm("form_data","{:U('save')}");
 		};
+
 		$(document).ready(function() {
-		set_return_url();
-		set_val('push_web',"{$config.push_web}");
-		set_val('push_wechat',"{$config.push_wechat}");
+			set_return_url();
+			set_val('push_web',"{$config.push_web}");
+			set_val('push_wechat',"{$config.push_wechat}");
 		});
 	</script>
 </block>

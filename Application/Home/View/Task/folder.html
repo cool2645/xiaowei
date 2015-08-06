@@ -51,16 +51,9 @@
 				<ul class="nav nav-pills">
 					<li <eq name="fid" value="all">class="active"</eq>>
 						<a href="{:U('folder','fid=all')}">所有</a>
-					</li>
-
-					<li <eq name="fid" value="todo">class="active"</eq>>
-						<a href="{:U('folder','fid=todo')}">等我接受
-						<notempty name="todo_task_count">
-							<span class="badge badge-pink">{$todo_task_count}</span>
-						</notempty></a>
-					</li>				
+					</li>		
 					<li <eq name="fid" value="dept">class="active"</eq>>
-						<a href="{:U('folder','fid=dept')}">等我部门接受
+						<a href="{:U('folder','fid=dept')}">部门任务
 						<notempty name="dept_task_count">
 							<span class="badge badge-pink">{$dept_task_count}</span>
 						</notempty></a>
@@ -127,7 +120,7 @@
 							<span class="col-12">{$vo.expected_time|substr=0,16}&nbsp;</span>
 							<span class="col-6">{$vo.status|task_status}&nbsp;</span>
 							<span class="col-6 text-center">
-								<if condition="($vo.status lt 3) and ($vo.user_id eq $user_id)">
+								<if condition="($vo.status lt 30) and ($vo.user_id eq $user_id)">
 									<a href="{:U('edit','id='.$vo['id'])}">修改</a>&nbsp;<a href="{:U('del','id='.$vo['id'])}">删除</a>
 								</if></span>
 						</div>

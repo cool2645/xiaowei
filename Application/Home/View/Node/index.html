@@ -121,9 +121,7 @@
 		}
 
 		function save() {
-			if (check_form("form_data")) {
-				sendForm("form_data", "{:U('node/save')}", fix_url("{:U('node/index')}?eq_pid=" + $("#eq_pid").val()));
-			}
+			sendForm("form_data", "{:U('node/save')}", fix_url("{:U('node/index')}?eq_pid=" + $("#eq_pid").val()));
 		}
 
 		function select_pid() {

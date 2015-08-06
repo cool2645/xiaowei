@@ -23,20 +23,6 @@ class  UserModel extends CommonModel {
 		array('repassword','require','确认密码必须'),
 		);
 
-	public $_auto		=	array(
-		array('password','pwdHash',self::MODEL_BOTH,'callback'),
-		array('create_time','time',self::MODEL_INSERT,'function'),
-		array('update_time','time',self::MODEL_UPDATE,'function'),
-		);
-
-	protected function pwdHash() {
-		if(isset($_POST['password'])) {
-			return pwdHash($_POST['password']);
-		}else{
-			return false;
-		}
-	}
-
 	function get_user_list($keyword='')
 	{		
 		$sql= " SELECT user .* , dept.name AS dept_name, position.name AS position_name";

@@ -78,7 +78,8 @@ class UserController extends HomeController {
 		}
 		$User = M("User");
 		// 检测用户名是否冲突
-		$name = I('emp_no'); ;
+		$name = I('emp_no');
+		;
 		$result = $User -> getByAccount($name);
 		if ($result) {
 			$this -> error('该编码已经存在！');
@@ -101,17 +102,16 @@ class UserController extends HomeController {
 			$emp_no = $model -> emp_no;
 			$name = $model -> name;
 			$mobile_tel = $model -> mobile_tel;
-			$model -> open_id = $model -> emp_no;
-			$model -> westatus = 1;
 			if ($result = $model -> add()) {
 				$data['id'] = $result;
 				M("UserConfig") -> add($data);
-
-				if (!empty($mobile_tel)) {
-					import("Weixin.ORG.Util.Weixin");
-					$weixin = new \Weixin();
-					$mobile_tel = trim($mobile_tel, '+-');
-					$weixin -> add_user($emp_no, $name, $mobile_tel);
+				if (get_system_config('IS_LICENSED')) {
+					if (!empty($mobile_tel)) {
+						import("Weixin.ORG.Util.Weixin");
+						$weixin = new \Weixin();
+						$mobile_tel = trim($mobile_tel, '+-');
+						$weixin -> add_user($emp_no, $name, $mobile_tel);
+					}
 				}
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('用户添加成功！');
@@ -133,13 +133,16 @@ class UserController extends HomeController {
 		$mobile_tel = $model -> mobile_tel;
 		$list = $model -> save();
 		if (false !== $list) {
-			//成功提示
-			if (!empty($mobile_tel)) {
-				import("Weixin.ORG.Util.Weixin");
-				$weixin = new \Weixin();
-				$mobile_tel = trim($mobile_tel, '+-');
-				$weixin -> update_user($emp_no, $name, $mobile_tel);
+			if (get_system_config('IS_LICENSED')) {
+				if (!empty($mobile_tel)) {
+					import("Weixin.ORG.Util.Weixin");
+					$weixin = new \Weixin();
+					$mobile_tel = trim($mobile_tel, '+-');
+					$weixin -> add_user($emp_no, $name, $mobile_tel);
+					$weixin -> update_user($emp_no, $name, $mobile_tel);
+				}
 			}
+
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
 		} else {
@@ -169,7 +172,7 @@ class UserController extends HomeController {
 			$name = $val['name'];
 			$mobile_tel = trim($val['mobile_tel'], '+-');
 
-			$error_code =        json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+			$error_code =             json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
 			$list[$key]['error_code'] = $error_code;
 			$list[$key]['desc'] = $error_code_desc[$error_code];
 			$list[$key]['emp_no'] = $key;
@@ -283,17 +286,18 @@ class UserController extends HomeController {
 					$data_user['birthday'] = $sheetData[$i]["I"];
 					$data_user['open_id'] = $sheetData[$i]["A"];
 					$data_user['westatus'] = 1;
+					$data_user['password'] = md5($sheetData[$i]["A"]);
 
 					$role_list = explode($sheetData[$i]["E"]);
 					foreach ($role_list as $key => $val) {
 						$data_role[] = $role[$val];
 					}
 					$user_id = M("User") -> add($data_user);
-
 					$this -> add_role($user_id, $data_role);
 				}
-
-				$this -> _weixin_sync();
+				if (get_system_config('IS_LICENSED')) {
+					$this -> _weixin_sync();
+				}
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('导入成功！');
 			}

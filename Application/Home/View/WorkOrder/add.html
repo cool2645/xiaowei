@@ -104,9 +104,7 @@
 		$("#actor_wrap span.address_list span").each(function() {
 		$("#actor").val($("#actor").val()+$(this).find("b").text()+'|'+$(this).attr("data")+";");
 		});
-		if(check_form("form_data")) {
 		sendForm("form_data","{:U('save')}");
-		}
 		}
 		function popup_actor() {
 		winopen("{:U('popup/work_order')}",730,574);

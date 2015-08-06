@@ -105,6 +105,7 @@ class receiveMail {
 	 * @param string $msg_range
 	 * @return array
 	 */
+	 
 	public function mail_list($msg_range = '') {
 		if ($msg_range) {
 			$range = $msg_range;
@@ -125,9 +126,14 @@ class receiveMail {
 	 * @return int
 	 */
 	public function mail_total_count() {
-		$check = imap_check($this -> _connect);
-		$this -> _total_count = $check -> Nmsgs;
-		return $this -> _total_count;
+		//$check = imap_check($this -> _connect);
+		//$this -> _total_count = $check -> Nmsgs;
+		//return $this -> _total_count;		
+	}
+	
+	public function get_unread_list(){
+		$uids   = imap_search($this->_connect, 'UNSEEN', SE_UID);
+		return $uids;		
 	}
 
 	/**
@@ -522,8 +528,10 @@ class receiveMail {
 	 * @param string $msg_count
 	 * @return bool
 	 */
-	public function mail_read($msg_count) {
-		$status = imap_setflag_full($this -> _connect, $msg_count, "//Seen");
+	 
+	public function mail_readed($msg_count) {
+		$uid=imap_uid($this -> _connect,$msg_count);
+		$status = imap_setflag_full($this -> _connect,$msg_count, '\Seen',ST_UID);
 		return $status;
 	}
 
