@@ -21,9 +21,7 @@ class UdfFieldController extends HomeController {
 		$this -> display();
 	}
 
-	function index() {
-	
-		$row_type = I('row_type');
+	function index($row_type) {
 		if (IS_POST) {
 			$opmode = I("opmode");
 			$model = D("UdfField");
@@ -70,6 +68,7 @@ class UdfFieldController extends HomeController {
 		$controller = CONTROLLER_NAME;
 		$this -> assign('controller', CONTROLLER_NAME);
 		$model = D("UdfField");
+
 		$this -> assign('row_type', $row_type);
 
 		$where['row_type'] = array('eq', $row_type);

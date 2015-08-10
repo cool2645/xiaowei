@@ -495,6 +495,24 @@ function date_to_int($date) {
 	return $time;
 }
 
+function get_offset_date($date, $i, $type = "d") {
+	$date = explode("-", $date);
+	switch ($type) {
+		case 'y' :
+			$time = mktime(0, 0, 0, $date[1], $date[2], $date[0] + $i);
+			break;
+		case 'm' :
+			$time = mktime(0, 0, 0, $date[1] + $i, $date[2], $date[0]);
+			break;
+		case 'd' :
+			$time = mktime(0, 0, 0, $date[1], $date[2] + $i, $date[0]);
+			break;
+		default :
+			break;
+	}
+	return date('Y-m-d', $time);
+}
+
 function fix_time($time) {
 	return substr($time, 0, 5);
 }
@@ -859,6 +877,52 @@ function popup_tree_menu($tree, $level = 0) {
 			}
 		}
 		$html = $html . "</ul>\r\n";
+	}
+	return $html;
+}
+
+function popup_tree_menu2($tree, $level = 0) {
+	$level++;
+	$html = "";
+	if (is_array($tree)) {
+		$html = "<ul class=\"tree_menu\">\r\n";
+		foreach ($tree as $val) {
+			if (isset($val["name"])) {
+				$title = $val['name'];
+				$id = $val["id"];
+				$pid = $val['pid'];
+				if (empty($val["id"])) {
+					$id = $val["name"];
+				}
+				if (!empty($val["is_del"])) {
+					$del_class = "is_del";
+				} else {
+					$del_class = "";
+				}
+				if (isset($val['_child'])) {
+					$html = $html . "<li class=\"level_{$level} dept dept_{$id} dept_pid_{$pid}\" dept_pid_id=\"{$pid}\" dept_id=\"{$id}\">\r\n<a node=\"$id\" ><span><i class=\"fa fa-angle-right\"></i>$title</span></a>\r\n";
+					$html = $html . get_emp_list($val['id']);
+					$html = $html . popup_tree_menu2($val['_child'], $level);
+					$html = $html . "</li>\r\n";
+				} else {
+					$html = $html . "<li class=\"level_{$level} dept dept_{$id} dept_pid_{$pid}\" dept_pid_id=\"{$pid}\" dept_id=\"{$id}\">\r\n<a node=\"$id\" ><span><i class=\"fa fa-angle-right\"></i>$title</span></a>\r\n</li>\r\n";
+					$html = $html . get_emp_list($val['id']);
+				}
+			}
+		}
+		$html = $html . "</ul>\r\n";
+	}
+	return $html;
+}
+
+function get_emp_list($dept_id) {
+	$where['is_del'] = array('eq', 0);
+	$where['dept_id'] = array('eq', $dept_id);
+	$user_list = M("User") -> where($where) -> select();
+	$html = '';
+	foreach ($user_list as $key => $val) {
+		$id = $val['id'];
+		$html = $html . "<li class=\"emp dept_pid_{$dept_id}\" user_id=\"$id\">\r\n<a ><span><i class=\"fa fa-user\"></i>{$val['name']}</span></a>\r\n</li>";
 	}
 	return $html;
 }
@@ -1275,7 +1339,7 @@ function get_position_name($id) {
 	return $data['position_name'];
 }
 
-function send_push($data, $user_list, $time = null,$type='text') {
+function send_push($data, $user_list, $time = null, $type = 'text') {
 
 	$model = M("Push");
 	if (empty($time)) {
@@ -1341,19 +1405,21 @@ function send_ws($data, $user_list) {
 	fwrite($client, json_encode($msg) . "\n");
 }
 
-function send_weixin($data, $user_list) {	
-		// 这样可以按照企业号的发送格式发送图文、文件上、声音等多媒体信息了,curl不支持多维数组，转换成json传递数据|Terry
-	$msg=json_encode($data,JSON_UNESCAPED_UNICODE);
+function send_weixin($data, $user_list) {
+	// 这样可以按照企业号的发送格式发送图文、文件上、声音等多媒体信息了,curl不支持多维数组，转换成json传递数据|Terry
+	$msg = json_encode($data, JSON_UNESCAPED_UNICODE);
 
 	$where['id'] = array('in', $user_list);
 	$openid = M('User') -> where($where) -> getField('openid', true);
 	$openid = implode('|', array_filter($openid));
+
 	// 这里$url不加/oa/的话测试图文会传递到weixin的index控制器|Terry
 	$url = get_system_config('WEIXIN_SITE_URL') . "/weixin.php?c=Oa&a=send";
-	$type='news';
+	$type = 'news';
 
 	$params['content'] = $msg;
 	$params['openid'] = $openid;
+
 	//$params['type'] = $type;
 
 	$opts[CURLOPT_TIMEOUT_MS] = 1000;
@@ -1370,28 +1436,31 @@ function send_weixin($data, $user_list) {
 	$error = curl_error($ch);
 	curl_close($ch);
 
-	return $data;	
+	return $data;
 }
 
-function send_sms($data, $user_list, $type = 'text'){
-	$sms_max=get_system_config('SMS_MAX');
-	$msg = '【' . $data['type'] . "】" . $data['action'] . ' ' . $data['title'] . '：' . utf_str_sub($data['content'],$sms_max) . to_date(time(), "m-d H:i");
+function send_sms($data, $user_list, $type = 'text') {
+	$sms_max = get_system_config('SMS_MAX_SIZE');
+	$msg = '【' . $data['type'] . "】" . $data['action'] . ' ' . $data['title'] . '：' . utf_str_sub($data['content'], $sms_max) . to_date(time(), "m-d H:i");
 	header("Content-Type: text/html; charset=utf-8");
 
 	$url = 'http://192.168.100.9:9080/OpenMasService?WSDL';
 	$message = $msg;
 	$extendCode = "26";
+
 	//自定义扩展代码（模块）
 	$ApplicationID = "OA";
+
 	//账号
 	$Password = "3hxiuE8bWNFC";
+
 	//密码
 	if (is_array($user_list)) {
 		$where['id'] = array('in', $user_list);
 	} else {
 		$where['id'] = array('eq', $user_list);
 	}
-	
+
 	$mobile_list = M("User") -> where($where) -> getField('mobile_tel', true);
 	$destinationAddresses = $mobile_list;
 
@@ -1415,15 +1484,21 @@ function get_emp_pic($id) {
 
 function task_status($status) {
 	if ($status == 0) {
-		return "等待接受";
+		return "未处理";
 	}
-	if ($status == 1) {
-		return "已接受";
-	}
-	if ($status == 2) {
+	if ($status == 10) {
 		return "进行中";
 	}
-	if ($status == 3) {
+	if ($status == 20) {
+		return "已完成";
+	}
+	if ($status == 21) {
+		return "已转发";
+	}
+	if ($status == 22) {
+		return "已拒绝";
+	}		
+	if ($status == 30) {
 		return "已完成";
 	}
 	if ($status == 4) {
@@ -1435,8 +1510,8 @@ function task_status($status) {
 }
 
 function task_log_status($status) {
-	if ($status == 0) {
-		return "等待接受";
+	if ($status == 10) {
+		return "进行中";
 	}
 	if ($status == 1) {
 		return "已接受";
@@ -1588,11 +1663,11 @@ function conv_flot($data) {
 	return substr($return, 0, -1) . ']';
 }
 
-function is_public($id){
-	if($id==1){
+function is_public($id) {
+	if ($id == 1) {
 		return "公开";
 	}
-	if($id==0){
+	if ($id == 0) {
 		return "私有";
 	}
 }
@@ -1602,11 +1677,10 @@ function get_push_agent_id($type) {
 	foreach ($msg_push_config as $val) {
 		$tmp = explode("=", $val);
 		list($msg_type, $push_agent_id) = $tmp;
-		if($msg_type==$type){
+		if ($msg_type == $type) {
 			return $push_agent_id;
 		}
 	}
 	return get_system_config('OA_AGENT_ID');
 }
-
 ?>

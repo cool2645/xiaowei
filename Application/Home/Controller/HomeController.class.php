@@ -542,7 +542,8 @@ class HomeController extends Controller {
 	}
 
 	protected function _field_manage($row_type) {
-		R('UdfField/index', "row_type=$row_type");
+		dump($row_type);
+		R('UdfField/index',array('row_type'=>$row_type));
 	}
 
 }

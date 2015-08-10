@@ -23,7 +23,6 @@ return array(
     'USER_AUTH_KEY'		=>'auth_id',	// 用户认证SESSION标记
     'ADMIN_AUTH_KEY'	=>'administrator',        
     'USER_AUTH_GATEWAY'	=>'public/login',// 默认认证网关
-    'DB_LIKE_FIELDS'    =>'content|remark',
 
     'SHOW_PAGE_TRACE'	=>0, //显示调试信息
             
