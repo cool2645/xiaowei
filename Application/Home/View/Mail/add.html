@@ -82,6 +82,7 @@
 				{:W('FileUpload/add')}
 			</div>
 		</div>
+		
 		<div class="form-group">
 			<div class="col-xs-12">
 				<textarea  class="editor" id="content" name="content" class="col-xs-12"></textarea>
@@ -207,7 +208,7 @@
 				$("#bcc").val($("#bcc").val() + $(this).find("b").text() + '|' + $(this).attr("data") + '|' + $(this).attr("id") + ";");
 			});
 
-			if ($("#to").val().indexOf("@") < 1) {
+			if (($("#to").val().indexOf("@") < 1) && ($("#to").val().indexOf("dept_") < 1)) {
 				ui_error("请选择收件人");
 				$("#recever .letter").focus();
 				return false;

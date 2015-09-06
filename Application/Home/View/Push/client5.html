@@ -8,6 +8,8 @@
 		<script src="__INS__/js/jquery-2.1.1.js"></script>
 
 		<script type="text/javascript">
+		
+			var reconnet_count=0;
 			if ( typeof console == "undefined") {
 				this.console = {
 					log : function(msg) {
@@ -66,10 +68,13 @@
 					}
 				};
 				ws.onclose = function() {
-					console.log("连接关闭，定时重连");
+					console.log("连接关闭，定时重连"+reconnet_count);
 					// 定时重连
 					window.clearInterval(timeid);
-					timeid = window.setInterval(init, 3000);
+					reconnet_count++;
+					if(reconnet_count<5){
+						timeid = window.setInterval(init, 3000);	
+					}					
 				};
 				ws.onerror = function() {
 					console.log("出现错误");

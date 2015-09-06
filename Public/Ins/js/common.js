@@ -16,7 +16,7 @@ function winprint() {
 }
 
 function freshVerify() {
-	$('#verifyImg').attr("src", $('#verifyImg').attr("src").split("?")[0] + "?" + Math.random());
+	$('#verifyImg').attr("src", $('#verifyImg').attr("src")+"&" + Math.random());
 }
 
 function click_top_menu(node) {
@@ -312,9 +312,9 @@ var Inputbox = {
 
 /*赋值*/
 
-function set_val(name, val) {
+function set_val(name, val) { 
 	if ($("#" + name + " option").length > 0) {
-		$("#" + name).val(val);
+		$("#" + name+" [value="+val+"]").attr('selected','selected');
 		return;
 	}
 
@@ -324,6 +324,7 @@ function set_val(name, val) {
 			return;
 		}
 	}
+	
 	if ($("." + name).length > 0) {
 		if (($("." + name).first().attr("type")) === "checkbox") {
 			var arr_val = val.split(",");
@@ -474,6 +475,9 @@ function check_form(form_id) {
 			return false;
 		}
 	}
+	if(typeof(tinyMCE) != 'undefined'){
+		tinyMCE.triggerSave(true);
+	}
 
 	var check_flag = true;
 	$("#" + form_id + " :input").each(function(i) {
@@ -536,31 +540,34 @@ function sendAjax(url, vars, callback) {
 
 /*提交表单*/
 function sendForm(formId, post_url, return_url) {
-	if ($("#ajax").val() == 1) {
-		var vars = $("#" + formId).serialize();
-		$.ajax({
-			type : "POST",
-			url : post_url,
-			data : vars,
-			dataType : "json",
-			success : function(data) {
-				if (data.status) {
-					ui_alert(data.info, function() {
-						if (return_url) {
-							location.href = return_url;
-						}
-					});
-				} else {
-					ui_error(data.info);
+	if(check_form(formId)){
+		window.onbeforeunload = null;
+		if ($("#ajax").val() == 1) {
+			var vars = $("#" + formId).serialize();
+			$.ajax({
+				type : "POST",
+				url : post_url,
+				data : vars,
+				dataType : "json",
+				success : function(data) {
+					if (data.status) {
+						ui_alert(data.info, function() {
+							if (return_url) {
+								location.href = return_url;
+							}
+						});
+					} else {
+						ui_error(data.info);
+					}
 				}
+			});
+		} else {
+			$("#" + formId).attr("action", post_url);
+			if (return_url) {
+				set_cookie('return_url', return_url);
 			}
-		});
-	} else {
-		$("#" + formId).attr("action", post_url);
-		if (return_url) {
-			set_cookie('return_url', return_url);
+			$("#" + formId).submit();
 		}
-		$("#" + formId).submit();
 	}
 }
 
@@ -699,6 +706,7 @@ var udf_field = {
 		});
 	},
 };
+
 
 $(document).ready(function() {
 	$("#sidebar .nav a").click(function() {

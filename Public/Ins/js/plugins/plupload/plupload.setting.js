@@ -6,7 +6,7 @@ var uploader = new plupload.Uploader({
 	flash_swf_url : app_path + '/Public/Static/plupload/Moxie.swf',
 	drop_element : 'main-container',
 	filters : {
-		max_file_size : '10mb'
+		max_file_size : '1000mb'
 	},
 	init : {
 		PostInit : function() {
@@ -72,15 +72,17 @@ window.onbeforeunload = function(e) {
 	e = e || window.event;
 	// For IE and Firefox prior to version 4
 	$new_upload = $("#file_list").attr("new_upload");
-	if ($new_upload.length) {
-		if (e) {
-			e.returnValue = '上传的附件将被删除，确定退出吗？';
+	if ($new_upload !== undefined) {
+		if ($new_upload.length) {
+			if (e) {
+				e.returnValue = '上传的附件将被删除，确定退出吗？';
+			}
+			// For Safari
+			window.onunload = function() {
+				sendAjax(del_url, 'sid=' + $(this).attr("id"));
+			};
+			return '上传的附件将被删除，确定退出吗？';
 		}
-		// For Safari
-		window.onunload = function() {
-			sendAjax(del_url, 'sid=' + $(this).attr("id"));
-		};
-		return '上传的附件将被删除，确定退出吗？';
 	}
 };
 
@@ -102,4 +104,4 @@ $(document).on("click", "#uploader a.del", function() {
 			$obj.remove();
 		}
 	});
-}); 
+});

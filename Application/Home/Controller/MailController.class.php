@@ -250,7 +250,7 @@ class MailController extends HomeController {
 
 			$arr_to = array_filter(explode(';', $to));
 			foreach ($arr_to as $item) {
-				if (strpos($item, "dept@group") !== false) {
+				if (strpos($item, "dept_") !== false) {
 					$arr_tmp = array_filter(explode('|', $item));
 					$dept_id = str_replace("dept_", '', $arr_tmp[2]);
 					$mail_list = $this -> get_mail_list_by_dept_id($dept_id);
@@ -472,21 +472,13 @@ class MailController extends HomeController {
 		if ($connect) {
 			for ($i = 1; $i <= $mail_count; $i++) {
 				$mail_id = $mail_count - $i + 1;
-				$item = $mail -> mail_list($mail_id);
-
-				$where = array();
-				$where['user_id'] = $user_id;
-				if (empty($item[$mail_id])) {
-					$temp_mail_header = $mail -> mail_header($mail_id);
-					$where['mid'] = $temp_mail_header['mid'];
-				} else {
-					$where['mid'] = $item[$mail_id];
-				}
+				$mail_header = $mail -> mail_header($mail_id);
+				$where['mid'] = array('eq',$mail_header['mid']);
+				$where['user_id']=array('eq',get_user_id());
 				$count = M('Mail') -> where($where) -> count();
-
 				if ($count == 0) {
 					$model = M("Mail");
-					$model -> create($mail -> mail_header($mail_id));
+					$model -> create($mail_header);					
 					if ($model -> create_time < strtotime(date('y-m-d H:i:s')) - 86400 * 30) {
 						$mail -> close_mail();
 						if ($new > 0) {
@@ -584,7 +576,6 @@ class MailController extends HomeController {
 
 		foreach ($list as $val) {
 			//包含
-
 			if (($val['sender_check'] == 1) && ($val['sender_option'] == 1) && (strpos($model -> from, $val['sender_key']) !== false)) {
 				$model -> folder = $val['to'];
 				return;

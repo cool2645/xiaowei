@@ -1,8 +1,9 @@
 <extend name="Layout/ins_base" />
 <block name="content">
 	<div class="page-header clearfix">
-		<h1 class="col-xs-6">选择人员</h1>
-		<div class="col-xs-6 text-right">
+		<h3 class="col-xs-4">选择人员</h3>
+		<div class="col-xs-8 text-right">
+			<a onclick="select_all();" class="btn btn-sm btn-primary">全选</a>
 			<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
 			<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
 		</div>
@@ -30,7 +31,10 @@
 <block name="js">
 	<script type="text/javascript">
 		var $return_dept_id;
-
+		function select_all(){			
+			$(".emp").not('.hidden').find('a').click();
+		}
+		
 		function save() {
 			$("#data option").each(function(i) {
 				emp_no = $(this).val();
@@ -45,49 +49,26 @@
 		function go_back() {
 			if ($dept_pid_id != undefined) {
 				$return_dept_id = $dept_pid_id;
-				$("ul.tree_menu li").hide();
-				$("ul.tree_menu li.dept_pid_" + $return_dept_id).show();
+				$("ul.tree_menu li").addClass('hidden');
+				$("ul.tree_menu li.dept_pid_" + $return_dept_id).removeClass('hidden');
 				$dept_name = $("ul.tree_menu li.dept_" + $return_dept_id + "> a").text();
 				$dept_pid_id = $("ul.tree_menu li.dept_" + $return_dept_id).attr('dept_pid_id');
 				$("#dept_name").text($dept_name);
 			}
 		}
 
-		function btn_local_search() {
-			$(".sub_left_menu .tree_menu a").each(function() {
-				$(this).attr("class", "");
-			});
-			sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
-				showdata(data);
-			});
-			return false;
-		}
-
-		function key_local_search() {
-			$(".sub_left_menu .tree_menu a").each(function() {
-				$(this).attr("class", "");
-			});
-			if (event.keyCode == 13) {
-				sendAjax("{:U('read')}", "keyword=" + $("#keyword").val(), function(data) {
-					showdata(data);
-				});
-			}
-			return false;
-		}
-
-
 		$(document).ready(function() {
-			$("ul.tree_menu li").hide();
-			$("ul.tree_menu li.level_1").show();
+			$("ul.tree_menu li").addClass('hidden');
+			$("ul.tree_menu li.level_1").removeClass('hidden');
 
 			$("ul.tree_menu li.dept").click(function() {
-				$("ul.tree_menu li").hide();
+				$("ul.tree_menu li").addClass('hidden');
 				$dept_id = $(this).attr("dept_id");
 				$dept_name = $(this).text();
 				$dept_pid_id = $(this).attr("dept_pid_id");
 				$return_dept_id = $dept_pid_id;
 				$('#dept_name').text($dept_name);
-				$("ul.tree_menu li.dept_pid_" + $dept_id).show();
+				$("ul.tree_menu li.dept_pid_" + $dept_id).removeClass('hidden');
 			});
 
 			$("ul.tree_menu li.emp").click(function() {

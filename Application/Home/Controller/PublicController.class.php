@@ -10,7 +10,6 @@ class PublicController extends Controller {
 	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
 	 */
 	public function login() {
-
 		$this -> assign("is_verify_code", get_system_config("IS_VERIFY_CODE"));
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
@@ -48,7 +47,7 @@ class PublicController extends Controller {
 		}
 
 		$map = array();
-		// 支持使用绑定帐号登录
+
 		$map['emp_no'] = $_POST['emp_no'];
 		$map["is_del"] = array('eq', 0);
 		$map['password'] = array('eq', md5($_POST['password']));
@@ -65,6 +64,9 @@ class PublicController extends Controller {
 			session('user_pic', $auth_info['pic']);
 			session('dept_id', $auth_info['dept_id']);
 
+			// if (empty($auth_info['init_pwd'])) {
+				// $this -> redirect('init_pwd');
+			// }
 			//保存登录信息
 			$User = M('User');
 			$ip = get_client_ip();
@@ -80,6 +82,85 @@ class PublicController extends Controller {
 		}
 	}
 
+	public function init_pwd() {
+		$auth_id = session(C('USER_AUTH_KEY'));
+		if (!isset($auth_id)) {
+			//跳转到认证网关
+			redirect(U(C('USER_AUTH_GATEWAY')));
+		}
+		$this -> display();
+	}
+
+	public function find_pwd() {
+		if (IS_POST) {
+			$verify_no = I('verify_no');
+			if ($verify_no !== session('verify_no')) {
+				$this -> error('验证码错误');
+			}
+			$emp_no = I('emp_no');
+			$password = I('password');
+
+			$where['emp_no'] = array('eq', $emp_no);
+			$data['password'] = md5($password);
+			$result = M("User") -> where($where) -> save($data);
+			if ($result !== false) {
+				$this -> success('修改密码成功');
+				die ;
+			} else {
+				$this -> success('修改密码失败');
+			}
+		}
+		$this -> display();
+	}
+
+	public function send_sms_verify($emp_no) {
+		$verify_no = rand_string(6, 1);
+		session('verify_no', $verify_no);
+		if (empty($emp_no)) {
+			$return['info'] = '请输入员工编号';
+			$return['status'] = 0;
+			$this -> ajaxReturn($return);
+		}
+
+		$where_user['emp_no'] = array('eq', $emp_no);
+		$user = M("User") -> where($where_user) -> find();
+
+		if ($user == false) {
+			$return['info'] = '员工编号不存在';
+			$return['status'] = 0;
+			$this -> ajaxReturn($return);
+		}
+		if ($user !== false) {
+			if (empty($user['mobile_tel'])) {
+				$return['info'] = '该用户手机号不存在，请联系管理员';
+				$return['status'] = 0;
+				$this -> ajaxReturn($return);
+			}
+		}
+
+		$account = 'jkwl110';
+
+		//用户密码 $password
+		$password = 'jkwl11033';
+
+		//发送到的目标手机号码 $mobile
+		$mobile = $user['mobile_tel'];
+
+		//短信内容 $content
+		$content = "【SIAS】您的验证码：{$verify_no}";
+
+		//发送短信（其他方法相同）
+		$gateway = "http://sh2.ipyy.com/sms.aspx?action=send&userid=&account={$account}&password={$password}&mobile={$mobile}&content={$content}&sendTime=";
+		$result = file_get_contents($gateway);
+		//dump($result);
+		$xml = simplexml_load_string($result);
+		if ($xml -> returnstatus == 'Success') {
+			$return['status'] = 1;
+			$return['info'] = '短信已发送';
+			$this -> ajaxReturn($return);
+		}
+	}
+
 	/* 退出登录 */
 	public function logout() {
 		$auth_id = session(C('USER_AUTH_KEY'));
@@ -90,6 +171,26 @@ class PublicController extends Controller {
 		} else {
 			$this -> assign("jumpUrl", __APP__);
 			$this -> error('退出成功！');
+		}
+	}
+
+	public function reset_pwd() {
+		$password = I('password');
+		if ('' == trim($password)) {
+			$this -> error('密码不能为空！');
+		}
+
+		$data['password'] = md5($password);
+		$data['id'] = get_user_id();
+		$data['init_pwd'] = 1;
+
+		$result = M('User') -> save($data);
+
+		if (false !== $result) {
+			$this -> assign('jumpUrl', get_return_url());
+			$this -> success("密码修改成功");
+		} else {
+			$this -> error('重置密码失败！');
 		}
 	}
 
@@ -180,20 +281,13 @@ class PublicController extends Controller {
 		if ($connect) {
 			for ($i = 1; $i <= $mail_count; $i++) {
 				$mail_id = $mail_count - $i + 1;
-				$item = $mail -> mail_list($mail_id);
-				$where = array();
-				$where['user_id'] = $user_id;
-				if (empty($item[$mail_id])) {
-					$temp_mail_header = $mail -> mail_header($mail_id);
-					$where['mid'] = $temp_mail_header['mid'];
-				} else {
-					$where['mid'] = $item[$mail_id];
-				}
+				$mail_header = $mail -> mail_header($mail_id);
+				$where['mid'] = $mail_header['mid'];
+				$where['user_id']=array('eq',$user_id);
 				$count = M('Mail') -> where($where) -> count();
-
 				if ($count == 0) {
 					$model = M("Mail");
-					$model -> create($mail -> mail_header($mail_id));
+					$model -> create($mail_header);
 					if ($model -> create_time < strtotime(date('y-m-d H:i:s')) - 86400 * 30) {
 						$mail -> close_mail();
 						if ($new > 0) {
@@ -216,7 +310,7 @@ class PublicController extends Controller {
 					$str = $mail -> get_attach($mail_id);
 
 					$model -> add_file = $this -> _receive_file($str, $model);
-					$this -> _organize($model,$user_id);
+					$this -> _organize($model, $user_id);
 					$model -> add();
 
 				} else {
@@ -242,7 +336,6 @@ class PublicController extends Controller {
 	private function _receive_file($str, &$model) {
 
 		$ar = array_filter(explode("?", $str));
-		dump($ar);
 		$files = array();
 		if (!empty($ar)) {
 			foreach ($ar as $key => $value) {
@@ -271,9 +364,9 @@ class PublicController extends Controller {
 		return $add_file;
 	}
 
-	private function _organize(&$model,$user_id) {
-		$where['user_id'] = array('eq',$user_id);
-		$where['is_del'] = array('eq',0);
+	private function _organize(&$model, $user_id) {
+		$where['user_id'] = array('eq', $user_id);
+		$where['is_del'] = array('eq', 0);
 		$list = M("MailOrganize") -> where($where) -> order('sort') -> select();
 
 		foreach ($list as $val) {
@@ -342,10 +435,6 @@ class PublicController extends Controller {
 		} else {
 			return $list;
 		}
-	}
-
-	function test() {
-		echo 'yyyyy';
 	}
 
 }

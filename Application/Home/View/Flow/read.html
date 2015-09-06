@@ -112,10 +112,8 @@
 			<notempty name="flow_type.udf_tpl">
 				<eq name="vo.step" value="40">
 					{:W('UserDefineField/udf_read',array($vo['udf_data'],$flow_type['udf_tpl']))}
-
 					<else/>
 					{:W('UserDefineField/edit2',array($vo['udf_data']))}
-
 				</eq>
 				<else/>
 				{:W('UserDefineField/edit2',array($vo['udf_data']))}
@@ -229,10 +227,10 @@
 			<div class="clearfix"></div>
 		</form>
 	</eq>
-
+	
 	<a id="flow_status"></a>
 	{:W('PageHeader/simple',array('name'=>'审批情况','search'=>'N'))}
-	<div class="ul_table border-bottom">
+	<div class="ul_table ul_table_responsive border-bottom">
 		<ul>
 			<li class="thead">
 				<span class="col-6">类型</span>
@@ -245,7 +243,7 @@
 				<li class="tbody">
 					<span class="col-6">{$item.step|show_step_type}</span>
 					<span class="col-9">{$item.user_name}</span>
-					<span class="col-12">{$item.create_time|to_date='Y-m-d H:i'}</span>
+					<span class="col-12">{$item.update_time|to_date='Y-m-d H:i'}</span>
 					<span class="col-9">{$item.result|show_result}</span>
 					<span class="auto">
 						<div style="overflow:hidden">
@@ -257,7 +255,7 @@
 	</div>
 	<notempty name="refer_flow_log">
 		{:W('PageHeader/simple',array('name'=>'参阅情况','search'=>'N'))}
-		<div class="ul_table border-bottom">
+		<div class="ul_table ul_table_responsive border-bottom">
 			<ul>
 				<li class="thead">
 					<span class="col-9 text-center">发送人</span>
@@ -349,7 +347,7 @@
 	<script type="text/javascript">
 		udf_field.init({$vo['udf_data']});
 		function approve() {
-			sendForm("form_confirm", "{:U('approve')}", "{:U('read','id='.$vo['id'])}");
+			sendForm("form_confirm", "{:U('approve')}", "{:U('read','id='.$vo['id'])}");			
 		}
 
 		function refer() {
@@ -406,7 +404,7 @@
 			});
 			$("#consult span").on("dblclick", function() {
 				$("#consult span").last().find("b").remove();
-			});
+			});	
 			show_content();
 		});
 	</script>

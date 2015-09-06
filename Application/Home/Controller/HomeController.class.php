@@ -402,7 +402,6 @@ class HomeController extends Controller {
 			$model = D(CONTROLLER_NAME);
 		}
 		$fields = get_model_fields($model);
-
 		foreach ($request as $val) {
 			$field = substr($val, 3);
 			$prefix = substr($val, 0, 3);
@@ -542,7 +541,6 @@ class HomeController extends Controller {
 	}
 
 	protected function _field_manage($row_type) {
-		dump($row_type);
 		R('UdfField/index',array('row_type'=>$row_type));
 	}
 

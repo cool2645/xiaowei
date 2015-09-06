@@ -150,9 +150,7 @@
 		function del() {
 			ui_confirm('真的要删除吗?', function() {
 				$("#opmode").val("del");
-				if (check_form("form_data")) {
-					sendForm("form_data", "", "__SELF__");
-				}
+				sendForm("form_data", "", "__SELF__");				
 			});
 		};
 

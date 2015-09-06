@@ -6,6 +6,7 @@
 		<title>{$title|default=get_system_config("SYSTEM_NAME")}</title>
 		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">
 		<link href="__INS__/font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link href="__INS__/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 
 		<link href="__INS__/css/style.css" rel="stylesheet">
 		<link href="__INS__/css/xiaowei.css" rel="stylesheet">
@@ -23,6 +24,7 @@
 		<!-- Custom and plugin javascript -->
 		<script src="__INS__/js/inspinia.js"></script>
 		<script src="__INS__/js/common.js"></script>
+		<include file="Layout:ins_plugin_js"/>
 		<block name="js"></block>
 	</body>
 </html>

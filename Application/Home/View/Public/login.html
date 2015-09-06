@@ -34,7 +34,7 @@
 									<input class="form-control" id="verify" name="verify" />
 								</div>
 								<div class="col-xs-6">
-									<img src="{:U('verify')}" / style='cursor:pointer' title='刷新验证码' id='verifyImg' onclick='freshVerify()'>
+									<img src="{:U('verify')}" style='cursor:pointer' title='刷新验证码' id='verifyImg' onclick='freshVerify()'>
 								</div>
 							</div>
 						</div>
@@ -65,9 +65,9 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<!-- 开源版不允许删除版权链接 谢谢支持  -->
-		<div class="row text-right">			
+		<div class="row text-right">
 			版权所有：<a href="http://www.smeoa.com">小微OA</a>
 		</div>
 	</div>
@@ -80,13 +80,14 @@
 
 		$(document).ready(function() {
 			var $dom = "#password";
-			<notempty name="is_verify_code">$dom="#verify";</notempty >
+			<notempty name="is_verify_code">
+				$dom="#verify";
+			</notempty>
 			 $($dom).keydown(function(event) {
 				if (event.keyCode == 13) {
-					if (check_form("form_login")) {
-						sendForm("form_login", "{:U('public/check_login')}");
-						return false;
-					}
+					sendForm("form_login", "{:U('public/check_login')}");
+					return false;
+					
 				}
 			});
 		});

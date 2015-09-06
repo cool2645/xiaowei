@@ -1224,8 +1224,9 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 }
 
 .Index .ibox-content {
-	height: 240px;
+	height: 245px;
 }
+
 .Index .ibox, .Index .ibox-content {
 	padding: 0;
 }

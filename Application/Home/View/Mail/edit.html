@@ -207,7 +207,7 @@
 			$("#blind_carbon_copy .address_list span").each(function() {
 				$("#cc").val($("#cc").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";");
 			});
-			if ($("#to").val().indexOf("@") < 1) {
+			if (($("#to").val().indexOf("@") < 1) && ($("#to").val().indexOf("dept_") < 1)) {
 				ui_error("请选择收件人");
 				$("#recever letter").focus();
 				return false;

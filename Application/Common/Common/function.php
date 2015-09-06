@@ -114,6 +114,7 @@ function badge_count_todo_work_order() {
 
 function badge_count_doing_work_order() {
 	//等我接受的任务
+	$work_order_list_doing_count=0;
 	$where = array();
 	$where_log['type'] = 1;
 	$where_log['status'] = array('in', '1,2');
@@ -128,14 +129,14 @@ function badge_count_doing_work_order() {
 }
 
 function badge_count_task() {
-	return badge_count_todo_task() + badge_count_dept_task() + badge_count_no_assign_task();
+	return badge_count_no_finish_task() + badge_count_dept_task() + badge_count_no_assign_task();
 }
 
-function badge_count_todo_task() {
+function badge_count_no_finish_task() {
 	//等我接受的任务
 	$where = array();
 	$where_log['type'] = 1;
-	$where_log['status'] = 0;
+	$where_log['status'] = array('lt', 20);
 	$where_log['executor'] = get_user_id();
 	$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', true);
 	$task_todo_count = 0;
@@ -223,8 +224,8 @@ function badge_count_flow_todo() {
 	$where['is_del'] = array('eq', 0);
 	$where['_string'] = "result is null";
 	$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
-
 	$log_list = rotate($log_list);
+	
 	$new_confirm_count = 0;
 	if (!empty($log_list)) {
 		$map['id'] = array('in', $log_list['flow_id']);
@@ -238,7 +239,7 @@ function badge_count_flow_receive() {
 	$emp_no = get_emp_no();
 	$where['emp_no'] = $emp_no;
 	$where['step'] = 100;
-	$where['is_read'] = 1;
+	$where['is_read'] = 0;
 
 	$log_list = M("FlowLog") -> where($where) -> field('flow_id') -> select();
 	$log_list = rotate($log_list);
@@ -436,7 +437,7 @@ function get_user_info($id, $field) {
 	return $result;
 }
 
-function get_user_id() {
+function get_user_id($emp_no=null) {
 	$user_id = session(C('USER_AUTH_KEY'));
 	return isset($user_id) ? $user_id : 0;
 }
@@ -765,10 +766,12 @@ function list_to_tree($list, $root = 0, $pk = 'id', $pid = 'pid', $child = '_chi
 	$tree = array();
 	if (is_array($list)) {
 		// 创建基于主键的数组引用
+	 
 		$refer = array();
 		foreach ($list as $key => $data) {
 			$refer[$data[$pk]] = &$list[$key];
 		}
+		 
 		foreach ($list as $key => $data) {
 			// 判断是否存在parent
 			$parentId = 0;
@@ -1439,35 +1442,50 @@ function send_weixin($data, $user_list) {
 	return $data;
 }
 
-function send_sms($data, $user_list, $type = 'text') {
-	$sms_max = get_system_config('SMS_MAX_SIZE');
-	$msg = '【' . $data['type'] . "】" . $data['action'] . ' ' . $data['title'] . '：' . utf_str_sub($data['content'], $sms_max) . to_date(time(), "m-d H:i");
+function send_sms($data, $user_list) {
+
 	header("Content-Type: text/html; charset=utf-8");
-
-	$url = 'http://192.168.100.9:9080/OpenMasService?WSDL';
-	$message = $msg;
-	$extendCode = "26";
-
-	//自定义扩展代码（模块）
-	$ApplicationID = "OA";
-
-	//账号
-	$Password = "3hxiuE8bWNFC";
-
-	//密码
+	$msg='【SIAS】亲爱的同事您好，你找回的OA财务密码：ABCDEF，请妥善保管。';
+	// $url = 'http://192.168.100.9:9080/OpenMasService?WSDL';	
+	// $message = $msg;
+	// $extendCode = "26";
+// 
+	// //自定义扩展代码（模块）
+	// $ApplicationID = "OA";
+// 
+	// //账号
+	// $Password = "3hxiuE8bWNFC";
+// 
+	// //密码
+	// if (is_array($user_list)) {
+		// $where['id'] = array('in', $user_list);
+	// } else {
+		// $where['id'] = array('eq', $user_list);
+	// }
+// 
+	// $mobile_list = M("User") -> where($where) -> getField('mobile_tel', true);
+	// $destinationAddresses = $mobile_list;
+// 
+	// //手机号码
+	// $paras = array('destinationAddresses' => $destinationAddresses, 'message' => $message, 'extendCode' => $extendCode, 'applicationId' => $ApplicationID, 'password' => $Password);
+	// $client = new soapclient($url);
+	// $result = $client -> SendMessage3($paras);
+	
+	$sms_user='jkwl110';
+	$sms_password='jkwl11033';
 	if (is_array($user_list)) {
 		$where['id'] = array('in', $user_list);
 	} else {
-		$where['id'] = array('eq', $user_list);
+		 $where['id'] = array('eq', $user_list);
 	}
-
-	$mobile_list = M("User") -> where($where) -> getField('mobile_tel', true);
-	$destinationAddresses = $mobile_list;
-
-	//手机号码
-	$paras = array('destinationAddresses' => $destinationAddresses, 'message' => $message, 'extendCode' => $extendCode, 'applicationId' => $ApplicationID, 'password' => $Password);
-	$client = new soapclient($url);
-	$result = $client -> SendMessage3($paras);
+		
+	//$sms_user_list = M("User") -> where($where) -> getField('mobile_tel', true);
+	//$sms_user_list=implode(",", $sms_user_list);
+	$sms_user_list=$user_list;	
+	$url="http://sh2.ipyy.com/sms.aspx?action=send&userid=&account={$sms_user}&password={$sms_password}&mobile={$sms_user_list}&content={$msg}&sendTime=&extno=";
+		
+	$result=file_get_contents($url);
+	dump($result);
 }
 
 function get_emp_pic($id) {
@@ -1493,19 +1511,13 @@ function task_status($status) {
 		return "已完成";
 	}
 	if ($status == 21) {
-		return "已转发";
+		return "已转交";
 	}
 	if ($status == 22) {
 		return "已拒绝";
 	}		
 	if ($status == 30) {
 		return "已完成";
-	}
-	if ($status == 4) {
-		return "已转交";
-	}
-	if ($status == 5) {
-		return "不接受";
 	}
 }
 

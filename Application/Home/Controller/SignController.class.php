@@ -15,8 +15,8 @@ class SignController extends HomeController {
 	protected $config = array('app_type' => 'personal');
 	//过滤查询字段
 	function _search_filter(&$map) {
-		if (!empty($_POST["name"])) {
-			$map['name'] = array('like', "%" . $_POST['name'] . "%");
+		if (!empty($_POST["keyword"])) {
+			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 		$map['is_real_time'] = array('eq', 0);
 	}
@@ -46,7 +46,6 @@ class SignController extends HomeController {
 
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
-
 		$this -> assign('user_id', get_user_id());
 
 		$auth = $this -> config['auth'];
@@ -111,26 +110,24 @@ class SignController extends HomeController {
 				$this -> assign('emp_list', $emp_list);
 			}
 		}
-
-		$map = $this -> _search();
-
+		
 		if ($auth['admin']) {
-			if (empty($map['dept_id'])) {
-				if (!empty($dept_list)) {
-					$map['dept_id'] = array('in', array_merge($dept_list, array($dept_id)));
-				} else {
-					$map['dept_id'] = array('eq', $dept_id);
-				}
-			}
+			// if (empty($map['dept_id'])) {
+				// if (!empty($dept_list)) {
+					// $map['dept_id'] = array('in', array_merge($dept_list, array($dept_id)));
+				// } else {
+					// $map['dept_id'] = array('eq', $dept_id);
+				// }
+			// }
 		} else {
 			$map['user_id'] = get_user_id();
 		}
-
+		
+		$model = D("SignView");		
+		$map = $this -> _search($model);	
 		if (method_exists($this, '_search_filter')) {
 			$this -> _search_filter($map);
 		}
-		$model = D("SignView");
-
 		if (I('mode') == 'export') {
 			$this -> _report_export($model, $map);
 		} else {

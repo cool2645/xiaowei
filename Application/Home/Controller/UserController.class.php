@@ -99,8 +99,9 @@ class UserController extends HomeController {
 			// 写入帐号数据
 			$model -> letter = get_letter($model -> name);
 			$model -> password = md5($model -> emp_no . $model -> emp_no);
+			$model -> dept_id=I('dept_id');
 			$emp_no = $model -> emp_no;
-			$name = $model -> name;
+			$name = $model -> name;					
 			$mobile_tel = $model -> mobile_tel;
 			if ($result = $model -> add()) {
 				$data['id'] = $result;
@@ -222,7 +223,20 @@ class UserController extends HomeController {
 			$this -> error('重置密码失败！');
 		}
 	}
-
+	function del_pwd() {
+		$id = $_POST['user_id'];
+		$User=M('User');
+        $where['id']=array('in', $id);
+        $data['pay_pwd']='';
+        $result=$User->where($where)->save($data);
+		if (false !== $result) {
+			$this -> assign('jumpUrl', get_return_url());
+			$this -> success("密码清除成功");
+		} else {
+			$this -> error('清除密码失败！');
+		}
+	}
+	
 	public function password() {
 		$this -> assign("id", I('id'));
 		$this -> display();

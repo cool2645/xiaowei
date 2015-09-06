@@ -16,6 +16,9 @@
 	<include file="Layout:page_script"/>
 	<body class="{$Think.CONTROLLER_NAME}">
 		<div class="shade"></div>
+		<div class="form-group hidden" id="img_upload_container">
+			<div id="img_upload">上传</div>
+		</div>
 		<nav class="navbar navbar-default row" role="navigation" id="top_menu">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -26,7 +29,7 @@
 				<div class="hidden-xs">
 					&nbsp;
 				</div>
-				<a href="{:U('index/index')}" class="navbar-brand"><i class="fa fa-leaf"></i>{:get_system_config("SYSTEM_NAME")}</a>
+				<a href="{:U('index/index')}" class="navbar-brand">{:get_system_config("SYSTEM_NAME")}</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse-6">

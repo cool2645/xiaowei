@@ -27,7 +27,7 @@ class SystemConfigController extends HomeController {
 
 		$this -> assign('eq_pid', $eq_pid);
 
-		$list = $node -> where('pid=0') -> order('sort desc') -> getField('id,name');
+		$list = $node -> where('pid=0') -> order('sort asc') -> getField('id,name');
 		$this -> assign('groupList', $list);
 
 		$node = M("SystemConfig");

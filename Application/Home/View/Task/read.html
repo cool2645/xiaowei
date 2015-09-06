@@ -6,14 +6,9 @@
 			<div class="pull-left">
 				<a onclick="go_return_url();" class="btn btn-sm btn-primary">返回</a>
 			</div>
-
 			<div class="pull-right">
 				<eq name="no_assign" value="1">
 					<a onclick="let_me_do({$task_id})" class="btn btn-sm btn-primary">我来处理</a>
-				</eq>
-				<eq name="is_accept" value="1">
-					<a onclick="accept({$task_log_id})" class="btn btn-sm btn-primary">接受</a>
-					<a onclick="reject({$task_log_id});" class="btn btn-sm btn-danger">不接受</a>
 				</eq>
 			</div>
 		</div>
@@ -170,7 +165,7 @@
 						<form method='post' id="form_data_forword" name="form_data_forword" >
 							<input type="hidden" name="id" value="{$task_working.id}">
 							<input type="hidden" name="task_id" value="{$task_working.task_id}">
-							<input type="hidden" name="status" value="4">
+							<input type="hidden" name="status" value="21">
 							<input type="hidden" id="forword_executor" name="forword_executor" >
 							<div class="form-group col-sm-12">
 								<label class="col-sm-2 control-label" for="name">转交给：</label>
@@ -285,8 +280,8 @@
 					});
 				}
 
-				if ($status_name == "finish") {
-					ui_confirm('选择完成以后不能修改了,是否提交?', function() {
+				if ($status_name == "forword") {
+					ui_confirm('转交以后不能修改了,是否提交?', function() {
 						sendAjax("{:U('save_log')}", vars, function(data) {
 							if (data.status) {
 								ui_alert(data.info, function() {
@@ -299,8 +294,8 @@
 					});
 				}
 
-				if ($status_name == "forword") {
-					ui_confirm('选择转发以后不能修改了,是否继续修改了?', function() {
+				if ($status_name == "reject") {
+					ui_confirm('选择拒绝以后不能修改了,是否提交?', function() {
 						sendAjax("{:U('save_log')}", vars, function(data) {
 							if (data.status) {
 								ui_alert(data.info, function() {
@@ -314,7 +309,6 @@
 				}
 			}
 		}
-
 
 		$(document).ready(function() {
 			$(document).on("click", ".inputbox .address_list a.del", function() {

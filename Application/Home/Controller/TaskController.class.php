@@ -44,11 +44,11 @@ class TaskController extends HomeController {
 			$this -> _search_filter($where);
 		}
 
-		$todo_task_count = badge_count_todo_task();
+		$no_finish_task_count = badge_count_no_finish_task();
 		$dept_task_count = badge_count_dept_task();
 		$no_assign_task_count = badge_count_no_assign_task();
 
-		$this -> assign('todo_task_count', $todo_task_count);
+		$this -> assign('no_finish_task_count', $no_finish_task_count);
 		$this -> assign('dept_task_count', $dept_task_count);
 		$this -> assign('no_assign_task_count', $no_assign_task_count);
 
@@ -59,22 +59,7 @@ class TaskController extends HomeController {
 			case 'all' :
 				$this -> assign("folder_name", '所有任务');
 				break;
-			case 'todo' :
-				$this -> assign("folder_name", '未完成');
-
-				$where_log['type'] = 1;
-				$where_log['status'] = array('eq', '0');
-				$where_log['executor'] = get_user_id();
-
-				$task_list = M("TaskLog") -> where($where_log) -> getField('task_id', TRUE);
-				if (empty($task_list)) {
-					$where['_string'] = '1=2';
-				} else {
-					$where['id'] = array('in', $task_list);
-				}
-
-				break;
-
+				
 			case 'dept' :
 				$this -> assign("folder_name", '我们部门的任务');
 				$auth = $this -> config['auth'];
@@ -118,7 +103,7 @@ class TaskController extends HomeController {
 			case 'no_finish' :
 				$this -> assign("folder_name", '我未完成');
 
-				$where_log['status'] = array('lt', 30);
+				$where_log['status'] = array('lt', 20);
 				$where_log['executor'] = get_user_id();
 				$where_log['type'] = array('eq', 1);
 
@@ -264,14 +249,14 @@ class TaskController extends HomeController {
 	function let_me_do($task_id) {
 		if (IS_POST) {
 			M("Task") -> where("id=$task_id") -> setField('executor', get_user_name() . "|" . get_user_id());
-			M("Task") -> where("id=$task_id") -> setField('status', 1);
+			M("Task") -> where("id=$task_id") -> setField('status', 10);
 
 			$data['task_id'] = I(task_id);
 			$data['executor'] = get_user_id();
 			$data['executor_name'] = get_user_name();
 			$data['transactor'] = get_user_id();
 			$data['transactor_name'] = get_user_name();
-			$data['status'] = 1;
+			$data['status'] = 10;
 
 			$task_id = I(task_id);
 			$list = M("TaskLog") -> add($data);

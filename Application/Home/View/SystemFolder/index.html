@@ -133,8 +133,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function add_folder() {
-			//winopen("{:U('add_folder')}",704,570);
- 			winopen("{:U('SystemFolder/add',array('controller'=>$controller))}",704,570);
+ 			winopen("{:U('SystemFolder/add',array('controller'=>$controller,'has_pid'=>$has_pid))}",704,470);
 		};
 		function add() {
 			$("#opmode").val("add");
@@ -184,9 +183,7 @@
 				$("#read").val($("#read").val() + $(this).text().replace(';', '') + '|' + $(this).attr("data") + ";");
 			});
 
-			if (check_form("form_data")) {
-				sendForm("form_data", "", "__SELF__");
-			}
+			sendForm("form_data", "", "__SELF__");
 		};
 
 		function showdata(result) {
@@ -207,7 +204,6 @@
 		function select_pid() {
 			winopen("{:U('SystemFolder/winpop','controller='.CONTROLLER_NAME)}", 704, 400);
 		}
-
 
 		$(document).ready(function() {
 			set_return_url();

@@ -35,7 +35,7 @@ class  NodeModel extends CommonModel {
 		}
 	}
 	
-	public function access_list($user_id){		
+	public function access_list($user_id=null){		
 		if(empty($user_id)){
 			$user_id=get_user_id();	
 		}

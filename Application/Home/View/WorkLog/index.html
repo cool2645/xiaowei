@@ -111,11 +111,11 @@
 				{:W('FileUpload/view',array('add_file'=>$vo['add_file']))}
 				<div class="space-12"></div>
 			</foreach>
+			<div class="pagination">
+				{$page}
+			</div>
+		</div>
 	</empty>
-	</div>
-	<div class="pagination">
-		{$page}
-	</div>
 </block>
 <block name="js">
 	<script type="text/javascript">

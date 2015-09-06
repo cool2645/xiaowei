@@ -22,6 +22,7 @@ class SystemFolderController extends HomeController {
 
 	function add($controller) {
 		$this -> assign('controller', $controller);
+		$this->assign('has_pid',I('has_pid'));
 		$this -> display();
 	}
 
@@ -101,5 +102,4 @@ class SystemFolderController extends HomeController {
 		$this -> assign('menu', popup_tree_menu($tree));
 		$this -> display("SystemFolder:winpop");
 	}
-
 }

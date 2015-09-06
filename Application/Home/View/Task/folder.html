@@ -51,7 +51,13 @@
 				<ul class="nav nav-pills">
 					<li <eq name="fid" value="all">class="active"</eq>>
 						<a href="{:U('folder','fid=all')}">所有</a>
-					</li>		
+					</li>
+					<li <eq name="fid" value="no_finish">class="active"</eq>>
+						<a href="{:U('folder','fid=no_finish')}">我未完成
+						<notempty name="no_finish_task_count">
+							<span class="badge badge-pink">{$no_finish_task_count}</span>
+						</notempty></a>
+					</li>
 					<li <eq name="fid" value="dept">class="active"</eq>>
 						<a href="{:U('folder','fid=dept')}">部门任务
 						<notempty name="dept_task_count">
@@ -60,22 +66,19 @@
 					</li>
 					<li <eq name="fid" value="no_assign">class="active"</eq>>
 						<a href="{:U('folder','fid=no_assign')}" >不知让谁处理
-							<notempty name="no_assign_task_count">
-								<span class="badge badge-pink">{$no_assign_task_count}</span>
-							</notempty></a>
-					</li>
-					<li <eq name="fid" value="no_finish">class="active"</eq>>
-						<a href="{:U('folder','fid=no_finish')}">我未完成</a>
-					</li>
+						<notempty name="no_assign_task_count">
+							<span class="badge badge-pink">{$no_assign_task_count}</span>
+						</notempty></a>
+					</li>					
 					<li <eq name="fid" value="finished">class="active"</eq>>
 						<a href="{:U('folder','fid=finished')}">我已完成</a>
-					</li>	
+					</li>
 					<li <eq name="fid" value="my_task">class="active"</eq>>
 						<a href="{:U('folder','fid=my_task')}">我发布的</a>
 					</li>
 					<li <eq name="fid" value="my_assign">class="active"</eq>>
 						<a href="{:U('folder','fid=my_assign')}">我指派的</a>
-					</li>
+					</li>				
 				</ul>
 			</div>
 			<if condition="$auth['write']">
@@ -94,7 +97,7 @@
 				</div>
 				<div class="pull-right">
 					<span class="col-20 autocut">分配给</span>
-					<span class="col-12">发起时间</span>					
+					<span class="col-12">发起时间</span>
 					<span class="col-12">期望完成时间</span>
 					<span class="col-6 ">状态</span>
 					<span class="col-6 text-center">操作</span>

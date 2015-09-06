@@ -19,6 +19,7 @@
 					<a onclick="import_user()" class="btn btn-sm btn-primary">导入</a>
 					<a onclick="weixin_sync()" class="hidden btn btn-sm btn-primary">同步到微信</a>
 					<a onclick="reset_pwd()" class="btn btn-sm btn-primary">设置密码</a>
+					<a onclick="del_pwd()" class="btn btn-sm btn-primary">清空工资密码</a>
 				</div>
 				<div class="pull-right">
 					<a onclick="add()"  class="btn btn-sm btn-primary">新增</a>
@@ -169,10 +170,27 @@
 		function add() {
 			winopen("{:U('add')}", 704,500);
 		};
-
+        function del_pwd(){
+		if($("input[name='user_id[]']:checked").length==0){
+				ui_error('请选择要清空密码的人员 ');
+				return;
+			}
+			var vars = $("#form_user").serialize();	
+			ui_confirm('确定要清空密码吗?', function() {
+				
+				sendAjax("{:U('del_pwd')}", vars, function(data) {
+					if (data.status) {
+						ui_alert(data.info, function() {
+							location.reload(true);
+						});
+					}
+				});
+			});
+        }
 		function del() {			
 			if($("input[name='user_id[]']:checked").length==0){
 				ui_error('请选择要删除的人员 ');
+				return;
 			}
 			var vars = $("#form_user").serialize();			
 			ui_confirm('确定要删除吗?', function() {

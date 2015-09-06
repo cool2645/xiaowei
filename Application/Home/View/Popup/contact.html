@@ -7,11 +7,9 @@
 				<label>
 					<input class="ace"  type="radio" id="rb_dept" name="type" value="dept" >
 					<span class="lbl">部门</span> </label>
-
 				<label class="hidden">
 					<input  class="ace"  type="radio" id="rb_rank" name="type" value="rank">
 					<span class="lbl">职级</span> </label>
-
 				<label>
 					<input  class="ace"  type="radio" id="rb_position" name="type" value="position">
 					<span class="lbl">职位</span> </label>
@@ -114,8 +112,7 @@
 
 		function save() {
 			$("#rc select option").each(function(i) {
-				email = $(this).html().split(";")[1].split("&")[0];
-				emp_no = $(this).val();
+				email = $(this).val();
 				name = jQuery.trim($(this).text()).replace(/<.*>/, '');
 				html = conv_inputbox_item(name, email);
 				$("#recever .address_list", parent.document).append(html);
@@ -154,11 +151,10 @@
 				var email = result.data[s].email;
 				var name = result.data[s].name;
 				var name = name + "/" + position_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(name, id);
+				var html_string = conv_address_item(name, email);
 				$("#addr_list").append(html_string);
 			}
 		}
-
 
 		$(document).ready(function() {
 			$("#rb_{$type}").prop('checked', true);

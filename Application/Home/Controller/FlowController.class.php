@@ -57,8 +57,8 @@ class FlowController extends HomeController {
 				$where['is_del'] = 0;
 				$where['_string'] = "result is null";
 				$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
-
 				$log_list = rotate($log_list);
+				
 				if (!empty($log_list)) {
 					$map['id'] = array('in', $log_list['flow_id']);
 				} else {
@@ -350,7 +350,7 @@ class FlowController extends HomeController {
 
 		$fid = I("fid");
 		$this -> _flow_auth_filter($fid, $map);
-
+		
 		$fid = I('fid');
 		$model = D("Flow");
 		$where['id'] = array('eq', $id);
@@ -381,7 +381,7 @@ class FlowController extends HomeController {
 		$model = M("FlowLog");
 		$where = array();
 		$where['flow_id'] = $id;
-		$where['step'] = array('eq', 100);
+		$where['step'] = array('eq', 100);		
 		$refer_flow_log = $model -> where($where) -> order("id") -> select();
 		$this -> assign("refer_flow_log", $refer_flow_log);
 
@@ -395,9 +395,9 @@ class FlowController extends HomeController {
 		$where = array();
 		$where['flow_id'] = $id;
 		$where['emp_no'] = get_emp_no();
-		$where['step'] = array('eq', 100);
-
+		$where['step'] = array('eq', 100);		
 		$to_refer = $model -> where($where) -> find();
+		$is_read=$model->where($where)->setField('is_read',1);
 		$this -> assign("to_refer", $to_refer);
 
 		if (!empty($to_confirm)) {
@@ -477,6 +477,7 @@ class FlowController extends HomeController {
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
+		$model->confirm_name=I('confirm_name');
 		$str_confirm = D("Flow") -> _conv_auditor($model -> confirm);
 		$str_consult = D("Flow") -> _conv_auditor($model -> consult);
 		$str_auditor = $str_confirm . $str_consult;

@@ -190,7 +190,7 @@ class  RoleModel extends CommonModel {
 		return result;
 	}
 
-	function get_auth($module_name,$user_id) {
+	function get_auth($module_name,$user_id=null) {
 		if(empty($user_id)){
 			$user_id=get_user_id();
 		}

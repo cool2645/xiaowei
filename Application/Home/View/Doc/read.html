@@ -12,7 +12,7 @@
 
 			<div class="pull-right">
 				<a onclick="winprint()" class="btn btn-sm btn-primary hidden-xs">打印</a>
-				<if condition="$auth['write']">
+				<if condition="($auth['write']) and ($vo.user_id eq get_user_id())">
 					<a onclick="edit();" class="btn btn-sm btn-primary">修改</a>
 				</if>
 			</div>
