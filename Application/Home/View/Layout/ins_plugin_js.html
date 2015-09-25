@@ -13,11 +13,11 @@
 </notempty>
 
 <notempty name="plugin.editor">
+	<empty name="plugin.uploader">
+		<script type="text/javascript" src="__INS__/js/plugins/plupload/plupload.full.min.js"></script>
+	</empty>
 	<script type="text/javascript" src="__INS__/js/plugins/tinymce/tinymce.min.js"></script>
 	<script type="text/javascript" src="__INS__/js/plugins/tinymce/tinymce.setting.js"></script>
-	<!--<script type="text/javascript" src="__INS__/js/plugins/editor/kindeditor.js"></script>
-	<script type="text/javascript" src="__INS__/js/plugins/editor/lang/zh_CN.js"></script>
-	<script type="text/javascript" src="__INS__/js/plugins/editor/kindeditor.setting.js"></script>-->
 </notempty>
 
 <notempty name="plugin.baidu_map">
@@ -34,7 +34,11 @@
 		 $('.input-date').datetimepicker({
 			format : 'YYYY-MM-DD',
 			locale : 'zh-cn',
-			ignoreReadonly : true
+			ignoreReadonly : true,
+			widgetPositioning : {
+				horizontal : 'auto',
+				vertical : 'bottom'
+			},
 		});
 		
 		$(".input-daterange input").datetimepicker({
@@ -42,7 +46,11 @@
 			locale : 'zh-cn',
 			showTodayButton : true,
 			showClose : true,
-			ignoreReadonly : true
+			ignoreReadonly : true,
+			widgetPositioning : {
+				horizontal : 'auto',
+				vertical : 'bottom'
+			},
 		});
 
 		$("#start_date").on("dp.change", function(e) {
@@ -69,9 +77,6 @@
 				vertical : 'bottom'
 			},
 		});
-
-		</notempty>
-
-		 
+		</notempty>		 
 	}); 
 </script>

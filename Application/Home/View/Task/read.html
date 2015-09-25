@@ -82,25 +82,25 @@
 		<ul>
 			<li class="thead">
 				<span class="col-9 text-center">分配给</span>
-				<span class="col-9 text-center">状态</span>
-				<span class="col-9 text-center">执行人</span>
-				<span class="col-15 text-center">计划完成时间</span>
-				<span class="col-15 text-center">已完成情况</span>
+				<span class="col-6 text-center">状态</span>
+				<span class="col-6 text-center">执行人</span>
+				<span class="col-13 text-center">计划完成时间</span>
+				<span class="col-13 text-center">已完成情况</span>
 				<span class="auto">执行内容</span>
 			</li>
 			<volist name="task_log" id="item">
 				<li class="tbody">
 					<span class="col-9 text-center">&nbsp;{$item.executor_name}</span>
-					<span class="col-9 text-center">&nbsp;{$item.status|task_status}</span>
-					<span class="col-9 text-center">&nbsp;{$item.transactor_name}</span>
-					<span class="col-15 text-center">&nbsp;{$item.plan_time|substr=0,16}</span>
-					<span class="col-15 text-center"> &nbsp;
+					<span class="col-6 text-center">&nbsp;{$item.status|task_status}</span>
+					<span class="col-6 text-center">&nbsp;{$item.transactor_name}&nbsp;</span>
+					<span class="col-13 text-center">&nbsp;{$item.plan_time|substr=0,16}&nbsp;</span>
+					<span class="col-13 text-center"> &nbsp;
 						<eq name='item.status' value='10'>
 							{$item.finish_rate|finish_rate}
 						</eq>
 						<egt name='item.status' value='20'>
 							{$item.finish_time|substr=0,16}
-						</egt></span>
+						</egt>&nbsp;</span>
 					<span class="auto">
 						<div style="overflow:hidden">
 							{$item.feed_back}
@@ -196,12 +196,6 @@
 						<form method='post' id="form_data_reject" name="form_data_reject" >
 							<input type="hidden" name="status" value="22">
 							<input type="hidden" name="id" value="{$task_working.id}">
-							<div class="form-group col-sm-12">
-								<label class="col-sm-2 control-label" >任务完成时间：</label>
-								<div class="col-sm-10 ">
-									<input class="input-date-time form-control" name="finish_time" id="finish_time" value="{$task_working.finish_time|substr=0,16}" check="require" msg="请输入实际完成时间" readonly="readonly">
-								</div>
-							</div>
 							<div class="form-group panel-body">
 								<label class="col-sm-2 control-label" >执行内容：</label>
 								<div class="col-sm-10">
@@ -264,10 +258,9 @@
 					});
 				}
 			}
-
 			$form_name = "form_data_" + $status_name;
-			var vars = $("#" + $form_name).serialize();
-			if (check_form($form_name)) {
+			if (check_form($form_name)) {				
+				var vars = $("#" + $form_name).serialize();				
 				if ($status_name == "working") {
 					sendAjax("{:U('save_log')}", vars, function(data) {
 						if (data.status) {
@@ -309,6 +302,7 @@
 				}
 			}
 		}
+
 
 		$(document).ready(function() {
 			$(document).on("click", ".inputbox .address_list a.del", function() {

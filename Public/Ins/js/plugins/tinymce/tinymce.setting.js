@@ -7,6 +7,7 @@ $(function() {
 		url : upload_url,
 		flash_swf_url : app_path + '/Public/Static/plupload/Moxie.swf',
 		chunk_size : '2mb',
+		resize : { width : 720, height : 960, quality : 90 },
 		filters : {
 			max_file_size : '2mb',
 			mime_types : [{
@@ -31,7 +32,7 @@ $(function() {
 				}
 			},
 			Error : function(up, err) {
-				document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
+				ui_alert(err.message);
 			}
 		}
 	});
@@ -40,16 +41,18 @@ $(function() {
  	
 	if (is_mobile()) {
 		$editor = {
+			menu : {},
 			language : "zh_CN",
 			selector : ".editor",
-			plugins : ["autosave imageupload advlist autolink lists link image imagetools charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+			//plugins里的imagetools去掉了防止把图片以二进制形式插入content字段|Terry
+			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
 			toolbar : "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
 		};
 		$simple = {
 			menu : {},
 			language : "zh_CN",
 			selector : ".simple",
-			plugins : ["autosave imageupload advlist autolink lists link image imagetools charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
 			toolbar : false,
 		};
 
@@ -57,14 +60,14 @@ $(function() {
 		$editor = {
 			language : "zh_CN",
 			selector : ".editor",
-			plugins : ["autosave imageupload advlist autolink lists link image imagetools charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
 			toolbar : "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
 		};
 		$simple = {
 			menu : {},
 			language : "zh_CN",
 			selector : ".simple",
-			plugins : ["autosave imageupload advlist autolink lists link image imagetools charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
 			toolbar : "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
 		};
 	}

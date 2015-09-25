@@ -121,7 +121,6 @@ class SupplierController extends HomeController {
 					$data['is_del'] = 0;
 					$model -> add($data);
 				}
-				//dump($sheetData);
 				if (file_exists(__ROOT__ . "/" . $inputFileName)) {
 					unlink(__ROOT__ . "/" . $inputFileName);
 				}

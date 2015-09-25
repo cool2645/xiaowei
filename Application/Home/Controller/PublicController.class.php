@@ -41,11 +41,6 @@ class PublicController extends Controller {
 			$this -> error('密码必须！');
 		}
 
-		if ($_POST['emp_no'] == 'admin') {
-			$is_admin = true;
-			session(C('ADMIN_AUTH_KEY'), true);
-		}
-
 		$map = array();
 
 		$map['emp_no'] = $_POST['emp_no'];

@@ -164,10 +164,10 @@
 		};
 
 		function showdata(result) {
+			$("#opmode").val("edit");
 			for (var s in result.data) {
 				set_val(s, result.data[s]);
-			}
-			$("#opmode").val("edit");
+			}			
 		}
 
 		$(document).ready(function() {

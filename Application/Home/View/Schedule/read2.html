@@ -44,7 +44,7 @@
 					<div class="left" >
 						低
 					</div>
-					<div id="slider-range-priority"></div>
+					<div id="basic_slider"></div>
 					<div class="right" >
 						高
 					</div>
@@ -104,20 +104,19 @@
 	}
 
 	$(function() {
-		$("#slider-range-priority").slider({
-			range : "min",
-			min : 1,
-			max : 5,
-			value : "{$vo.priority}",
-			slide : function(event, ui) {
-				$("#priority").val(ui.value);
-				$("div.slider_box div.ui-slider").css("background-color", schedule_bg(ui.value));
-				$("div.slider_box div.ui-widget-header").css("background-color", schedule_bg(ui.value));
-			}
+			$("#basic_slider").noUiSlider({
+				start : {$vo.priority},
+				step : 1,
+				range : {
+					'min' : 1,
+					'max' : 5,
+				},
+			});
+			$("#basic_slider").on('change',function(){
+				$("div.slider_box .noUi-base").css("background-color", schedule_bg($(this).val()));
+			});
+			$("div.slider_box .noUi-base").css("background-color", schedule_bg({$vo.priority}));						
 		});
-		$("div.slider_box div.ui-slider").css("background-color", schedule_bg("{$vo.priority}"));
-		$("div.slider_box div.ui-widget-header").css("background-color", schedule_bg("{$vo.priority}"));
-	})
 
 	$(document).ready(function() {
 		fill_time("start_time");

@@ -30,6 +30,7 @@ class TaskModel extends CommonModel {
 		$executor_list = $data['executor'];
 		$executor_list = array_filter(explode(';', $executor_list));
 
+				
 		if (!empty($executor_list)) {
 			foreach ($executor_list as $key => $val) {
 				$tmp = explode('|', $val);

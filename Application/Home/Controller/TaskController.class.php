@@ -375,6 +375,10 @@ class TaskController extends HomeController {
 			$model -> status = 20;
 			$status = 20;
 		}
+		
+		if($model -> status==22){
+			$model -> finish_time = to_date(time());
+		}
 
 		$list = $model -> save();
 
@@ -416,7 +420,9 @@ class TaskController extends HomeController {
 			$forword_executor = I('forword_executor');
 			D('Task') -> forword($task_id, $forword_executor);
 		}
+		if ($status = 22) {
 
+		}
 		if ($list !== false) {
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('提交成功!');

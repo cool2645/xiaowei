@@ -20,12 +20,12 @@ return array(
     'SESSION_AUTO_START'=>true,
     
 	/* 认证相关 */
-    'USER_AUTH_KEY'		=>'auth_id',	// 用户认证SESSION标记
-    'ADMIN_AUTH_KEY'	=>'administrator',        
+    'USER_AUTH_KEY'	=>'auth_id',	// 用户认证SESSION标记
+    'ADMIN_USER_LIST'	=>'admin',        
     'USER_AUTH_GATEWAY'	=>'public/login',// 默认认证网关
 
     'SHOW_PAGE_TRACE'	=>1, //显1示调试信息
-            
+ 
     /* 系统数据加密设置 */
     'DATA_AUTH_KEY'		=> '1*NX+Jds|p!IFqltgD)"?4;ic<{,wuya239Ax^]-', //默认数据加密KEY        
 );

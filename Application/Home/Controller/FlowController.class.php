@@ -109,6 +109,38 @@ class FlowController extends HomeController {
 				}
 				break;
 
+			case 'receive_read' :
+				$this -> assign("folder_name", '已参阅');
+				$FlowLog = M("FlowLog");
+				$where['emp_no'] = $emp_no;
+				$where['step'] = 100;
+				$where['is_del'] = 0;
+				$where['_string'] = "comment is not null";
+				$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
+				$log_list = rotate($log_list);
+				if (!empty($log_list)) {
+					$map['id'] = array('in', $log_list['flow_id']);
+				} else {
+					$map['_string'] = '1=2';
+				}
+				break;
+				
+			case 'receive_unread' :
+				$this -> assign("folder_name", '未参阅');
+				$FlowLog = M("FlowLog");
+				$where['emp_no'] = $emp_no;
+				$where['step'] = 100;
+				$where['is_del'] = 0;
+				$where['_string'] = "comment is null";
+				$log_list = $FlowLog -> where($where) -> field('flow_id') -> select();
+				$log_list = rotate($log_list);
+				if (!empty($log_list)) {
+					$map['id'] = array('in', $log_list['flow_id']);
+				} else {
+					$map['_string'] = '1=2';
+				}
+				break;	
+							
 			case 'report' :
 				$this -> assign("folder_name", '统计报告');
 				$role_list = D("Role") -> get_role_list($user_id);
@@ -347,15 +379,15 @@ class FlowController extends HomeController {
 		$plugin['uploader'] = true;
 		$plugin['editor'] = true;
 		$this -> assign("plugin", $plugin);
-
+		
 		$fid = I("fid");
 		$this -> _flow_auth_filter($fid, $map);
-		
-		$fid = I('fid');
+			
 		$model = D("Flow");
-		$where['id'] = array('eq', $id);
-		$where['_logic'] = 'and';
-		$map['_complex'] = $where;
+		$where['id'] = array('eq', $id);		
+		$where['_logic'] = 'and';			
+		$map['_complex'] = $where;			
+				
 		$vo = $model -> where($map) -> find();
 		if (empty($vo)) {
 			$this -> error("系统错误");
@@ -381,7 +413,8 @@ class FlowController extends HomeController {
 		$model = M("FlowLog");
 		$where = array();
 		$where['flow_id'] = $id;
-		$where['step'] = array('eq', 100);		
+		$where['step'] = array('eq', 100);	
+		$model->where($where)->setField('is_read',1);	
 		$refer_flow_log = $model -> where($where) -> order("id") -> select();
 		$this -> assign("refer_flow_log", $refer_flow_log);
 
@@ -628,7 +661,8 @@ class FlowController extends HomeController {
 		//保存当前数据对象
 		$list = $model -> save();
 		
-		if ($list !== false) {//保存成功			
+		if ($list !== false) {//保存成功		
+			$this -> assign('jumpUrl', U('flow/folder', 'fid=receive_unread'));	
 			$this -> success('操作成功!');
 		} else {
 			//失败提示

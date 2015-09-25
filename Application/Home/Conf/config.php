@@ -15,9 +15,10 @@
 		'TEMPLETE_PATH'=>'./Uploads/Templete',	
 	    		  
 		 // 文件上传相关配置 
+		'CHUNK_UPLOAD'=>true,
 	    'DOWNLOAD_UPLOAD' => array(
 	        'mimes'    => '', //允许上传的文件MiMe类型
-	        'maxSize'  => 20*1024*1024, //上传的文件大小限制 (0-不做限制)
+	        'maxSize'  => 0, //上传的文件大小限制 (0-不做限制)
 	        'autoSub'  => true, //自动子目录保存文件
 	        'subName'  =>  array('date','Y-m'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
 	        'rootPath' => './Uploads/Download/', //保存根路径

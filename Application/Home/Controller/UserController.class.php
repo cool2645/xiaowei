@@ -78,8 +78,7 @@ class UserController extends HomeController {
 		}
 		$User = M("User");
 		// 检测用户名是否冲突
-		$name = I('emp_no');
-		;
+		$name = I('emp_no'); ;
 		$result = $User -> getByAccount($name);
 		if ($result) {
 			$this -> error('该编码已经存在！');
@@ -98,11 +97,14 @@ class UserController extends HomeController {
 		} else {
 			// 写入帐号数据
 			$model -> letter = get_letter($model -> name);
-			$model -> password = md5($model -> emp_no . $model -> emp_no);
-			$model -> dept_id=I('dept_id');
+			$model -> password = md5($model -> emp_no);
+			$model -> dept_id = I('dept_id');
+			$model -> openid = $model -> emp_no;
+			$model -> westatus = array('eq', 1);
 			$emp_no = $model -> emp_no;
-			$name = $model -> name;					
+			$name = $model -> name;
 			$mobile_tel = $model -> mobile_tel;
+
 			if ($result = $model -> add()) {
 				$data['id'] = $result;
 				M("UserConfig") -> add($data);
@@ -152,48 +154,28 @@ class UserController extends HomeController {
 		}
 	}
 
-	private function _weixin_sync() {
+	private function _weixin_sync($user_list) {
 
 		import("Weixin.ORG.Util.Weixin");
 		$weixin = new \Weixin($agent_id);
-		$user_list = M("User") -> getField('emp_no', true);
 
-		$weixin_user_list = $weixin -> get_user_list();
-		foreach ($weixin_user_list as $key => $val) {
-			$data[] = $val['userid'];
-		}
-
-		$weixin -> del_user_list($data);
-
+		$where['emp_no'] = array('in', $user_list);
 		$user_list = M("User") -> where(array('is_del' => 0)) -> getField('emp_no,name,mobile_tel');
 
 		$error_code_desc = C('WEIXIN_ERROR_CODE');
+
 		foreach ($user_list as $key => $val) {
 			$emp_no = $val['emp_no'];
 			$name = $val['name'];
 			$mobile_tel = trim($val['mobile_tel'], '+-');
 
-			$error_code =             json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+			$error_code =      json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
 			$list[$key]['error_code'] = $error_code;
 			$list[$key]['desc'] = $error_code_desc[$error_code];
 			$list[$key]['emp_no'] = $key;
 		}
 		$this -> assign('list', $list);
 		$this -> display();
-	}
-
-	private function _add_weixin_user($user_id, $name, $mobile) {
-		import("Weixin.ORG.Util.Weixin");
-		$weixin = new \Weixin();
-		$restr = $weixin -> add_user($id, $name, $mobile);
-		return $restr;
-	}
-
-	private function _del_weixin_user($user_id, $name, $mobile) {
-		import("Weixin.ORG.Util.Weixin");
-		$weixin = new \Weixin();
-		$restr = $weixin -> add_user($id, $name, $mobile);
-		return $restr;
 	}
 
 	protected function add_default_role($user_id) {
@@ -223,12 +205,13 @@ class UserController extends HomeController {
 			$this -> error('重置密码失败！');
 		}
 	}
+
 	function del_pwd() {
 		$id = $_POST['user_id'];
-		$User=M('User');
-        $where['id']=array('in', $id);
-        $data['pay_pwd']='';
-        $result=$User->where($where)->save($data);
+		$User = M('User');
+		$where['id'] = array('in', $id);
+		$data['pay_pwd'] = '';
+		$result = $User -> where($where) -> save($data);
 		if (false !== $result) {
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success("密码清除成功");
@@ -236,7 +219,7 @@ class UserController extends HomeController {
 			$this -> error('清除密码失败！');
 		}
 	}
-	
+
 	public function password() {
 		$this -> assign("id", I('id'));
 		$this -> display();
@@ -256,13 +239,26 @@ class UserController extends HomeController {
 	}
 
 	function del() {
-		$id = I('user_id');
-		$this -> _destory($id);
+		$id = I('user_id');		
+		$admin_user_list=C('ADMIN_USER_LIST');
+		
+		$where['emp_no']=array('not in',$admin_user_list);
+		$where['id']=array('in',$id);
+		
+		$admin_user_id=M("User")->where($where)->getField('id',TRUE);
+		$admin_emp_no=M("User")->where($where)->getField('emp_no',TRUE);		
+				
+		import("Weixin.ORG.Util.Weixin");
+		$weixin = new \Weixin();
+		$restr = $weixin -> del_user($admin_emp_no);
+		
+		$this -> _destory($admin_user_id);
 	}
 
 	public function import() {
 		$opmode = $_POST["opmode"];
 		if ($opmode == "import") {
+			$import_user = array();
 			$File = D('File');
 			$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
 			$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
@@ -286,7 +282,7 @@ class UserController extends HomeController {
 				$model = D("User");
 				for ($i = 2; $i <= count($sheetData); $i++) {
 					$data = array();
-
+					$import_user[] = $sheetData[$i]["A"];
 					$data_user['emp_no'] = $sheetData[$i]["A"];
 					$data_user['name'] = $sheetData[$i]["B"];
 
@@ -310,7 +306,7 @@ class UserController extends HomeController {
 					$this -> add_role($user_id, $data_role);
 				}
 				if (get_system_config('IS_LICENSED')) {
-					$this -> _weixin_sync();
+					$this -> _weixin_sync($import_user);
 				}
 				$this -> assign('jumpUrl', get_return_url());
 				$this -> success('导入成功！');

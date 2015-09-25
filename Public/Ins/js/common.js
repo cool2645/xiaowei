@@ -25,7 +25,7 @@ function click_top_menu(node) {
 	set_cookie("top_menu", node);
 	set_cookie("left_menu", "");
 	set_cookie("current_node", "");
-	location.href = url;
+	("http://" === url.substr(0, 7)||"#" === url.substr(0, 1))? window.open(url) : location.href = url;
 }
 
 function click_home_list(obj_node) {

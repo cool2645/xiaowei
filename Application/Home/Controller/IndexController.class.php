@@ -90,7 +90,7 @@ class IndexController extends HomeController {
 	}
 
 	public function _udf_renew_list() {
-		
+
 		$node_model = M("UdfShop");
 		$node_list = $node_model -> order('sort asc') -> select();
 
@@ -101,9 +101,9 @@ class IndexController extends HomeController {
 		$end_date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
 
 		$target_list = D('UdfRenew') -> get_target($start_date, $end_date);
-		
+
 		$present_list = D('UdfRenew') -> get_sumary($start_date, $end_date);
-		
+
 		foreach ($node_list as $key => $val) {
 
 			$shop_no = rotate(tree_to_list(list_to_tree($node_list, $val['id'])));
@@ -203,24 +203,28 @@ class IndexController extends HomeController {
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
 		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id', true);
-		$info_list = implode(",", $info_list);
 
 		if (!empty($info_list)) {
-			$map['_string'] .= "or Info.id in ($info_list)";
+			$info_list = implode(",", $info_list);
+
+			if (!empty($info_list)) {
+				$map['_string'] .= "or Info.id in ($info_list)";
+			}
+
+			$folder_list = D("SystemFolder") -> get_authed_folder("Info");
+			if ($folder_list) {
+				$map['folder'] = array("in", $folder_list);
+			} else {
+				$map['_string'] = '1=2';
+			}
+			$map['is_del'] = array('eq', 0);
+
+			$model = D("InfoView");
+			//获取最新邮件
+
+			$info_list = $model -> where($map) -> field("id,name,create_time,folder_name") -> order("create_time desc") -> limit(8) -> select();
+
 		}
-
-		$folder_list = D("SystemFolder") -> get_authed_folder("Info");
-		if ($folder_list) {
-			$map['folder'] = array("in", $folder_list);
-		} else {
-			$map['_string'] = '1=2';
-		}
-		$map['is_del'] = array('eq', 0);
-
-		$model = D("InfoView");
-		//获取最新邮件
-
-		$info_list = $model -> where($map) -> field("id,name,create_time,folder_name") -> order("create_time desc") -> limit(8) -> select();
 		$this -> assign("info_list", $info_list);
 	}
 
@@ -230,6 +234,7 @@ class IndexController extends HomeController {
 		//获取最新邮件
 		$start_date = date("Y-m-d");
 		$where['user_id'] = $user_id;
+		$where['is_del'] = array('eq', 0);
 		$where['start_time'] = array('egt', $start_date);
 		$schedule_list = M("Schedule") -> where($where) -> order('start_time,priority desc') -> limit(8) -> select();
 		$this -> assign("schedule_list", $schedule_list);

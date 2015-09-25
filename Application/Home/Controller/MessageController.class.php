@@ -1,7 +1,7 @@
 <?php
 
 namespace Home\Controller;
-
+use Think\Model;
 class MessageController extends HomeController {
 	protected $config = array('app_type' => 'personal');
 	//过滤查询字段
@@ -21,19 +21,20 @@ class MessageController extends HomeController {
 	}
 
 	public function index() {
-		//列表过滤器，生成查询Map对象
+		//列表过滤器，生成查询Map对象		
 		$model = D("Message");
 		if (empty($_POST['keyword'])) {
-			$list = $model -> get_list();
-			$this -> assign('list', $list);
-		} else {
+			$sql = $model -> get_sql();			
+			$model = new Model();
+			$model -> table("($sql) a");
+		} else {			
 			if (method_exists($this, '_filter')) {
 				$this -> _filter($map);
 			}
-			if (!empty($model)) {
-				$this -> _list($model, $map);
-			}
 		}
+		if (!empty($model)) {
+			$this -> _list($model, $map);
+		}		
 		$this -> assign('owner_id', get_user_id());
 		$this -> display();
 	}

@@ -45,12 +45,12 @@
 						</div>
 					</div>
 					<div class="col-xs-11">
-						<p>
-							{$vo.sender_name}：{$vo.content}
-						</p>
-						<p>
-							<span>{$vo.create_time|to_date='Y-m-d'}</span>
-						</p>
+						<div>
+							{$vo.sender_name}：<span>{$vo.create_time|to_date='Y-m-d H:i'}</span>
+						</div>
+						<div>
+							{$vo.content}							
+						</div>
 						<p>
 							{:W('FileUpload/link',array($vo['add_file']))}
 						</p>

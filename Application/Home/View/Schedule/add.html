@@ -121,6 +121,7 @@
 			});
 			$("#basic_slider").on('change',function(){
 				$("div.slider_box .noUi-base").css("background-color", schedule_bg($(this).val()));
+				$("#priority").val($(this).val());
 			});
 			$("div.slider_box .noUi-base").css("background-color", schedule_bg(3));
 		});

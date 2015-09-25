@@ -117,6 +117,8 @@ class ScheduleController extends HomeController {
 	}
 
 	public function read2($id){
+		$plugin['jquery-ui'] = true;		
+		$this -> assign("plugin", $plugin);
 		$this -> read($id);
 	}
 	

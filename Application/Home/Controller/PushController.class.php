@@ -37,14 +37,6 @@ class PushController extends HomeController {
 		$this -> display();
 	}
 
-	function test() {
-		$data['type'] = 'type';
-		$data['action'] = 'action';
-		$data['title'] = 'title';
-		$data['content'] = 'contnet';
-		send_ws($data, array('1'));
-	}
-
 	function server() {
 		$user_id = $user_id = get_user_id();
 		session_write_close();

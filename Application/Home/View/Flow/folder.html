@@ -77,7 +77,7 @@
 		<form method="post" action="" name="form_data" id="form_data">
 			<ul>
 				<foreach name="list" item="vo">
-					<li class="tbody">
+					<li class="tbody <eq name='folder' value='receive'>{:get_flow_receive_is_read($vo['id'])}</eq>">
 						<div class="pull-left">
 							<span class="col-13 ">{$vo.doc_no}</span>
 							<span class="col-13  "> {$vo.type_name}</span>
