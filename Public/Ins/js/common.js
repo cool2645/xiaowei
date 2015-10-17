@@ -541,7 +541,8 @@ function sendAjax(url, vars, callback) {
 /*提交表单*/
 function sendForm(formId, post_url, return_url) {
 	if(check_form(formId)){
-		window.onbeforeunload = null;
+		//绑定beforeunload事件
+		$(window).unbind('beforeunload',null);
 		if ($("#ajax").val() == 1) {
 			var vars = $("#" + formId).serialize();
 			$.ajax({

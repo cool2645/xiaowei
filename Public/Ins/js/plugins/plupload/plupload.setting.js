@@ -1,5 +1,6 @@
+var uploader;
 $(function() {
-	var uploader = new plupload.Uploader({
+	uploader = new plupload.Uploader({
 		runtimes : 'html5,flash',
 		browse_button : 'pickfiles', // you can pass in id...
 		container : document.getElementById('uploader'), // ... or DOM Element itself
@@ -70,24 +71,15 @@ $(function() {
 	});
 	uploader.init();
 });
-
-window.onbeforeunload = function(e) {
-	e = e || window.event;
-	// For IE and Firefox prior to version 4
+//绑定beforeunload事件
+$(window).bind('beforeunload', function() {
 	$new_upload = $("#file_list").attr("new_upload");
 	if ($new_upload !== undefined) {
 		if ($new_upload.length) {
-			if (e) {
-				e.returnValue = '上传的附件将被删除，确定退出吗？';
-			}
-			// For Safari
-			window.onunload = function() {
-				sendAjax(del_url, 'sid=' + $(this).attr("id"));
-			};
-			return '上传的附件将被删除，确定退出吗？';
+			return '您输入的内容尚未保存，确定离开此页面吗？';
 		}
 	}
-};
+});
 
 $(document).on("click", "#uploader a.del", function() {
 	$obj = $(this).parents("li");

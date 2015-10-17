@@ -95,24 +95,26 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-		window.onbeforeunload=null;
-		$("#executor").val("");
-		$("#executor_wrap span.address_list span").each(function() {
-		$("#executor").val($("#executor").val()+$(this).find("b").text()+'|'+$(this).attr("data")+";");
-		});
-		$("#actor").val("");
-		$("#actor_wrap span.address_list span").each(function() {
-		$("#actor").val($("#actor").val()+$(this).find("b").text()+'|'+$(this).attr("data")+";");
-		});
-		sendForm("form_data","{:U('save')}");
+			$("#executor").val("");
+			$("#executor_wrap span.address_list span").each(function() {
+				$("#executor").val($("#executor").val() + $(this).find("b").text() + '|' + $(this).attr("data") + ";");
+			});
+			$("#actor").val("");
+			$("#actor_wrap span.address_list span").each(function() {
+				$("#actor").val($("#actor").val() + $(this).find("b").text() + '|' + $(this).attr("data") + ";");
+			});
+			sendForm("form_data", "{:U('save')}");
 		}
+
 		function popup_actor() {
-		winopen("{:U('popup/work_order')}",730,574);
+			winopen("{:U('popup/work_order')}", 730, 574);
 		}
+
+
 		$(document).ready(function() {
-		$(document).on("click",".inputbox .address_list a.del", function() {
-		$(this).parent().parent().remove();
-		});
+			$(document).on("click", ".inputbox .address_list a.del", function() {
+				$(this).parent().parent().remove();
+			});
 		});
 	</script>
 </block>

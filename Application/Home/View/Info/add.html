@@ -79,7 +79,6 @@
 		}
 
 		function save() {
-			window.onbeforeunload = null;
 			$("#scope_user_name").val("");
 			$("#actor_wrap span.address_list span").each(function() {
 				$("#scope_user_name").val($("#scope_user_name").val() + $(this).text().replace(';', '') + '|' + $(this).attr("data") + ";");

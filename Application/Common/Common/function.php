@@ -235,6 +235,30 @@ function badge_count_flow_todo() {
 	return $new_confirm_count;
 }
 
+function badge_count_gov_doc() {
+	$model = M('gov_doc_auth');
+	$auth = $model -> select();
+	$where['user_id'] = get_user_id();
+	$list = $model -> where($where) -> find();
+	$user_auth = $list['set_auth'];
+	if ($user_auth == 0) {
+		$model = D('GovDoc');
+		$where['user_id'] = get_user_id();
+		$where['is_del'] = 0;
+		$where['is_read'] = 0;
+		$gov_doc_count = $model -> where($where) -> count();
+		return $gov_doc_count;
+
+	}
+
+	$model = D('GovDocView');
+	$where['user_id'] = get_user_id();
+	$where['is_del'] = 0;
+	$where['state'] = 0;
+	$gov_doc_count = $model -> where($where) -> count();
+	return $gov_doc_count;
+}
+
 function badge_count_flow_receive() {
 	//获取收到的流程
 	$emp_no = get_emp_no();
@@ -909,12 +933,12 @@ function popup_tree_menu2($tree, $level = 0) {
 					$del_class = "";
 				}
 				if (isset($val['_child'])) {
-					$html = $html . "<li class=\"level_{$level} dept dept_{$id} dept_pid_{$pid}\" dept_pid_id=\"{$pid}\" dept_id=\"{$id}\">\r\n<a node=\"$id\" ><span><i class=\"fa fa-angle-right\"></i>$title</span></a>\r\n";
+					$html = $html . "<li class=\"level_{$level} dept dept_{$id} dept_pid_{$pid}\" dept_pid_id=\"{$pid}\" dept_id=\"{$id}\">\r\n<a node=\"$id\" ><span><i class=\"fa fa-angle-right\"></i>$title</span></a><i class=\"check \"></i>\r\n";
 					$html = $html . get_emp_list($val['id']);
 					$html = $html . popup_tree_menu2($val['_child'], $level);
 					$html = $html . "</li>\r\n";
 				} else {
-					$html = $html . "<li class=\"level_{$level} dept dept_{$id} dept_pid_{$pid}\" dept_pid_id=\"{$pid}\" dept_id=\"{$id}\">\r\n<a node=\"$id\" ><span><i class=\"fa fa-angle-right\"></i>$title</span></a>\r\n</li>\r\n";
+					$html = $html . "<li class=\"level_{$level} dept dept_{$id} dept_pid_{$pid}\" dept_pid_id=\"{$pid}\" dept_id=\"{$id}\">\r\n<a node=\"$id\" ><span><i class=\"fa fa-angle-right\"></i>$title</span></a><i class=\"check\"></i>\r\n</li>\r\n";
 					$html = $html . get_emp_list($val['id']);
 				}
 			}
@@ -931,7 +955,7 @@ function get_emp_list($dept_id) {
 	$html = '';
 	foreach ($user_list as $key => $val) {
 		$id = $val['id'];
-		$html = $html . "<li class=\"emp dept_pid_{$dept_id}\" user_id=\"$id\">\r\n<a ><span><i class=\"fa fa-user\"></i>{$val['name']}</span></a>\r\n</li>";
+		$html = $html . "<li class=\"emp dept_pid_{$dept_id}\" user_id=\"$id\">\r\n<a><span><i class=\"fa fa-user\"></i>{$val['name']}</span><i class=\"check fa \"></i></a>\r\n</li>";
 	}
 	return $html;
 }
@@ -1423,7 +1447,7 @@ function send_weixin($data, $user_list) {
 	$openid = implode('|', array_filter($openid));
 
 	// 这里$url不加/oa/的话测试图文会传递到weixin的index控制器|Terry
-	$url = get_system_config('WEIXIN_SITE_URL') . "/weixin.php?c=Oa&a=send";
+	$url = get_system_config('WEIXIN_SITE_URL') . "/index.php?m=Weixin&c=Oa&a=send";
 	$type = 'news';
 
 	$params['content'] = $msg;
@@ -1713,7 +1737,7 @@ function get_flow_receive_is_read($id) {
 	};
 }
 
-//公文流转时判断
+//签批时判断是否是已经选择的领导
 function is_disable($gov_doc_id, $user_id) {
 	$model = M('gov_doc_log');
 	$where['gov_doc_id'] = $gov_doc_id;
@@ -1737,5 +1761,29 @@ function get_nav_url($url) {
 			break;
 	}
 	return $url;
+}
+
+function get_top_menu_id($url, $menu = null) {
+	if (empty($menu)) {
+		$menu = D("Node") -> access_list();
+		$menu = sort_by($menu, 'sort');
+	}
+	$menu = tree_to_list(list_to_tree($menu));
+	foreach ($menu as $key => $val) {
+		$node_url = str_replace('#', '', $val['url']);
+		if ($node_url == $url) {
+			$return = $val['id'];
+		}
+	}
+
+	arsort($menu);
+	foreach ($menu as $key => $val) {
+		if ($val['id'] == $return) {
+			if ($val['pid'] != 0) {
+				$return = $val['pid'];
+			}
+		}
+	}
+	return $return;
 }
 ?>

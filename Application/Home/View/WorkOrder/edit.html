@@ -97,7 +97,6 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-			window.onbeforeunload = null;
 			$("#executor").val("");
 			$("#actor_wrap span.address_list span").each(function() {
 				$("#executor").val($("#executor").val() + $(this).find("b").text() + '|' + $(this).attr("data") + ";");

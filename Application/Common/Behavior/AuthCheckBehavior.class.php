@@ -11,6 +11,11 @@ class AuthCheckBehavior extends Behavior {
 		//个人数据
 		$app_type = $params['app_type'];	
 		switch($app_type) {
+			case 'weixin':
+				if(!is_weixin()){
+					$this->error('只能在微信里访问');
+				}
+				return true;
 			case 'public' :
 				$auth = array('admin' => false, 'write' => false, 'read' => true);
 				$params['auth'] = $auth;

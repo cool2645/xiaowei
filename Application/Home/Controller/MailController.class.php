@@ -486,7 +486,7 @@ class MailController extends HomeController {
 							$push_data['action'] = '';
 							$push_data['title'] = '收到' . $new . '封邮件';
 							$push_data['content'] = '';
-							$push_data['url'] = U("Mail/folder?fid=inbox");
+							$push_data['url'] = U('Mail/folder','fid=inbox&return_url=Mail/index');
 
 							send_push($push_data, $user_id);
 						}
@@ -529,7 +529,7 @@ class MailController extends HomeController {
 			$push_data['action'] = '';
 			$push_data['title'] = '收到' . $new . '封邮件';
 			$push_data['content'] = '';
-			$push_data['url'] = U("Mail/folder?fid=inbox");
+			$push_data['url'] = U('Mail/folder','fid=inbox&return_url=Mail/index');
 			send_push($push_data, $user_id);
 		}
 	}

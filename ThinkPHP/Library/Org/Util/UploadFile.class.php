@@ -157,11 +157,11 @@ class UploadFile extends Think
             if(false !== $image) {
                 //是图像文件生成缩略图
                 $thumbWidth		=	explode(',',$this->thumbMaxWidth);
-                $thumbHeight		=	explode(',',$this->thumbMaxHeight);
-                $thumbPrefix		=	explode(',',$this->thumbPrefix);
-                $thumbSuffix = explode(',',$this->thumbSuffix);
-                $thumbFile			=	explode(',',$this->thumbFile);
-                $thumbPath    =  $this->thumbPath?$this->thumbPath:$file['savepath'];
+                $thumbHeight	=	explode(',',$this->thumbMaxHeight);
+                $thumbPrefix	=	explode(',',$this->thumbPrefix);
+                $thumbSuffix 	=	explode(',',$this->thumbSuffix);
+                $thumbFile		=	explode(',',$this->thumbFile);
+                $thumbPath    	=  $this->thumbPath?$this->thumbPath:$file['savepath'];
                 // 生成图像缩略图
                 import("ORG.Util.Image");
                 $realFilename  =  $this->autoSub?basename($file['savename']):$file['savename'];
@@ -226,10 +226,10 @@ class UploadFile extends Think
             //过滤无效的上传
             if(!empty($file['name'])) {
                 //登记上传文件的扩展信息
-                $file['key']				=  $key;
+                $file['key']			=  $key;
                 $file['extension']		= $this->getExt($file['name']);
                 $file['savepath']		= $savePath;
-                $file['savename']   = $this->getSaveName($file);
+                $file['savename']   	= $this->getSaveName($file);
 
                 // 自动检查附件
                 if($this->autoCheck) {
@@ -434,10 +434,10 @@ class UploadFile extends Think
         }
 
         //检查是否合法上传
-        //if(!$this->checkUpload($file['tmp_name'])) {
-       //    $this->error = '非法上传文件！';
-        //    return false;
-        //}
+        if(!$this->checkUpload($file['tmp_name'])) {
+           $this->error = '非法上传文件！';
+            return false;
+        }
         return true;
     }
 
@@ -507,6 +507,9 @@ class UploadFile extends Think
      */
     private function checkUpload($filename)
     {
+    	if($file['is_move']){
+    		return true;
+    	}	
         return is_uploaded_file($filename);
     }
 

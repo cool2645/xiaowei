@@ -121,7 +121,6 @@
 <block name="js">
 	<script type="text/javascript">
 		function save(step) {
-			window.onbeforeunload = null;
 			$("#confirm").val("");
 			$("#confirm_wrap  span").each(function() {
 				$("#confirm").val($("#confirm").val() + $(this).attr("data") + '|');

@@ -80,7 +80,6 @@
 <block name="js">
 	<script type="text/javascript">
 		function save() {
-			window.onbeforeunload = null;
 			if (check_form("form_data")) {
 				var vars = $("#form_data").serialize();
 				sendAjax("{:U('save')}", vars, function(data) {

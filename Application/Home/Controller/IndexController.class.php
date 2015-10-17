@@ -202,9 +202,7 @@ class IndexController extends HomeController {
 
 		$map['_string'] = " Info.is_public=1 or Info.dept_id=$dept_id ";
 
-		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id', true);
-
-		if (!empty($info_list)) {
+		$info_list = M("InfoScope") -> where("user_id=$user_id") -> getField('info_id', true);		
 			$info_list = implode(",", $info_list);
 
 			if (!empty($info_list)) {
@@ -212,6 +210,7 @@ class IndexController extends HomeController {
 			}
 
 			$folder_list = D("SystemFolder") -> get_authed_folder("Info");
+			
 			if ($folder_list) {
 				$map['folder'] = array("in", $folder_list);
 			} else {
@@ -220,11 +219,8 @@ class IndexController extends HomeController {
 			$map['is_del'] = array('eq', 0);
 
 			$model = D("InfoView");
-			//获取最新邮件
-
+			
 			$info_list = $model -> where($map) -> field("id,name,create_time,folder_name") -> order("create_time desc") -> limit(8) -> select();
-
-		}
 		$this -> assign("info_list", $info_list);
 	}
 

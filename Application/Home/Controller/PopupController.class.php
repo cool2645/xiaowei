@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 
 namespace Home\Controller;
 
@@ -162,7 +162,7 @@ class PopupController extends HomeController {
 		$this -> assign('menu', popup_tree_menu2($tree));
 		$this -> display('mobile');
 	}
-	
+
 	function auth() {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
@@ -192,6 +192,7 @@ class PopupController extends HomeController {
 		$this -> display();
 	}
 
+
 	function depts() {
 		$plugin['jquery-ui'] = true;
 		$this -> assign("plugin", $plugin);
@@ -218,16 +219,17 @@ class PopupController extends HomeController {
 	}
 
 	function task() {
-		if(is_weixin()){
-			$this->mobile();			
-		}else{
+		if (is_weixin()) {
+			$this -> mobile();
+		} else {
 			$this -> actor();
-		}		
+		}
 	}
 
 	function work_order() {
 		$this -> actor();
 	}
+
 	function confirm() {
 
 		$plugin['jquery-ui'] = true;
@@ -248,7 +250,7 @@ class PopupController extends HomeController {
 	function refer() {
 		$this -> actor();
 	}
-	
+
 	function flow() {
 
 		$plugin['jquery-ui'] = true;
@@ -298,8 +300,8 @@ class PopupController extends HomeController {
 
 			if (!$info) {
 				$result['result_code'] = 102;
-				  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-				$result['result_des'] = $protocol.$_SERVER['HTTP_HOST'].$image;
+				$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+				$result['result_des'] = $protocol . $_SERVER['HTTP_HOST'] . $image;
 			} else {
 				$max_width = 440;
 				if ($info['type'] == 'jpg' || $info['type'] == 'jpeg') {
@@ -392,8 +394,7 @@ class PopupController extends HomeController {
 
 	function json() {
 		header("Content-Type:text/html; charset=utf-8");
-		$type = I('type');
-		;
+		$type = I('type'); ;
 		$key = $_REQUEST['key'];
 
 		$model = M("User");

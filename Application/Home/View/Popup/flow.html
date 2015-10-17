@@ -94,20 +94,14 @@
 				html_string = conv_inputbox_item(name, emp_no);
 				$("#consult_wrap .address_list", parent.document).append(html_string);
 			});
-			$("#bcc select option").each(function(i) {
-				emp_no = $(this).val();
-				name = jQuery.trim($(this).text());
-				html_string = conv_inputbox_item(name, emp_no);
-				$("#refer_wrap .address_list", parent.document).append(html_string);
-			});
-
+ 
 			$("#confirm_wrap span a", parent.document).remove();
 			$("#confirm_wrap .address_list span", parent.document).append("<b><i class=\"fa fa-arrow-right\"></i></b>");
-			$("#confirm_wrap .address_list span b:last", parent.document).remove();
+			$("#confirm_wrap .address_list span b:last", parent.document).html("<i class=\"fa\"></i>");
 
 			$("#consult_wrap span a", parent.document).remove();
 			$("#consult_wrap .address_list span", parent.document).append("<b><i class=\"fa fa-arrow-right\"></i></b>");
-			$("#consult_wrap .address_list span b:last", parent.document).remove();
+			$("#consult_wrap .address_list span b:last", parent.document).html("<i class=\"fa\"></i>");
 
 			$("#confirm_wrap,#consult_wrap,#refer_wrap", parent.document).show();
 			myclose();

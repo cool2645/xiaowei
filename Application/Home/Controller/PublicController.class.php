@@ -5,10 +5,7 @@ use Think\Controller;
 
 class PublicController extends Controller {
 	protected $config = array('app_type' => 'public');
-	/**
-	 * 后台用户登录
-	 * @author 麦当苗儿 <zuojiazi@vip.qq.com>
-	 */
+
 	public function login() {
 		$this -> assign("is_verify_code", get_system_config("IS_VERIFY_CODE"));
 		$auth_id = session(C('USER_AUTH_KEY'));
@@ -290,7 +287,7 @@ class PublicController extends Controller {
 							$push_data['action'] = '';
 							$push_data['title'] = '收到' . $new . '封邮件';
 							$push_data['content'] = '';
-							$push_data['url'] = U("Mail/folder?fid=inbox");
+							$push_data['url'] = U('Mail/folder','fid=inbox&return_url=Mail/index');
 
 							send_push($push_data, $user_id);
 						}
@@ -317,7 +314,7 @@ class PublicController extends Controller {
 				$push_data['action'] = '';
 				$push_data['title'] = '收到' . $new . '封邮件';
 				$push_data['content'] = '';
-				$push_data['url'] = U("Mail/folder?fid=inbox");
+				$push_data['url'] = U("Mail/folder?fid=inbox&return_url=Mail/index");
 
 				send_push($push_data, $user_id);
 			}

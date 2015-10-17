@@ -193,7 +193,6 @@
 			});
 		});
 		function send(flag) {
-			window.onbeforeunload = null;
 			$("#to").val("");
 			$("#recever .address_list span").each(function() {
 				$("#to").val($("#to").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";");

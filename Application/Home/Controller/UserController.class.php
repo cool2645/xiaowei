@@ -78,7 +78,8 @@ class UserController extends HomeController {
 		}
 		$User = M("User");
 		// 检测用户名是否冲突
-		$name = I('emp_no'); ;
+		$name = I('emp_no');
+		;
 		$result = $User -> getByAccount($name);
 		if ($result) {
 			$this -> error('该编码已经存在！');
@@ -100,7 +101,7 @@ class UserController extends HomeController {
 			$model -> password = md5($model -> emp_no);
 			$model -> dept_id = I('dept_id');
 			$model -> openid = $model -> emp_no;
-			$model -> westatus = array('eq', 1);
+			$model -> westatus = 1;
 			$emp_no = $model -> emp_no;
 			$name = $model -> name;
 			$mobile_tel = $model -> mobile_tel;
@@ -169,7 +170,7 @@ class UserController extends HomeController {
 			$name = $val['name'];
 			$mobile_tel = trim($val['mobile_tel'], '+-');
 
-			$error_code =      json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+			$error_code =       json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
 			$list[$key]['error_code'] = $error_code;
 			$list[$key]['desc'] = $error_code_desc[$error_code];
 			$list[$key]['emp_no'] = $key;
@@ -239,19 +240,19 @@ class UserController extends HomeController {
 	}
 
 	function del() {
-		$id = I('user_id');		
-		$admin_user_list=C('ADMIN_USER_LIST');
-		
-		$where['emp_no']=array('not in',$admin_user_list);
-		$where['id']=array('in',$id);
-		
-		$admin_user_id=M("User")->where($where)->getField('id',TRUE);
-		$admin_emp_no=M("User")->where($where)->getField('emp_no',TRUE);		
-				
+		$id = I('user_id');
+		$admin_user_list = C('ADMIN_USER_LIST');
+
+		$where['emp_no'] = array('not in', $admin_user_list);
+		$where['id'] = array('in', $id);
+
+		$admin_user_id = M("User") -> where($where) -> getField('id', TRUE);
+		$admin_emp_no = M("User") -> where($where) -> getField('emp_no', TRUE);
+
 		import("Weixin.ORG.Util.Weixin");
 		$weixin = new \Weixin();
 		$restr = $weixin -> del_user($admin_emp_no);
-		
+
 		$this -> _destory($admin_user_id);
 	}
 

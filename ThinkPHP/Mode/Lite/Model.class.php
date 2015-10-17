@@ -987,7 +987,7 @@ class Model {
      * @param string $sql  SQL指令
      * @return mixed
      */
-    public function query($sql) {
+    public function query($sql) {	
         return $this->db->query($sql);
     }
 

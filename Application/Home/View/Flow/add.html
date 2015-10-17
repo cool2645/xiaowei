@@ -46,7 +46,7 @@
 
 		<div class="form-group">
 			<label class="col-sm-2 control-label" >审批：</label>
-			<div class="col-sm-10">
+			<div class="col-sm-10 address_list_box">
 				<p id="confirm_wrap" class="form-control-static address_list">
 					{$flow_type.confirm_name}
 				</p>
@@ -55,7 +55,7 @@
 
 		<div class="form-group">
 			<label class="col-sm-2 control-label" >协商：</label>
-			<div class="col-sm-10">
+			<div class="col-sm-10 address_list_box">
 				<p id="consult_wrap" class=" form-control-static address_list">
 					{$flow_type.consult_name}
 				</p>
@@ -92,16 +92,25 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			udf_field.init();
-			$("#confirm span").on("dblclick", function() {
-				$("#confirm span").last().find("b").remove();
+			$('.address_list').on('mouseenter','span', function() {
+				$i = $(this).find('i');
+				$i.removeClass('fa-arrow-right');
+				$i.addClass('fa-times');
 			});
-			$("#consult span").on("dblclick", function() {
-				$("#consult span").last().find("b").remove();
+			$('.address_list').on('mouseleave','span', function() {
+				$i = $(this).find('i');
+				$i.removeClass('fa-times');
+				$i.addClass('fa-arrow-right');
+				
+				$(".address_list span i:last").attr('class','fa');
+			});
+
+			$('.address_list').on('click','i',function(){
+				$(this).parents('span').remove();
 			});
 		});
 
 		function save(step) {
-			window.onbeforeunload = null;
 			$("#confirm").val("");
 			$("#confirm_wrap  span").each(function() {
 				$("#confirm").val($("#confirm").val() + $(this).attr("data") + '|');
@@ -115,18 +124,12 @@
 			});
 			$("#consult_name").val($("#consult_wrap").html());
 
-			$("#refer").val("");
-			$("#refer_wrap  span").each(function() {
-				$("#refer").val($("#refer").val() + $(this).attr("data") + '|');
-			});
-			$("#refer_name").val($("#refer_wrap").html());
-
 			if ($("#confirm").val().length < 2) {
 				ui_error('请选择审批流程');
 				return false;
 			}
 			$("#step").val(step);
-			sendForm("form_data", "{:U('save')}","{:U('index')}");
+			sendForm("form_data", "{:U('save')}", "{:U('index')}");
 		}
 
 		function popup_confirm() {

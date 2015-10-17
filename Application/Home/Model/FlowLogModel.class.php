@@ -30,7 +30,7 @@ class  FlowLogModel extends CommonModel {
 			$push_data['action'] = '需要审批';
 			$push_data['title'] = $flow['name'];
 			$push_data['content'] = '提交人：'.get_dept_name()."-".get_user_name();
-			$push_data['url'] = U("Flow/read?id={$data['flow_id']}");
+			$push_data['url'] = U('Flow/read',"id={$data['flow_id']}&return_url=Flow/index");
 			send_push($push_data,$user_id);	
 		}
 	}

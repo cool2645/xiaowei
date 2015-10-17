@@ -27,12 +27,12 @@ class TaskController extends HomeController {
 
 	/*--------------------------------------------------------------------
 	 * 任务状态说明
-	 * 1:未处理
-	 * 2:进行中
-	 * 3:已完成
-	 * 4:已拒绝
-	 * 5:已关闭
-	 --------------------------------------------------------------*/
+	 * 0:未处理
+	 * 10:进行中
+	 * 20:已完成
+	 * 21:已转交
+	 * 22:已拒绝
+	 --------------------------------------------------------------------*/
 	public function folder() {
 		$plugin['date'] = true;
 		$this -> assign("plugin", $plugin);
@@ -257,7 +257,8 @@ class TaskController extends HomeController {
 			$data['transactor'] = get_user_id();
 			$data['transactor_name'] = get_user_name();
 			$data['status'] = 10;
-
+			$data['type'] = 1;
+						
 			$task_id = I(task_id);
 			$list = M("TaskLog") -> add($data);
 			if ($list != false) {
@@ -269,93 +270,6 @@ class TaskController extends HomeController {
 				$this -> error('提交成功');
 			}
 		}
-	}
-
-	function accept() {
-		if (IS_POST) {
-			$task_log_id = I('task_log_id');
-			$data['id'] = $task_log_id;
-			$data['transactor'] = get_user_id();
-			$data['transactor_name'] = get_user_name();
-			$data['status'] = 1;
-			$list = M("TaskLog") -> save($data);
-
-			$task_id = M("TaskLog") -> where("id=$task_log_id") -> getField('task_id');
-			M("Task") -> where("id=$task_id") -> setField('status', 1);
-
-			if ($list != false) {
-				//$this -> _add_to_schedule($task_id);
-				$return['info'] = '接受成功';
-				$return['status'] = 1;
-				$this -> ajaxReturn($return);
-			} else {
-				$this -> error('提交成功');
-			}
-		}
-	}
-
-	function reject() {
-		$widget['editor'] = true;
-		$this -> assign("widget", $widget);
-		if (IS_POST) {
-			$model = D("TaskLog");
-			if (false === $model -> create()) {
-				$this -> error($model -> getError());
-			}
-			$model -> transactor = get_user_id();
-			$model -> transactor_name = get_user_name();
-			$model -> finish_time = to_date(time());
-			$list = $model -> save();
-			$status = I('status');
-			$task_id = I('task_id');
-			if ($status > 2) {
-				$where_count['task_id'] = array('eq', $task_id);
-				$total_count = M("TaskLog") -> where($where_count) -> count();
-
-				$where_count['status'] = array('gt', 2);
-				$finish_count = M("TaskLog") -> where($where_count) -> count();
-				if ($total_count == $finish_count) {
-					M("Task") -> where("id=$task_id") -> setField('status', 5);
-					$user_id = M('Task') -> where("id=$task_id") -> getField('user_id');
-
-					$info = M("Task") -> where("id=$task_id") -> find();
-
-					$transactor_name = get_user_name();
-
-					$push_data['type'] = '任务';
-					$push_data['action'] = '拒绝接受';
-					$push_data['title'] = "{$transactor_name}拒绝接受您发起的[{$info['name']}]任务";
-					$push_data['content'] = "如有问题，请与[{$transactor_name}]进行沟通。";
-					$push_data['url'] = U("Task/read?id={$info['id']}");
-
-					send_push($push_data, $user_id);
-				}
-			}
-			if ($list !== false) {
-				$this -> success('提交成功');
-			} else {
-				$this -> success('提交失败');
-			}
-		}
-
-		$task_id = I('task_id');
-		$where_log1['type'] = 1;
-		$where_log1['executor'] = get_user_id();
-		$where_log1['task_id'] = $task_id;
-		$task_log1 = M("TaskLog") -> where($where_log1) -> find();
-		if ($task_log1) {
-			$this -> assign('task_log', $task_log1);
-		} else {
-			$where_log2['type'] = 2;
-			$where_log2['executor'] = get_dept_id();
-			$where_log2['task_id'] = $task_id;
-			$task_log2 = M("TaskLog") -> where($where_log2) -> find();
-
-			if ($task_log2) {
-				$this -> assign('task_log', $task_log2);
-			}
-		}
-		$this -> display();
 	}
 
 	public function save_log($id) {
@@ -409,7 +323,7 @@ class TaskController extends HomeController {
 				$push_data['action'] = '已完成';
 				$push_data['title'] = "{$transactor_name}已完成您发起的[{$task['name']}]任务";
 				$push_data['content'] = "如有问题，请与[{$transactor_name}]进行沟通。";
-				$push_data['url'] = U("Task/read?id={$task['id']}");
+				$push_data['url'] = U('Task/read',"id={$task['id']}&return_url&Task/index");
 
 				send_push($push_data, $user_id);
 			}
@@ -480,5 +394,4 @@ class TaskController extends HomeController {
 
 		send_mail($email, $user_name, $title, $body);
 	}
-
 }

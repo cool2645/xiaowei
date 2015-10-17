@@ -44,9 +44,9 @@ class InfoController extends HomeController {
 
 		$where_scope['user_id'] = $user_id;
 		$info_list = M("InfoScope") -> where($where_scope) -> getField('info_id', true);
-		$info_list = implode(",", $info_list);
-
+		
 		if (!empty($info_list)) {
+			$info_list = implode(",", $info_list);
 			$map['_string'] .= "or Info.id in ($info_list)";
 		}
 

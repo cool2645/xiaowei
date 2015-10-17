@@ -67,7 +67,7 @@ class MessageController extends HomeController {
 		$push_data['action'] = '';
 		$push_data['title'] = "来自：" . get_dept_name() . "-" . $data['sender_name'] . "的消息";
 		$push_data['content'] = del_html_tag($data['content']);		
-		$push_data['url']=U('Message/index');
+		$push_data['url']=U('Message/index','return_url=Message/index');
 		
 		send_push($push_data, $recever_list);
 		
@@ -134,7 +134,7 @@ class MessageController extends HomeController {
 			$push_data['action'] = '';
 			$push_data['title'] = "来自：" . get_dept_name() . "-" . $data['sender_name'] . "的消息";
 			$push_data['content'] = strip_tags($data['content']);
-			$push_data['url']=U('Message/index');
+			$push_data['url']=U('Message/index','return_url=Message/index');
 		
 			send_push($push_data, I('receiver_id'));
 

@@ -47,7 +47,16 @@ class HomeController extends Controller {
 		$menu = array_merge($menu, $system_folder_menu, $user_folder_menu);
 		$menu = sort_by($menu, 'sort');
 
-		$top_menu = cookie('top_menu');
+		$return_url = I('get.return_url');
+		if (!empty($return_url)) {
+			cookie('return_url',U($return_url));
+			
+			$top_menu_id = get_top_menu_id($return_url,$menu);
+			cookie('top_menu', $top_menu_id);			
+		} else {
+			$top_menu = cookie('top_menu');
+		}
+		 
 		if (!empty($top_menu)) {
 			$top_menu_name = $model -> where("id=$top_menu") -> getField('name');
 			$this -> assign("top_menu_name", $top_menu_name);

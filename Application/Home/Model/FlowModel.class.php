@@ -101,7 +101,7 @@ class  FlowModel extends CommonModel {
 	function _before_update(&$data, $options) {
 		$flow_type = M("FlowType") -> find($data['type']);
 
-		if (!$flow_type['is_lock']) {
+		if ($flow_type['is_lock']) {
 			unset($data['confirm']);
 			unset($data['consult']);
 			unset($data['refer']);
@@ -241,7 +241,7 @@ class  FlowModel extends CommonModel {
 		$push_data['action'] = '被退回';
 		$push_data['title'] = $flow['name'];
 		$push_data['content'] = '审核人：' . get_dept_name() . "-" . get_user_name();
-		$push_data['url'] = U("Flow/read?id={$flow_id}");
+		$push_data['url'] = U('Flow/read',"id={$flow_id}&return_url=Flow/index");
 
 		$user_id = M("User") -> where(array(emp_no => $emp_no)) -> getField("id");
 		send_push($push_data, $user_id);
@@ -284,7 +284,7 @@ class  FlowModel extends CommonModel {
 			$push_data['action'] = '审核通过';
 			$push_data['title'] = $flow['name'];
 			$push_data['content'] = '审核人：' . get_dept_name() . "-" . get_user_name();
-			$push_data['url'] = U("Flow/read?id={$flow_id}");
+			$push_data['url'] = U('Flow/read',"id={$flow_id}&return_url=Flow/index");
 
 			send_push($push_data, $flow['user_id']);
 
@@ -378,7 +378,7 @@ class  FlowModel extends CommonModel {
 		$push_data['action'] = '需要您参阅';
 		$push_data['title'] = $flow['name'];
 		$push_data['content'] = '转发人：' . get_dept_name() . "-" . get_user_name();
-		$push_data['url'] = U("Flow/read?id={$flow_id}");
+		$push_data['url'] = U('Flow/read',"id={$flow_id}&return_url=Flow/index");
 
 		$where_user_list['emp_no'] = array('in', $emp_list);
 		$user_list = M("User") -> where($where_user_list) -> getField("id", true);

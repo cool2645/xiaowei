@@ -1137,6 +1137,30 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 	padding-right: 3px;
 }
 
+.address_list_box .address_list span {
+	padding-left: 0px;
+	height: 20px;
+	line-height: 20px;
+	display: inline-block;
+	margin-right: 5px;
+}
+.address_list_box .address_list b {
+	padding-left: 3px;
+}
+.address_list_box .address_list i {
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	width:16px;
+}
+
+.address_list_box .address_list i.fa-times {
+	cursor: pointer;
+	color:#ED5565;
+	padding-left: 3px;
+	padding-right: 3px;
+	width:16px;
+}
 .inputbox .letter {
 	border: 0;
 	display: inline-block;

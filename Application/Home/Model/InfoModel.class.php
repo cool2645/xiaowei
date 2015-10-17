@@ -78,7 +78,7 @@ class  InfoModel extends CommonModel {
 			$push_data['action'] = $info['folder_name'];
 			$push_data['title'] = $info['name'];
 			$push_data['content'] = del_html_tag($info['content']);
-			$push_data['url'] = U("Info/read?id={$id}");
+			$push_data['url'] = U('Info/read',"id={$id}&return_url=Info/index");
 			
 			send_push($push_data, $return_user_list);
 						

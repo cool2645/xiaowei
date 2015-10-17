@@ -68,8 +68,7 @@
 	<script type="text/javascript">
 		function save() {
 			$("#confirm_wrap,#consult_wrap,#refer_wrap", parent.document).hide();
-			$("#confirm_wrap,#consult_wrap,#refer_wrap", parent.document).html("");
-
+			
 			$("#rc select option").each(function(i) {
 				emp_no = $(this).val();
 				name = jQuery.trim($(this).text());
@@ -91,20 +90,17 @@
 				$("#refer_wrap", parent.document).append(html_string);
 			});
 
-			$("#confirm_wrap span a", parent.document).remove();
+			$("#confirm_wrap span i", parent.document).remove();
+			
 			$("#confirm_wrap span", parent.document).append("<b><i class=\"fa fa-arrow-right\"></i></b>");
-
-			$("#confirm_wrap span b:last", parent.document).remove();
+			$("#confirm_wrap span b:last", parent.document).html("<i class=\"fa\"></i>");
 
 			$("#consult_wrap span a", parent.document).remove();
 
 			$("#consult_wrap span", parent.document).append("<b><i class=\"fa fa-arrow-right\"></i></b>");
-			$("#consult_wrap span b:last", parent.document).remove();
+			$("#consult_wrap span b:last", parent.document).html("<b><i class=\"fa\"></i></b>");
 
-			$("#refer_wrap span a", parent.document).remove();
-			$("#refer_wrap span", parent.document).append("<b>;&nbsp;</b>");
-
-			$("#confirm_wrap,#consult_wrap,#refer_wrap", parent.document).show();
+			$("#confirm_wrap,#consult_wrap", parent.document).show();
 
 			myclose();
 		}

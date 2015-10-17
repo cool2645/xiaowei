@@ -96,7 +96,6 @@
 		}
 
 		function save() {
-			window.onbeforeunload = null;
 			$("#actor").val("");
 			$("#actor_wrap span.address_list span").each(function() {
 				$("#actor").val($("#actor").val() + $(this).text().replace(';', '') + '|' + $(this).attr("title") + ";");

@@ -613,7 +613,7 @@ class FlowController extends HomeController {
 			$push_data['action'] = '被否决';
 			$push_data['title'] = $flow['name'];
 			$push_data['content'] = '审核人：' . get_dept_name()."-".get_user_name();
-			$push_data['url']=U("Flow/read?id={$flow['id']}&fid=submit");
+			$push_data['url']=U('Flow/read',"id={$flow['id']}&fid=submit&return_url=Flow/index");
 			send_push($push_data, $flow['user_id']);
 
 			$this -> assign('jumpUrl', U('flow/folder', 'fid=confirm'));

@@ -67,6 +67,7 @@
 				<input type="hidden" id="save_name" name="save_name">
 				<input type="hidden" name="id" id="id">
 				<input type="hidden" name="pic" id="pic" >
+				<input type="hidden" name="signature" id="signature" >
 				<input type="hidden" name="opmode" id="opmode" value="edit">
 				<table class="table table-bordered" >
 					<tr>
@@ -77,7 +78,10 @@
 						<td colspan="2" class="col-30">
 						<input class="form-control" type="text" id="emp_no" name="emp_no"  check="require" msg="请输入员工编号" readonly="readonly">
 						</td>
-						<td rowspan="3" class="col-20"><img class="img-thumbnail col-12" id="emp_pic" onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'" ></td>
+						<td rowspan="3" class="col-20">
+							<img class="img-thumbnail col-12" id="emp_pic" onerror="javascript:this.src='/Uploads/emp_pic/no_avatar.jpg'" >
+							
+						</td>
 					</tr>
 					<tr>
 						<th>姓名*</th>
@@ -88,7 +92,7 @@
 					<tr>
 						<th>昵称*</th>
 						<td colspan="2">
-							<input  class="form-control" type="text" id="nickname" name="nickname" class="input-sm" check="require" msg="请输入姓名">
+						<input  class="form-control" type="text" id="nickname" name="nickname" class="input-sm" check="require" msg="请输入昵称">
 						</td>
 					</tr>
 					<tr>
@@ -104,7 +108,8 @@
 						<td colspan="2">
 						<input  type="text" id="birthday" name="birthday" readonly="readonly" class="input-date form-control" readonly="readonly">
 						</td>
-						<td colspan="2"><a onclick="select_avatar();" class="btn btn-sm btn-primary">上传头像</a></td>
+						<td colspan="2"><a onclick="select_avatar();" class="btn btn-sm btn-primary">上传头像</a>
+							</td>
 					</tr>
 					<tr>
 						<th>部门*</th>
@@ -164,7 +169,10 @@
 						</select></td>
 					</tr>
 					<tr>
-					     <td colspan="5"><p align="">带*为必填选项</p></td>
+						<td colspan="5">
+						<p align="">
+							带*为必填选项
+						</p></td>
 					</tr>
 				</table>
 			</form>
@@ -174,16 +182,16 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			winopen("{:U('add')}", 704,500);
+			winopen("{:U('add')}", 704, 500);
 		};
-        function del_pwd(){
-		if($("input[name='user_id[]']:checked").length==0){
+		function del_pwd() {
+			if ($("input[name='user_id[]']:checked").length == 0) {
 				ui_error('请选择要清空密码的人员 ');
 				return;
 			}
-			var vars = $("#form_user").serialize();	
+			var vars = $("#form_user").serialize();
 			ui_confirm('确定要清空密码吗?', function() {
-				
+
 				sendAjax("{:U('del_pwd')}", vars, function(data) {
 					if (data.status) {
 						ui_alert(data.info, function() {
@@ -192,13 +200,14 @@
 					}
 				});
 			});
-        }
-		function del() {			
-			if($("input[name='user_id[]']:checked").length==0){
+		}
+
+		function del() {
+			if ($("input[name='user_id[]']:checked").length == 0) {
 				ui_error('请选择要删除的人员 ');
 				return;
 			}
-			var vars = $("#form_user").serialize();			
+			var vars = $("#form_user").serialize();
 			ui_confirm('确定要删除吗?', function() {
 				sendAjax("{:U('del')}", vars, function(data) {
 					if (data.status) {
@@ -215,7 +224,7 @@
 				ui_error("请选择用户");
 				return false;
 			}
-			winopen("{:U('password')}?id=" + $("#id").val(), 704,400);
+			winopen("{:U('password')}?id=" + $("#id").val(), 704, 400);
 		}
 
 		function import_user() {
@@ -237,6 +246,14 @@
 				return false;
 			}
 			winopen("{:U('popup/avatar')}?id=" + $("#id").val(), 704, 500);
+		}
+
+		function select_signature() {
+			if ($("#id").val().length < 1) {
+				ui_error("请选择用户");
+				return false;
+			}
+			winopen("{:U('popup/signature')}?id=" + $("#id").val(), 704, 500);
 		}
 
 		function btn_search() {
@@ -264,13 +281,13 @@
 			}
 			$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
 			img_url = $("#pic").val();
-			if(img_url!=""){
-				img_url+= "?t=" + Math.random();
-				$("#emp_pic").attr("src", img_url);	
-			}else{
+			if (img_url != "") {
+				img_url += "?t=" + Math.random();
+				$("#emp_pic").attr("src", img_url);
+			} else {
 				$("#emp_pic").attr("src", "/Uploads/emp_pic/no_avatar.jpg");
-			}	
-						
+			}
+
 			$("#save_name").val("");
 			$("#opmode").val("edit");
 		}
