@@ -1631,6 +1631,9 @@ function conv_baidu_map(&$lat, &$lng) {
 	$result = json_decode(file_get_contents($url));
 	$lat = $result -> result[0] -> x;
 	$lng = $result -> result[0] -> y;
+	$data['lat']=$result -> result[0] -> x;
+	$data['lng']=$result -> result[0] -> y;
+	return $data;
 }
 
 function get_location($lat, $lng) {

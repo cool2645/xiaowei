@@ -182,7 +182,7 @@ class TaskController extends HomeController {
 	}
 
 	public function read($id) {
-
+		$plugin['uploader'] = true;
 		$plugin['jquery-ui'] = true;
 		$plugin['editor'] = true;
 		$plugin['date'] = true;

@@ -101,7 +101,7 @@ class  FlowModel extends CommonModel {
 	function _before_update(&$data, $options) {
 		$flow_type = M("FlowType") -> find($data['type']);
 
-		if ($flow_type['is_lock']) {
+		if (($flow_type['is_lock'])&&($data['step']>=20)) {
 			unset($data['confirm']);
 			unset($data['consult']);
 			unset($data['refer']);
@@ -243,12 +243,12 @@ class  FlowModel extends CommonModel {
 		$push_data['content'] = '审核人：' . get_dept_name() . "-" . get_user_name();
 		$push_data['url'] = U('Flow/read',"id={$flow_id}&return_url=Flow/index");
 
-		$user_id = M("User") -> where(array(emp_no => $emp_no)) -> getField("id");
+		$user_id = M("User") -> where(array('emp_no' => $emp_no)) -> getField("id");
 		send_push($push_data, $user_id);
 	}
 
 	public function next_step($flow_id, $step) {
-		$confirm = M("Flow") -> where(array(id => $flow_id)) -> getField("confirm");
+		$confirm = M("Flow") -> where(array('id' => $flow_id)) -> getField("confirm");
 		
 		if (!empty($confirm)&&($step==20)){
 			$confirm_list = array_filter(explode("|", $confirm));
@@ -261,7 +261,7 @@ class  FlowModel extends CommonModel {
 		$model = D("Flow");
 		if (substr($step, 0, 1) == 2) {
 			if ($this -> is_last_confirm($flow_id)) {
-				$model -> where(array(id => $flow_id)) -> setField('step', 30);
+				$model -> where(array('id' => $flow_id)) -> setField('step', 30);
 				$step = 30;
 			} else {
 				$step++;
@@ -277,7 +277,7 @@ class  FlowModel extends CommonModel {
 		}
 
 		if ($step == 40) {
-			$model -> where(array(id => $flow_id)) -> setField('step', 40);
+			$model -> where(array('id' => $flow_id)) -> setField('step', 40);
 
 			$flow = M("Flow") -> find($flow_id);
 			$push_data['type'] = '审批';
@@ -310,7 +310,7 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_confirm($flow_id) {
-		$confirm = M("Flow") -> where(array(id => $flow_id)) -> getField("confirm");
+		$confirm = M("Flow") -> where(array('id' => $flow_id)) -> getField("confirm");
 		if (empty($confirm)) {
 			return true;
 		}
@@ -323,7 +323,7 @@ class  FlowModel extends CommonModel {
 	}
 
 	function is_last_consult($flow_id) {
-		$consult = M("Flow") -> where(array(id => $flow_id)) -> getField("consult");
+		$consult = M("Flow") -> where(array('id' => $flow_id)) -> getField("consult");
 		if (empty($consult)) {
 			return true;
 		}
@@ -339,14 +339,14 @@ class  FlowModel extends CommonModel {
 
 	function duty_emp_no($flow_id, $step) {
 		if (substr($step, 0, 1) == 2) {
-			$confirm = M("Flow") -> where(array(id => $flow_id)) -> getField("confirm");
+			$confirm = M("Flow") -> where(array('id' => $flow_id)) -> getField("confirm");
 			$arr_confirm = array_filter(explode("|", $confirm));
 
 			return $arr_confirm[fmod($step, 10) - 1];
 		}
 
 		if (substr($step, 0, 1) == 3) {
-			$consult = M("Flow") -> where(array(id => $flow_id)) -> getField("consult");
+			$consult = M("Flow") -> where(array('id' => $flow_id)) -> getField("consult");
 			$arr_consult = array_filter(explode("|", $consult));
 			return $arr_consult[fmod($step, 10) - 1];
 		}

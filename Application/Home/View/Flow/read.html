@@ -29,6 +29,7 @@
 	<eq name="is_edit" value="1">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
 			<input type="hidden" id="id" name="id" value="{$vo.id}">
+			<input type="hidden" id="step" name="step" value="{$vo.step}">
 			<input type="hidden" id="ajax" name="ajax" value="0">
 			<input type="hidden" id="add_file" name="add_file" value="{$vo.add_file}">
 			<input type="hidden" id="type" name="type" value="{$flow_type.id}">
@@ -395,7 +396,6 @@
 		function popup_refer() {
 			winopen("{:U('popup/refer')}", 730, 574);
 		}
-
 
 		$(document).ready(function() {
 			set_return_url(document.location, 1);

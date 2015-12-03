@@ -120,7 +120,7 @@
 								<volist name="schedule_list" id="vo">
 									<li>
 										<span class="pull-right hidden-xs">{$vo.start_time|substr=0,10}</span>
-										<span  class="auto autocut"> <a url="{:U('schedule/read2','id='.$vo['id'])}&return_url=Schedule/index" >{$vo.name}</a></span>
+										<span  class="auto autocut"> <a href="{:U('schedule/read2','id='.$vo['id'])}&return_url=Schedule/index" >{$vo.name}</a></span>
 									</li>
 								</volist>
 							</ul>
@@ -130,7 +130,7 @@
 								<volist name="todo_list" id="vo">
 									<li>
 										<span class="pull-right hidden-xs">{$vo.end_date}</span>
-										<span  class="auto autocut"> <a url="{:U('todo/edit','id='.$vo['id'])}&return_url=Todo/index">{$vo.name}</a> </span>
+										<span  class="auto autocut"> <a href="{:U('todo/edit','id='.$vo['id'])}&return_url=Todo/index">{$vo.name}</a> </span>
 									</li>
 								</volist>
 							</ul>

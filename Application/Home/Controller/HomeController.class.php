@@ -49,10 +49,9 @@ class HomeController extends Controller {
 
 		$return_url = I('get.return_url');
 		if (!empty($return_url)) {
-			cookie('return_url',U($return_url));
-			
-			$top_menu_id = get_top_menu_id($return_url,$menu);
-			cookie('top_menu', $top_menu_id);			
+			cookie('return_url',U($return_url));			
+			$top_menu = get_top_menu_id($return_url,$menu);		
+			cookie('top_menu', $top_menu);			
 		} else {
 			$top_menu = cookie('top_menu');
 		}

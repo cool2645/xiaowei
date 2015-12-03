@@ -141,7 +141,8 @@ class FileModel extends Model {
 			header("Content-Description: File Transfer");
 			header('Content-type: ' . $file['type']);
 			header('Content-Length:' . $file['size']);
-			if (preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT'])) {//for IE
+			$ua=$_SERVER['HTTP_USER_AGENT'];
+			if (preg_match('/MSIE/',$ua) || preg_match("/Trident\/7.0/", $ua)) {
 				header('Content-Disposition: attachment; filename="' . rawurlencode($file['name']) . '"');
 			} else {
 				header('Content-Disposition: attachment; filename="' . $file['name'] . '"');

@@ -7,7 +7,6 @@ $(function() {
 		url : upload_url,
 		flash_swf_url : app_path + '/Public/Static/plupload/Moxie.swf',
 		chunk_size : '2mb',
-		drop_element : 'page-wrapper',
 		filters : {
 			max_file_size : '100mb'
 		},

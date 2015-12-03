@@ -242,8 +242,10 @@ class UserController extends HomeController {
 	function del() {
 		$id = I('user_id');
 		$admin_user_list = C('ADMIN_USER_LIST');
-
-		$where['emp_no'] = array('not in', $admin_user_list);
+		
+		if(!empty($admin_user_list)){
+			$where['emp_no'] = array('not in', $admin_user_list);	
+		}
 		$where['id'] = array('in', $id);
 
 		$admin_user_id = M("User") -> where($where) -> getField('id', TRUE);
