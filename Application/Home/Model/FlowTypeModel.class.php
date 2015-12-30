@@ -19,8 +19,7 @@ class  FlowTypeModel extends CommonModel {
 	protected $_validate	 =	 array(
 		array('name','require','名称必须',1),
 		array('short','require','简称必须',1),
-		array('doc_no_format','require','文档编码格式必须',1),		 
-		array('content','require','表单必须'),
+		array('doc_no_format','require','文档编码格式必须',1)
 		);
 }
 ?>

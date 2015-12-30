@@ -17,7 +17,7 @@
 	</div>
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
 		<input type="hidden" id="ajax" name="ajax" value="1">
-		<input type="hidden" id="add_file" name="add_file" >
+
 		<input type="hidden" id="type" name="type" value="{$flow_type.id}">
 		<input type="hidden" id="opmode" name="opmode" value="add">
 		<input type="hidden" id="confirm" name="confirm" value="">
@@ -92,22 +92,24 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			udf_field.init();
-			$('.address_list').on('mouseenter','span', function() {
-				$i = $(this).find('i');
-				$i.removeClass('fa-arrow-right');
-				$i.addClass('fa-times');
+
+			<php>if($flow_type['is_lock']==0){</php>
+			$('.address_list').on('mouseenter', 'span', function() {
+				$(this).find('i').remove();
+				$(this).append('<i class="fa fa-times"></i>');	 
 			});
-			$('.address_list').on('mouseleave','span', function() {
+			$('.address_list').on('mouseleave', 'span', function() {
 				$i = $(this).find('i');
 				$i.removeClass('fa-times');
 				$i.addClass('fa-arrow-right');
-				
-				$(".address_list span i:last").attr('class','fa');
+				$(".address_list span:last i").attr('class', 'fa');
 			});
 
-			$('.address_list').on('click','i',function(){
+			$('.address_list').on('click', 'i', function() {
 				$(this).parents('span').remove();
+				$(".address_list span:last i").attr('class', 'fa');
 			});
+			<php>}</php>
 		});
 
 		function save(step) {

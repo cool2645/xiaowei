@@ -209,8 +209,8 @@ class WorkOrderController extends HomeController {
 
 	public function read($id) {		
 		vendor('WeiXin.jssdk');
-		$corp_id = get_system_config('WEIXIN_CORP_ID');
-		$secret = get_system_config('WEIXIN_SECRET');
+		$corp_id = get_system_config('weixin_corp_id');
+		$secret = get_system_config('weixin_secret');
 		$jssdk = new \JSSDK($corp_id, $secret);
 		$signPackage = $jssdk -> GetSignPackage();
 

@@ -1,5 +1,6 @@
 <eq name="readonly" value="true">
-	<input disabled="disabled" data-date-format="YYYY-MM-DD HH:mm" class="form-control input-date-time" type="text" name="udf_field_{$id}" id="udf_field_{$id}" value="{$val}" <notempty name="validate"> check="{$validate}" msg="{$msg}"</notempty>  >
+	<input class="hidden" type="text" name="udf_field_{$id}" id="udf_field_{$id}" value="{$val}" >
+	<input disabled="disabled" class="form-control input-date-time" type="text" name="udf_field_{$id}" id="disabled_udf_field_{$id}" value="{$val}" <notempty name="validate"> check="{$validate}" msg="{$msg}"</notempty>  >
 	<else/>
 	<input data-date-format="YYYY-MM-DD HH:mm" class="form-control input-date-time" type="text" name="udf_field_{$id}" id="udf_field_{$id}" value="{$val}" <notempty name="validate"> check="{$validate}" msg="{$msg}"</notempty>  readonly="readonly">
 </eq>

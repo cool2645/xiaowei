@@ -46,6 +46,42 @@ class DeptController extends HomeController {
 		$this -> _destory($id);
 	}
 
+	/** 插入新新数据  **/
+	protected function _insert($name = CONTROLLER_NAME) {
+
+		$model = D($name);
+		if (false === $model -> create()) {
+			$this -> error($model -> getError());
+		}
+
+		/*保存当前数据对象 */
+		$list = $model -> add();
+		if ($list !== false) {//保存成功
+			$this -> assign('jumpUrl', get_return_url());
+			$this -> success('新增成功!');			
+		} else {
+			$this -> error('新增失败!');
+			//失败提示
+		}
+	}
+
+	/* 更新数据  */
+	protected function _update($name = CONTROLLER_NAME) {
+		$model = D($name);
+		if (false === $model -> create()) {
+			$this -> error($model -> getError());
+		}
+		$list = $model -> save();
+		if (false !== $list) {
+			$this -> assign('jumpUrl', get_return_url());
+			$this -> success('编辑成功!');
+			//成功提示
+		} else {
+			$this -> error('编辑失败!');
+			//错误提示
+		}
+	}
+
 	public function winpop() {
 		$node = M("Dept");
 		$menu = array();

@@ -5,18 +5,18 @@ function del_current_node() {
 function winprint() {
 	$("#sidebar").addClass("hidden");
 	$("#page-wrapper").addClass("print");
-	setTimeout(function(){
-		window.print();	
-	},300);	
-	
-	setTimeout(function(){
+	setTimeout(function() {
+		window.print();
+	}, 300);
+
+	setTimeout(function() {
 		$("#page-wrapper").removeClass("print");
 		$("#sidebar").removeClass("hidden");
-	},700);	
+	}, 700);
 }
 
 function freshVerify() {
-	$('#verifyImg').attr("src", $('#verifyImg').attr("src")+"&" + Math.random());
+	$('#verifyImg').attr("src", $('#verifyImg').attr("src") + "&" + Math.random());
 }
 
 function click_top_menu(node) {
@@ -25,7 +25,7 @@ function click_top_menu(node) {
 	set_cookie("top_menu", node);
 	set_cookie("left_menu", "");
 	set_cookie("current_node", "");
-	("http://" === url.substr(0, 7)||"#" === url.substr(0, 1))? window.open(url) : location.href = url;
+	("http://" === url.substr(0, 7) || "#" === url.substr(0, 1)) ? window.open(url) : location.href = url;
 }
 
 function click_home_list(obj_node) {
@@ -147,13 +147,20 @@ function conv_address_item(name, data) {
 	return html;
 }
 
+/*联系人显示格式转换*/
+function conv_address_item_radio(name, data) {
+	html = '<nobr><label>';
+	html += '		<input text="' + name + '"class="ace" type="radio" name="addr_id" value="' + data + '"/>';
+	html += '		<span class="lbl">' + name + '</span></label></nobr>';
+	return html;
+}
+
 function conv_inputbox_item(name, data) {
 	html = "<span data=\"" + data + "\" id=\"" + data + "\">";
 	html += "<nobr><b  title=\"" + name + "\">" + name + "</b>";
 	html += "<a class=\"del\" title=\"删除\"><i class=\"fa fa-times\"></i></a></nobr></span>";
 	return html;
 }
-
 
 /* 在iframe里显示textarea的内容*/
 function show_content() {
@@ -312,9 +319,12 @@ var Inputbox = {
 
 /*赋值*/
 
-function set_val(name, val) { 
+function set_val(name, val) {
+	if (val == "") {
+		return;
+	}
 	if ($("#" + name + " option").length > 0) {
-		$("#" + name+" [value="+val+"]").attr('selected','selected');
+		$("#" + name + " [value=" + val + "]").attr('selected', 'selected');
 		return;
 	}
 
@@ -324,7 +334,7 @@ function set_val(name, val) {
 			return;
 		}
 	}
-	
+
 	if ($("." + name).length > 0) {
 		if (($("." + name).first().attr("type")) === "checkbox") {
 			var arr_val = val.split(",");
@@ -422,7 +432,7 @@ function myclose() {
 }
 
 function winclose() {
-	$("body").removeClass("modal-open");		
+	$("body").removeClass("modal-open");
 	$("div.shade").hide();
 	$("#dialog").html("");
 	$("#dialog").remove();
@@ -475,7 +485,7 @@ function check_form(form_id) {
 			return false;
 		}
 	}
-	if(typeof(tinyMCE) != 'undefined'){
+	if ( typeof (tinyMCE) != 'undefined') {
 		tinyMCE.triggerSave(true);
 	}
 
@@ -501,29 +511,29 @@ function validate(data, datatype) {
 		data2 = tmp[1];
 	}
 	switch (datatype) {
-	case "require":
-		if (data == "") {
-			return false;
-		} else {
-			return true;
-		}
-		break;
-	case "email":
-		var reg = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
-		return reg.test(data);
-		break;
-	case "number":
-		var reg = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
-		return reg.test(data);
-		break;
-	case "html":
-		var reg = /<...>/;
-		return reg.test(data);
-		break;
-	case "eqt":
-		data2 = $("#" + data2).val();
-		return data >= data2;
-		break;
+		case "require":
+			if (data == "") {
+				return false;
+			} else {
+				return true;
+			}
+			break;
+		case "email":
+			var reg = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+			return reg.test(data);
+			break;
+		case "number":
+			var reg = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
+			return reg.test(data);
+			break;
+		case "html":
+			var reg = /<...>/;
+			return reg.test(data);
+			break;
+		case "eqt":
+			data2 = $("#" + data2).val();
+			return data >= data2;
+			break;
 	}
 }
 
@@ -540,9 +550,9 @@ function sendAjax(url, vars, callback) {
 
 /*提交表单*/
 function sendForm(formId, post_url, return_url) {
-	if(check_form(formId)){
+	if (check_form(formId)) {
 		//绑定beforeunload事件
-		$(window).unbind('beforeunload',null);
+		$(window).unbind('beforeunload', null);
 		if ($("#ajax").val() == 1) {
 			var vars = $("#" + formId).serialize();
 			$.ajax({
@@ -707,7 +717,6 @@ var udf_field = {
 		});
 	},
 };
-
 
 $(document).ready(function() {
 	$("#sidebar .nav a").click(function() {

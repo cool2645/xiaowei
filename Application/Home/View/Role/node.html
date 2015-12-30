@@ -27,12 +27,14 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
+						<th>ID</th>
 						<th>名称</th>
 					</tr>
 				</thead>
 				<tbody>
 					<volist name="list" id="data">
 						<tr id="{$data.id}">
+							<td>{$data.id}</td>
 							<td>{$data.name}</td>
 						</tr>
 					</volist>

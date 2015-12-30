@@ -2,8 +2,7 @@
 <block name="content">
 	{:W('PageHeader/simple',array('name'=>'发布任务','search'=>'N'))}
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
-		<input type="hidden" id="ajax" name="ajax" value="0">
-		<input type="hidden" id="add_file" name="add_file">
+		<input type="hidden" id="ajax" name="ajax" value="0">		
 		<input type="hidden" id="executor" name="executor" value="">
 		<input type="hidden" id="actor" name="actor" value="">
 		<input type="hidden" id="opmode" name="opmode" value="add">
@@ -21,7 +20,7 @@
 			<label class="col-sm-4 control-label" for="account_id">工作类型：</label>
 			<div class="col-sm-8">
 				<select name="order_type" id="order_type" class="form-control col-12" >
-					{:fill_option(get_system_config('WORK_ORDER_TYPE'))}
+					{:fill_option(get_system_config('work_order_type'))}
 				</select>
 			</div>
 		</div>

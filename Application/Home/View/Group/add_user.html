@@ -30,9 +30,9 @@
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th class="text-center col-5"><label class="inline pull-left">
-								<input class="ace" type="checkbox" name="id-toggle-all" id="id-toggle-all" />
-								<span class="lbl"></span></label></th>
+							<th class="text-center col-6">
+							<input class="ace" type="checkbox" name="id-toggle-all" id="id-toggle-all" />
+							</th>
 							<th>
 							<nobr>
 								员工编号
@@ -62,9 +62,9 @@
 					<tbody class="tbody">
 						<volist name="user_list" id="data">
 							<tr id="{$data.id}">
-								<td class="text-center col-3"><label class="inline pull-left">
-									<input class="ace" type="checkbox" name="user_id[]" value="{$data.id}" />
-									<span class="lbl"></span></label></td>
+								<td class="text-center col-6">
+								<input class="ace" type="checkbox" name="user_id[]" value="{$data.id}" />
+								</td>
 								<td>
 								<nobr>
 									{$data.emp_no}
@@ -96,7 +96,6 @@
 			</div>
 		</form>
 	</div>
-
 </block>
 <block name="js">
 	<script type="text/javascript">
@@ -118,5 +117,4 @@
 
 		}
 	</script>
-
 </block>

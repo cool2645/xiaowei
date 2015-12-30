@@ -397,11 +397,17 @@ class FlowController extends HomeController {
 		$this -> assign("user_name", $vo['user_name']);
 		$this -> assign('vo', $vo);
 
+		$field_list = D("UdfField") -> get_data_list($vo['udf_data']);
+		//dump($field_list);		
+		$this -> assign("field_list", $field_list);
+		
 		$flow_type_id = $vo['type'];
 		$model = M("FlowType");
 		$flow_type = $model -> find($flow_type_id);
 		$this -> assign("flow_type", $flow_type);
-
+		
+		
+		//审批日志
 		$model = M("FlowLog");
 		$where = array();
 		$where['flow_id'] = $id;
@@ -410,6 +416,7 @@ class FlowController extends HomeController {
 		$flow_log = $model -> where($where) -> order("id") -> select();
 		$this -> assign("flow_log", $flow_log);
 
+		//参阅日志
 		$model = M("FlowLog");
 		$where = array();
 		$where['flow_id'] = $id;
@@ -417,7 +424,8 @@ class FlowController extends HomeController {
 		$model->where($where)->setField('is_read',1);	
 		$refer_flow_log = $model -> where($where) -> order("id") -> select();
 		$this -> assign("refer_flow_log", $refer_flow_log);
-
+		
+		//当前审批信息
 		$where = array();
 		$where['flow_id'] = $id;
 		$where['emp_no'] = get_emp_no();
@@ -519,7 +527,7 @@ class FlowController extends HomeController {
 		}
 
 		$model -> udf_data = D('UdfField') -> get_field_data();
-
+ 
 		$list = $model -> add();
 
 		if ($list !== false) {//保存成功

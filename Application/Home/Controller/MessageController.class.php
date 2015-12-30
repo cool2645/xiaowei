@@ -33,6 +33,7 @@ class MessageController extends HomeController {
 			}
 		}
 		if (!empty($model)) {
+
 			$this -> _list($model, $map);
 		}		
 		$this -> assign('owner_id', get_user_id());
@@ -68,7 +69,7 @@ class MessageController extends HomeController {
 		$push_data['title'] = "来自：" . get_dept_name() . "-" . $data['sender_name'] . "的消息";
 		$push_data['content'] = del_html_tag($data['content']);		
 		$push_data['url']=U('Message/index','return_url=Message/index');
-		
+	
 		send_push($push_data, $recever_list);
 		
 		//保存当前数据对象

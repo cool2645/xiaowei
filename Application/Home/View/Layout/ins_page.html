@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>{$title|default=get_system_config("SYSTEM_NAME")}</title>
+		<title>{$title|default=get_system_config("system_name")}</title>
 		<link href="__INS__/css/bootstrap.min.css" rel="stylesheet">
 		<link href="__INS__/font-awesome/css/font-awesome.css" rel="stylesheet">
 		<link href="__INS__/css/animate.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 				<div class="hidden-xs">
 					&nbsp;
 				</div>
-				<a href="{:U('index/index')}" class="navbar-brand">{:get_system_config("SYSTEM_NAME")}</a>
+				<a href="{:U('index/index')}" class="navbar-brand">{:get_system_config("system_name")}</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navbar-collapse-6">
@@ -84,6 +84,7 @@
 		<script src="__INS__/js/bootstrap.min.js"></script>
 		<script src="__INS__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 		<script src="__INS__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="__INS__/js/bootstrap-suggest.min.js"></script>
 
 		<!-- Custom and plugin javascript -->
 		<script src="__INS__/js/inspinia.js"></script>

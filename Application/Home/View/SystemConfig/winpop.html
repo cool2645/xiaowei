@@ -20,8 +20,8 @@
 	<script type="text/javascript">
 		function save() {
 			if ($("#name").val().length > 0) {
-				$("#pid_name", parent.document).val($("#name").val());
-				$("#pid", parent.document).val($("#val").val());
+				$("form.common #pid_name", parent.document).val($("#name").val());
+				$("form.common #pid", parent.document).val($("#val").val());
 			} else {
 				ui_error("请选择父级节点");
 				return false;

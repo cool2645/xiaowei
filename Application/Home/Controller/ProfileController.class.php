@@ -35,8 +35,27 @@ class ProfileController extends HomeController {
 		$User = M('User');
 		$User -> password = md5($password);
 		$User -> id = $id;
-		$result = $User -> save();
+		$result = $User -> save();		
 		if (false !== $result) {
+			if (C('LDAP_LOGIN')) {
+				import("Home.ORG.Util.Ldap");
+				$ldap_server = C('LDAP_SERVER');
+				$ldap_port = C('LDAP_PORT');
+				$ldap_user = C('LDAP_USER');
+				$ldap_pwd = C('LDAP_PWD');
+				$ldap_base_dn = C('LDAP_BASE_DN');
+
+				$ldap = new \Ldap($ldap_server, $ldap_port, $ldap_user, $ldap_pwd, $ldap_base_dn);
+				$emp_no = get_emp_no($id);
+				$where_dept['id'] = array('eq', $id);
+				$dept_id = M("User") -> where($where_dept) -> getField('dept_id');
+				$dept_name = get_dept_name($dept_id);
+
+				$ldap -> reset_pwd($emp_no, $dept_name, $password);
+				if (!$ldap -> status) {
+					$this -> error($ldap -> info);
+				}				
+			}			
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success("密码修改成功");
 		} else {

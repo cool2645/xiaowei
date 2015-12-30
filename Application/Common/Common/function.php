@@ -448,7 +448,7 @@ function get_user_config($field) {
 	$where['id'] = array('eq', $user_id);
 	$result = $model -> where($where) -> getfield($field);
 	if (empty($result)) {
-		return get_system_config(strtoupper($field));
+		return get_system_config($field);
 	} else {
 		return $result;
 	}
@@ -487,8 +487,13 @@ function get_user_name($user_id = null) {
 	}
 }
 
-function get_dept_id() {
-	return session('dept_id');
+function get_dept_id($user_id = null) {
+	if (empty($user_id)) {
+		return session('dept_id');
+	} else {
+		$where['id'] = array('eq', $user_id);
+		return M("User") -> where($where) -> getField('dept_id');
+	}
 }
 
 function get_dept_name($dept_id = null) {
@@ -611,10 +616,9 @@ function show_udf_val($udf_field, $udf_data) {
 	if (!empty($udf_field)) {
 		foreach ($udf_field as $key => $val) {
 			list($show, $class) = explode("|", $val['config']);
-			$html .= '<span class="' . $class . ' autocut" title="' . $field_data[$val['id']] . '">' . $field_data[$val['id']] . '</span>';
+			$html .= '<span class="' . $class . ' autocut" title="' . $field_data[$val['id']] . '">' . $field_data[$val['id']] . '&nbsp;</span>';
 		}
 	}
-
 	return $html;
 }
 
@@ -1398,7 +1402,7 @@ function send_push($data, $user_list, $time = null, $type = 'text') {
 		$model -> add();
 	}
 
-	$ws_push_config = get_system_config('WS_PUSH_CONFIG');
+	$ws_push_config = get_system_config('ws_push_config');
 	if (!empty($ws_push_config)) {
 		$ws_push_config = array_filter(explode(',', $ws_push_config));
 		if (in_array($data['type'], $ws_push_config)) {
@@ -1406,7 +1410,7 @@ function send_push($data, $user_list, $time = null, $type = 'text') {
 		}
 	}
 
-	$sms_push_config = get_system_config('SMS_PUSH_CONFIG');
+	$sms_push_config = get_system_config('sms_push_config');
 	if (!empty($sms_push_config)) {
 		$sms_push_config = array_filter(explode(',', $sms_push_config));
 		if (in_array($data['type'], $sms_push_config)) {
@@ -1414,7 +1418,7 @@ function send_push($data, $user_list, $time = null, $type = 'text') {
 		}
 	}
 
-	$weixin_push_config = get_system_config('WEIXIN_PUSH_CONFIG');
+	$weixin_push_config = get_system_config('weixin_push_config');
 	if (!empty($weixin_push_config)) {
 		$weixin_push_config = array_filter(explode(',', $weixin_push_config));
 		if (in_array($data['type'], $weixin_push_config)) {
@@ -1447,7 +1451,7 @@ function send_weixin($data, $user_list) {
 	$openid = implode('|', array_filter($openid));
 
 	// 这里$url不加/oa/的话测试图文会传递到weixin的index控制器|Terry
-	$url = get_system_config('WEIXIN_SITE_URL') . "/index.php?m=Weixin&c=Oa&a=send";
+	$url = get_system_config('weixin_site_url') . "/index.php?m=Weixin&c=Oa&a=send";
 	$type = 'news';
 
 	$params['content'] = $msg;
@@ -1631,8 +1635,8 @@ function conv_baidu_map(&$lat, &$lng) {
 	$result = json_decode(file_get_contents($url));
 	$lat = $result -> result[0] -> x;
 	$lng = $result -> result[0] -> y;
-	$data['lat']=$result -> result[0] -> x;
-	$data['lng']=$result -> result[0] -> y;
+	$data['lat'] = $result -> result[0] -> x;
+	$data['lng'] = $result -> result[0] -> y;
 	return $data;
 }
 
@@ -1718,7 +1722,7 @@ function is_public($id) {
 }
 
 function get_push_agent_id($type) {
-	$msg_push_config = array_filter(explode(";", get_system_config('MSG_PUSH_CONFIG')));
+	$msg_push_config = array_filter(explode(";", get_system_config('msg_push_config')));
 	foreach ($msg_push_config as $val) {
 		$tmp = explode("=", $val);
 		list($msg_type, $push_agent_id) = $tmp;
@@ -1726,7 +1730,7 @@ function get_push_agent_id($type) {
 			return $push_agent_id;
 		}
 	}
-	return get_system_config('OA_AGENT_ID');
+	return get_system_config('oa_agent_id');
 }
 
 function get_flow_receive_is_read($id) {

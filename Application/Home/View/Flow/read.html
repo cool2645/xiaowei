@@ -26,12 +26,12 @@
 			</div>
 		</div>
 	</div>
+	<!--审批人可编辑模板  -->
 	<eq name="is_edit" value="1">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data" class="well form-horizontal">
 			<input type="hidden" id="id" name="id" value="{$vo.id}">
 			<input type="hidden" id="step" name="step" value="{$vo.step}">
 			<input type="hidden" id="ajax" name="ajax" value="0">
-			<input type="hidden" id="add_file" name="add_file" value="{$vo.add_file}">
 			<input type="hidden" id="type" name="type" value="{$flow_type.id}">
 			<input type="hidden" id="opmode" name="opmode" value="edit">
 			<input type="hidden" id="confirm" name="confirm" value="">
@@ -110,15 +110,9 @@
 					</p>
 				</div>
 			</div>
-			<notempty name="flow_type.udf_tpl">
-				<eq name="vo.step" value="40">
-					{:W('UserDefineField/udf_read',array($vo['udf_data'],$flow_type['udf_tpl']))}
-					<else/>
-					{:W('UserDefineField/edit2',array($vo['udf_data']))}
-				</eq>
-				<else/>
-				{:W('UserDefineField/edit2',array($vo['udf_data']))}
-			</notempty>
+			<volist name="field_list" id="vo">
+				{:W('UserDefineField/edit',array($vo))}
+			</volist>
 			<eq name="flow_type.is_show" value="1">
 				<div class="form-group">
 					<div class="col-xs-12">
@@ -134,6 +128,7 @@
 			</div>
 		</form>
 	</eq>
+	<!--审批人不可编辑模板  -->
 	<eq name="is_edit" value="0">
 		<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"  class="well form-horizontal">
 			<input type="hidden" id="ajax" name="ajax" value="0">
@@ -148,7 +143,7 @@
 					</p>
 				</div>
 			</div>
-
+			
 			<div class="form-group col-sm-6">
 				<label class="col-sm-4 control-label" >日期：</label>
 				<div class="col-sm-8">
@@ -201,12 +196,9 @@
 					</p>
 				</div>
 			</div>
-			<notempty name="flow_type.udf_tpl">
-				{:W('UserDefineField/udf_read',array($vo['udf_data'],$flow_type['udf_tpl']))}
-				<else />
-				{:W('UserDefineField/edit2',array($vo['udf_data']))}
-			</notempty>
-
+			<volist name="field_list" id="vo">
+				{:W('UserDefineField/view',array($vo))}
+			</volist>
 			<eq name="flow_type.is_show" value="1">
 				<div class="form-group">
 					<div class="col-xs-12">
@@ -267,7 +259,7 @@
 				<volist name="refer_flow_log" id="item">
 					<li class="tbody">
 						<span class="text-center col-9">{$item.from}</span>
-						<span class="text-center col-12">{$item.create_time|to_date='Y-m-d h:i'}</span>
+						<span class="text-center col-12">{$item.create_time|to_date='Y-m-d H:i'}</span>
 						<span style="width:90px;" class="text-center">{$item.user_name}</span>
 						<span class="auto">
 							<div style="overflow:hidden">

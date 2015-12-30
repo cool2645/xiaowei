@@ -60,18 +60,19 @@ $(function() {
 		$editor = {
 			language : "zh_CN",
 			selector : ".editor",
-			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
-			toolbar : "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
+			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor textcolor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+			toolbar : "undo redo | styleselect | fontsizeselect | forecolor backcolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
 		};
 		$simple = {
 			menu : {},
 			language : "zh_CN",
 			selector : ".simple",
 			plugins : ["autosave imageupload advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
-			toolbar : "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
+			toolbar : "styleselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link imageupload",
 		};
 	}
 
 	tinymce.init($editor);
 	tinymce.init($simple);
+	
 });

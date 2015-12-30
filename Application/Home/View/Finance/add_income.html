@@ -4,7 +4,6 @@
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data"   class="well form-horizontal">
 		<input type="hidden" id="ajax" name="ajax" value="0">
 		<input type="hidden" id="account_name" name="account_name" value="">
-		<input type="hidden" id="add_file" name="add_file">
 		<input type="hidden" id="doc_type" name="doc_type" value="1">
 		<input type="hidden" id="opmode" name="opmode" value="add">
 		<div class="form-group col-sm-6">
@@ -37,7 +36,7 @@
 			<div class="col-sm-8">
 				<select id="type" name="type" class="form-control" check="require" msg="请选择收收入项目">
 					<option value="" >请选择收入项目</option>
-					{:fill_option(get_system_config('FINANCE_INCOME_TYPE'))}
+					{:fill_option(get_system_config('finance_income_type'))}
 					<option value="其他" >其他</option>
 				</select>
 			</div>

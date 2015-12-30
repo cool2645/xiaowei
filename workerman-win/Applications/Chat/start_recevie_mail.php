@@ -46,7 +46,7 @@ $task -> onWorkerStart = function($task) {
 	$time_interval = 2.5;
 	\Workerman\Lib\Timer::add($time_interval, function() {
 		//include_once __DIR__ . '/../../index.php';
-		$url="http://xiaowei.localhost/index.php?m=&c=public&a=recevie_mail";
+		$url="http://xiaowei.test.com//index.php?m=&c=public&a=recevie_mail";
 		echo http_get($url);
 		//echo 'yyy';
 	});

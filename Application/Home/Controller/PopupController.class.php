@@ -442,5 +442,32 @@ class PopupController extends HomeController {
 		}
 	}
 
+	public function flow_dept() {
+		$node = M("Dept");
+		$menu = array();
+		$menu = $node -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
+
+		$tree = list_to_tree($menu);
+		$this -> assign('menu', popup_tree_menu($tree));
+		$pid = array();
+		$this -> assign('pid', $pid);
+		$this -> display();
+	}
+
+	public function flow_customer() {
+		$node = M("Dept");
+		$menu = array();
+		$menu = $node -> where('is_del=0') -> field('id,pid,name') -> order('sort asc') -> select();
+
+		$tree = list_to_tree($menu);
+		$this -> assign('menu', popup_tree_menu($tree));
+		$pid = array();
+		$this -> assign('pid', $pid);
+		$this -> display();
+	}
+	
+	public function flow_emp() {
+		$this->auth();
+	}	
 }
 ?>

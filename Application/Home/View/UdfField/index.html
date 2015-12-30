@@ -7,8 +7,8 @@
 				<a class="btn btn-sm btn-primary" onclick="go_return_url()">返回</a>
 			</div>
 			<div class="pull-right" id="uploader">
-				<a id="pickfiles" class="btn btn-sm btn-primary">导入</a>
-				<a onclick="export_udf()" class="btn btn-sm btn-primary">导出</a>
+				<!-- <a id="pickfiles" class="btn btn-sm btn-primary">导入</a>
+				<a onclick="export_udf()" class="btn btn-sm btn-primary">导出</a> -->
 				<a onclick="add()" class="btn btn-sm btn-primary">新增</a>
 				<a onclick="save()" class="btn btn-sm btn-primary">保存</a>
 				&nbsp;|&nbsp;
@@ -29,7 +29,7 @@
 				<input type="hidden" name="controller" id="controller" value="{$Think.CONTROLLER_NAME}">
 				<input type="hidden" name="row_type" id="row_type" value="{$row_type}">
 				<input type="hidden" name="id" id="id" >
-				<input type="hidden" id="opmode" name="opmode" value="add">
+				<input type="hidden" id="opmode" name="opmode" value="edit">
 				<input type="hidden" name="ajax" id="ajax" value="1">
 
 				<div class="form-group">
@@ -43,6 +43,8 @@
 					<div class="col-sm-8">
 						<select name="type" id="type" check="require" msg="请选择控件类型" class="form-control col-12">
 							<option value="">请选择</option>
+							<option value="popup">弹窗选择</option>
+							<option value="add_file">文件上传</option>
 							<option value="text">单行文本</option>
 							<option value="date">日期 </option>
 							<option value="datetime">日期+时间 </option>
@@ -108,36 +110,7 @@
 	</form>
 </block>
 <block name="js">
-	<script type="text/javascript" src="__INS__/js/plugins/plupload/plupload.full.min.js"></script>
 	<script>
-		var uploader = new plupload.Uploader({
-			runtimes : 'html5,flash,html4',
-			browse_button : 'pickfiles', // you can pass in id...
-			container: document.getElementById('uploader'), // ... or DOM Element itself
-			url : "{:U('UdfField/import',array('row_type'=>$row_type,'controller'=>$controller))}",
-			flash_swf_url :'__INS__/js/plugins/plupload/Moxie.swf',
-			drop_element : 'main-container',
-			filters : {
-				max_file_size : '10mb',
-				mime_types: [{title : "Image files", extensions : "xls,xlsx"},]
-			},
-			init : {
-				FilesAdded : function(up, files) {
-					up.start();
-				},
-				FileUploaded : function(up, file, data) {
-					var myObject = eval('(' + data.response + ')');
-					if (myObject.status) {
-						ui_alert(myObject.info, function() {							
-						});						
-					} else {
-						ui_alert(myObject.info, function() {							
-						});
-					}
-				}
-			}
-		});
-
 		function add() {
 			winopen("{:U('UdfField/add',array('controller'=>$controller,'row_type'=>$row_type))}",704,570);
 		};
@@ -164,14 +137,12 @@
 		};
 
 		function showdata(result) {
-			$("#opmode").val("edit");
 			for (var s in result.data) {
 				set_val(s, result.data[s]);
-			}			
+			}
 		}
 
 		$(document).ready(function() {
-			uploader.init();
 			$(".sub_left_menu .tree_menu  a").click(function() {
 				$(".sub_left_menu .tree_menu  a").removeClass("active");
 				$(this).addClass("active");

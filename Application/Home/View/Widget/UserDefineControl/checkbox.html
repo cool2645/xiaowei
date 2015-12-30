@@ -2,7 +2,8 @@
 	<div class="form-inline">
 		<foreach name="data" item="vo">
 			<label>
-				<input disabled="disabled" name="udf_field_{$id}[]" class="ace" type="checkbox" value="{$key}" <in name="key" value="$val">checked</in>>
+				<input class="hidden" name="udf_field_{$id}[]" class="ace" type="checkbox" value="{$key}" <in name="key" value="$val">checked</in>> 
+				<input disabled="disabled" name="disabled_udf_field_{$id}[]" class="ace" type="checkbox" value="{$key}" <in name="key" value="$val">checked</in>>
 				<span class="lbl">&nbsp;{$vo}</span> </label>&nbsp;&nbsp;&nbsp;&nbsp;
 		</foreach>
 	</div>

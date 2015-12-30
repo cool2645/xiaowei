@@ -4,7 +4,7 @@
 <form method='post' id="form_data" name="form_data" enctype="multipart/form-data"   class="well form-horizontal">
 	<input type="hidden" id="ajax" name="ajax" value="0">
 	<input type="hidden" id="id" name="id" value="{$vo.id}">
-	<input type="hidden" id="add_file" name="add_file" value="{$vo.add_file}">
+
 	<input type="hidden" id="opmode" name="opmode" value="edit">
 
 	<div class="form-group">
@@ -18,7 +18,7 @@
 		<div class="col-sm-8">
 			<select id="level" name="level" class="form-control" check="require" msg="请选择项目级别">
 				<option value="" >请选择</option>
-					{:fill_option(get_system_config("XMK_LEVEL"))}
+					{:fill_option(get_system_config("xmk_level"))}
 			</select>
 		</div>
 	</div>
@@ -27,7 +27,7 @@
 		<div class="col-sm-8">
 			<select id="status" name="status" class="form-control" check="require" msg="请选择项目状态">
 				<option value="" >请选择</option>
-					{:fill_option(get_system_config("XMK_STATUS"))}
+					{:fill_option(get_system_config("xmk_status"))}
 			</select>
 		</div>
 	</div>

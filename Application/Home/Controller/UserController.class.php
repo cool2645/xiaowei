@@ -78,8 +78,7 @@ class UserController extends HomeController {
 		}
 		$User = M("User");
 		// 检测用户名是否冲突
-		$name = I('emp_no');
-		;
+		$name = I('emp_no'); ;
 		$result = $User -> getByAccount($name);
 		if ($result) {
 			$this -> error('该编码已经存在！');
@@ -109,7 +108,7 @@ class UserController extends HomeController {
 			if ($result = $model -> add()) {
 				$data['id'] = $result;
 				M("UserConfig") -> add($data);
-				if (get_system_config('IS_LICENSED')) {
+				if (get_system_config('system_license')) {
 					if (!empty($mobile_tel)) {
 						import("Weixin.ORG.Util.Weixin");
 						$weixin = new \Weixin();
@@ -135,15 +134,16 @@ class UserController extends HomeController {
 		$emp_no = $model -> emp_no;
 		$name = $model -> name;
 		$mobile_tel = $model -> mobile_tel;
+		$is_del = $model -> is_del;
 		$list = $model -> save();
 		if (false !== $list) {
-			if (get_system_config('IS_LICENSED')) {
+			if (get_system_config('system_license')) {
 				if (!empty($mobile_tel)) {
 					import("Weixin.ORG.Util.Weixin");
 					$weixin = new \Weixin();
 					$mobile_tel = trim($mobile_tel, '+-');
 					$weixin -> add_user($emp_no, $name, $mobile_tel);
-					$weixin -> update_user($emp_no, $name, $mobile_tel);
+					$weixin -> update_user($emp_no, $name, $mobile_tel, $is_del);
 				}
 			}
 
@@ -170,7 +170,7 @@ class UserController extends HomeController {
 			$name = $val['name'];
 			$mobile_tel = trim($val['mobile_tel'], '+-');
 
-			$error_code =       json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+			$error_code =              json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
 			$list[$key]['error_code'] = $error_code;
 			$list[$key]['desc'] = $error_code_desc[$error_code];
 			$list[$key]['emp_no'] = $key;
@@ -242,20 +242,22 @@ class UserController extends HomeController {
 	function del() {
 		$id = I('user_id');
 		$admin_user_list = C('ADMIN_USER_LIST');
-		
-		if(!empty($admin_user_list)){
-			$where['emp_no'] = array('not in', $admin_user_list);	
+
+		if (!empty($admin_user_list)) {
+			$where['emp_no'] = array('not in', $admin_user_list);
 		}
 		$where['id'] = array('in', $id);
 
-		$admin_user_id = M("User") -> where($where) -> getField('id', TRUE);
-		$admin_emp_no = M("User") -> where($where) -> getField('emp_no', TRUE);
+		$user_id = M("User") -> where($where) -> getField('id', TRUE);
+		$emp_no = M("User") -> where($where) -> getField('emp_no', TRUE);
 
-		import("Weixin.ORG.Util.Weixin");
-		$weixin = new \Weixin();
-		$restr = $weixin -> del_user($admin_emp_no);
+		if (get_system_config('system_license')) {
+			import("Weixin.ORG.Util.Weixin");
+			$weixin = new \Weixin();
+			$restr = $weixin -> del_user($emp_no);
+		}
 
-		$this -> _destory($admin_user_id);
+		$this -> _destory($user_id);
 	}
 
 	public function import() {
@@ -266,7 +268,7 @@ class UserController extends HomeController {
 			$file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
 			$info = $File -> upload($_FILES, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
 			if (!$info) {
-				$this -> error();
+				$this -> error('上传错误');
 			} else {
 				//取得成功上传的文件信息
 				//$uploadList = $upload -> getUploadFileInfo();
@@ -308,7 +310,7 @@ class UserController extends HomeController {
 					$user_id = M("User") -> add($data_user);
 					$this -> add_role($user_id, $data_role);
 				}
-				if (get_system_config('IS_LICENSED')) {
+				if (get_system_config('system_license')) {
 					$this -> _weixin_sync($import_user);
 				}
 				$this -> assign('jumpUrl', get_return_url());

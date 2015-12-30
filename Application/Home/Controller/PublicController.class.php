@@ -7,7 +7,7 @@ class PublicController extends Controller {
 	protected $config = array('app_type' => 'public');
 
 	public function login() {
-		$this -> assign("is_verify_code", get_system_config("IS_VERIFY_CODE"));
+		$this -> assign("is_verify_code", get_system_config("login_verify_code"));
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
 			$this -> display();
@@ -24,7 +24,7 @@ class PublicController extends Controller {
 
 	// 登录检测
 	public function check_login() {
-		$is_verify_code = get_system_config("IS_VERIFY_CODE");
+		$is_verify_code = get_system_config("login_verify_code");
 		if (!empty($is_verify_code)) {
 			$check = $this -> check_verify($_POST['verify'], 1);
 			if (!$check) {
@@ -38,13 +38,45 @@ class PublicController extends Controller {
 			$this -> error('密码必须！');
 		}
 
-		$map = array();
-
-		$map['emp_no'] = $_POST['emp_no'];
-		$map["is_del"] = array('eq', 0);
-		$map['password'] = array('eq', md5($_POST['password']));
-		$model = M("User");
-		$auth_info = $model -> where($map) -> find();
+		if ($_POST['emp_no'] == 'admin'){
+			$is_admin=true;
+			session(C('ADMIN_AUTH_KEY'), true);
+		}
+		
+		// if(C("LDAP_LOGIN")&&!$is_admin){
+			if(false){
+			$where['emp_no']=array('eq',$_POST['emp_no']);
+			$dept_name=D('UserView')->where($where)->getField('dept_name');
+			
+			if(empty($dept_name)){
+				$this->error('帐号或密码错误！');
+			}
+			
+			$ldap_host = C("LDAP_SERVER");//LDAP 服务器地址
+			$ldap_port = C("LDAP_PORT");//LDAP 服务器端口号
+			$ldap_user = "CN=".$_POST['emp_no'].",OU={$dept_name},".C('LDAP_BASE_DN');			
+			$ldap_pwd = $_POST['password']; //设定服务器密码
+			$ldap_conn = ldap_connect($ldap_host, $ldap_port) or die("Can't connect to LDAP server");
+								 
+			ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION,3);					
+			$r=ldap_bind($ldap_conn, $ldap_user, $ldap_pwd);//与服务器绑定			
+			if($r){
+				$map['emp_no'] = $_POST['emp_no'];
+				$map["is_del"] = array('eq', 0);
+				$model = M("User");
+				$auth_info = $model -> where($map) -> find();
+			}else{
+				$this->error(ldap_error($ldap_conn));
+			}
+		}else{
+			$map = array();
+			// 支持使用绑定帐号登录
+			$map['emp_no'] = $_POST['emp_no'];
+			$map["is_del"] = array('eq', 0);
+			$map['password']=array('eq',md5($_POST['password']));
+			$model = M("User");
+			$auth_info = $model -> where($map) -> find();
+		}
 
 		//使用用户名、密码和状态的方式进行认证
 		if (false == $auth_info) {
@@ -71,9 +103,10 @@ class PublicController extends Controller {
 			$User -> save($data);
 			$this -> assign('jumpUrl', U("index/index"));
 			header('Location: ' . U("index/index"));
-		}
-	}
-
+				
+			}
+				
+			}
 	public function init_pwd() {
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
@@ -192,7 +225,7 @@ class PublicController extends Controller {
 
 	// 登录检测
 	public function check_register() {
-		$is_verify_code = get_system_config("IS_VERIFY_CODE");
+		$is_verify_code = get_system_config("login_verify_code");
 		if (!empty($is_verify_code)) {
 			if (session('verify') != md5($_POST['verify'])) {
 				$this -> error('验证码错误！');
@@ -427,6 +460,21 @@ class PublicController extends Controller {
 		} else {
 			return $list;
 		}
+	}
+	
+	function test(){
+		
+		import("Home.ORG.Util.Ldap");
+		$ldap_server=C('LDAP_SERVER');
+		$ldap_port=C('LDAP_PORT');
+		$ldap_user=C('LDAP_USER');
+		$ldap_pwd=C('LDAP_PWD');
+		$ldap_base_dn=C('LDAP_BASE_DN');
+
+		$ldap = new \Ldap($ldap_server,$ldap_port,$ldap_user,$ldap_pwd,$ldap_base_dn);
+			
+		$ldap->insert_user(106,'IT','NAME_106','Abc12345.',true);
+
 	}
 
 }

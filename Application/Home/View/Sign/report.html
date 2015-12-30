@@ -1,6 +1,6 @@
 <extend name="Layout/ins_page" />
 <block name="content">
-	{:W('PageHeader/adv_search',array('name'=>'考勤查询','search'=>'M'))}
+	{:W('PageHeader/adv_search',array('name'=>'考勤统计','search'=>'M'))}
 	<form method="post" name="form_adv_search" id="form_adv_search">
 		<div class="adv_search panel panel-default  hidden"  id="adv_search">
 			<div class="panel-heading">
@@ -76,11 +76,11 @@
 					<span class="col-8">经度</span>
 					<span class="col-8">纬度</span>
 					<span class="col-12">IP</span>
+					<span class="col-20">地理位置</span>
 				</div>
-				<div class="pull-right">
-				</div>
+				<div class="pull-right"></div>
 				<div class="auto autocut">
-					地理位置
+					备注
 				</div>
 			</li>
 			<empty name="list">
@@ -100,15 +100,14 @@
 								<span class="col-8">{$vo.latitude}</span>
 								<span class="col-8">{$vo.longitude}</span>
 								<span class="col-12">{$vo.ip}</span>
+								<span class="col-20">
+								<a href="#" title='{$vo.location}' onclick="winopen('{:U('read','id='.$vo['id'])}',704,510)">{$vo.location}</a></span>
 							</div>
 							<div class="pull-right">
 								
 							</div>
 							<div class="auto autocut">
-								<a href="#" onclick="winopen('{:U('read','id='.$vo['id'])}',704,510)">{$vo.location}
-								<eq name="vo.name|strlen" value="0">
-									无标题
-								</eq> </a>
+								<span class="col-12">{$vo.content}</span>
 							</div>
 						</li>
 					</foreach>
@@ -126,6 +125,7 @@
 		function add() {
 			window.open("{:U('add')}", "_self");
 		}
+
 
 		$(document).ready(function() {
 			set_return_url();

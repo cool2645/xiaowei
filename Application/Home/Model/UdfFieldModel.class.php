@@ -37,7 +37,7 @@ class  UdfFieldModel extends CommonModel {
 	}
 
 	public function get_data_list($udf_data) {
-		if(!empty($udf_data)){
+		if (!empty($udf_data)) {
 			$field_data = json_decode($udf_data, true);
 			$field_id = array_keys($field_data);
 
@@ -51,8 +51,9 @@ class  UdfFieldModel extends CommonModel {
 			return $val;
 		}
 	}
-		public function get_field_name($udf_name) {
-		if(!empty($udf_name)){
+
+	public function get_field_name($udf_name) {
+		if (!empty($udf_name)) {
 			$field_data = json_decode($udf_name, true);
 			$field_id = array_keys($field_data);
 
@@ -61,29 +62,29 @@ class  UdfFieldModel extends CommonModel {
 
 			foreach ($list_field as $key => $field) {
 				$val[$key] = $field["name"];
-				
+
 			}
-			
+
 			return $val;
 		}
 	}
 
 	function get_field_data() {
 		$udf_field = array_filter(array_keys($_REQUEST), array($this, 'filter'));
-		if(!empty($udf_field)){
-					foreach ($udf_field as $field) {
-			$tmp = array_filter(explode("_", $field));
-			$val = $_REQUEST[$field];
+		if (!empty($udf_field)) {
+			foreach ($udf_field as $field) {
+				$tmp = array_filter(explode("_", $field));
+				$val = $_REQUEST[$field];
 
-			if (is_array($val)) {
-				$val = implode(",", $val);
+				if (is_array($val)) {
+					$val = implode("|", $val);
+				}
+				$field_data[$tmp[2]] = $val;
 			}
-			$field_data[$tmp[2]] = $val;
-		}
 			return json_encode($field_data, JSON_UNESCAPED_UNICODE);
-		}else{
+		} else {
 			return;
-		}		
+		}
 	}
 
 	function filter($val) {
@@ -93,5 +94,6 @@ class  UdfFieldModel extends CommonModel {
 			return false;
 		}
 	}
+
 }
 ?>

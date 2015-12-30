@@ -49,22 +49,22 @@ class HomeController extends Controller {
 
 		$return_url = I('get.return_url');
 		if (!empty($return_url)) {
-			cookie('return_url',U($return_url));			
-			$top_menu = get_top_menu_id($return_url,$menu);		
-			cookie('top_menu', $top_menu);			
+			cookie('return_url', U($return_url));
+			$top_menu = get_top_menu_id($return_url, $menu);
+			cookie('top_menu', $top_menu);
 		} else {
 			$top_menu = cookie('top_menu');
 		}
-		 
+
 		if (!empty($top_menu)) {
 			$top_menu_name = $model -> where("id=$top_menu") -> getField('name');
 			$this -> assign("top_menu_name", $top_menu_name);
-			$this -> assign("title", get_system_config("SYSTEM_NAME") . "-" . $top_menu_name);
+			$this -> assign("title", get_system_config("system_name") . "-" . $top_menu_name);
 
 			$left_menu = list_to_tree($menu, $top_menu);
 			$this -> assign('left_menu', $left_menu);
 		} else {
-			$this -> assign("title", get_system_config("SYSTEM_NAME"));
+			$this -> assign("title", get_system_config("system_name"));
 		}
 	}
 
@@ -231,6 +231,7 @@ class HomeController extends Controller {
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
+		
 		$list = $model -> save();
 		if (false !== $list) {
 			$this -> assign('jumpUrl', get_return_url());
@@ -670,6 +671,7 @@ class HomeController extends Controller {
 	protected function _field_manage($row_type) {
 		R('UdfField/index', array('row_type' => $row_type));
 	}
+
 
 }
 ?>

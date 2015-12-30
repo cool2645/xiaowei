@@ -42,7 +42,7 @@ class FileModel extends Model {
 		$setting['callback'] = array($this, 'isFile');
 		$setting['removeTrash'] = array($this, 'removeTrash');
 		$setting['savePath'] = strtolower(CONTROLLER_NAME) . "/";
-		$setting['exts'] = array_filter(explode(",", get_system_config('UPLOAD_FILE_EXT')), 'upload_filter');
+		$setting['exts'] = array_filter(explode(",", get_system_config('upload_file_ext')), 'upload_filter');
 
 		$Upload = new Upload($setting, $driver, $config);
 		
