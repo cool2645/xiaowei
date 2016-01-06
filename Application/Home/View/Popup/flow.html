@@ -1,12 +1,11 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	<div class="panel panel-default ">
-		<div class="panel-heading clearfix">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
 			<div class="pull-left">
 				<label>
 					<input class="ace" type="radio" id="rb_dgp" name="type" value="dgp" >
 					<span class="lbl">部门级别-职位</span> </label>
-
 				<label>
 					<input class="ace" type="radio" id="rb_dp" name="type" value="dp" >
 					<span class="lbl">部门-职位</span> </label>
@@ -20,56 +19,50 @@
 					<span class="lbl">人员</span> </label>
 			</div>
 			<div class="pull-right">
-				<a  onclick="save();" class="btn btn-sm btn-primary">确定</a>
-				<a  onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
 			</div>
 		</div>
-		<div class="panel-body">
-			<div class="col-28 pull-left">
-				<div class="">
-					<b class="hidden dgp">部门级别</b><b class="hidden dp dept emp">部门</b>
-				</div>
+		<div class="popup-body clearfix">
+			<div class="col-23 pull-left">
+				<span class="popup-label"><b class="hidden dgp">部门级别</b><b class="hidden dp dept emp">部门</b></span>
 				<div class="popup_tree_menu">
-					<div id="dept_grade" style="width:100%;height:195px;" class="dgp hidden">
+					<div id="dept_grade" style="width:100%;height:179px;" class="dgp hidden">
 						{$list_dept_grade}
 					</div>
-					<div id="dept" style="width:100%;height:195px;" class="dp hidden dept">
+					<div id="dept" style="width:100%;height:179px;" class="dp hidden dept">
 						{$list_dept}
 					</div>
-					<div id="emp" style="width:100%;height:195px;" class="emp hidden">
+					<div id="emp" style="width:100%;height:179px;" class="emp hidden">
 						{$list_dept}
 					</div>
 				</div>
 				<div>
-					<b class="hidden dgp dp ">职位</b>
-					<b class="hidden emp">人员</b>
+					<span class="popup-label"><b class="hidden dgp dp ">职位</b></span>
+					<span class="popup-label"><b class="hidden emp">人员</b></span>
 				</div>
-				<div id="position" class="hidden dgp dp " style="width:100%;height:195px;">
+				<div id="position" class="hidden dgp dp " style="width:100%;height:179px;">
 					{$list_position}
 				</div>
-				<div id="addr_list" class="hidden  emp" style="width:100%;height:195px;"></div>
+				<div id="addr_list" class="hidden  emp" style="width:100%;height:179px;"></div>
 			</div>
-			<div class="col-34 pull-right">
-				<div>
-					<b style="padding-left: 60px;">审批</b><span id="rc_count"></span>
-				</div>
-				<div class="clearfix" style="margin-bottom: 15px;">
-					<label class="col-4 pull-left text-right" ><a onclick="add_address('rc');" class="btn btn-sm btn-primary"> <i class="fa fa-angle-double-right"></i> </a> </label>
-					<div class="col-28 pull-right">
-						<div id="rc" style="width:100%;height:195px;overflow:hidden">
-							<select size="6" style="height:100%;width:100%;"></select>
-						</div>
+			<div class="col-30 pull-left">
+				<div class="col-7 pull-left text-center mid" style="margin-top: 24px;">
+					<div style="height:206px;">
+						<a onclick="add_address('rc');" class="btn btn-sm btn-primary"><i class="fa fa-angle-double-right"></i></a>
+						<a onclick="save();" class="hidden-lg btn btn-sm btn-primary">确定</a>
+						<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
 					</div>
+					<a onclick="add_address('cc');" class="btn btn-sm btn-primary"><i class="fa fa-angle-double-right"></i></a>
 				</div>
-				<div>
-					<b  style="padding-left: 60px;">协商</b><span id="cc_count"></span>
-				</div>
-				<div class="clearfix">
-					<label class="col-4 pull-left text-right" ><a onclick="add_address('cc');" class="btn btn-sm btn-primary"> <i class="fa fa-angle-double-right"></i></a></label>
-					<div class="col-28 pull-right">
-						<div id="cc" style="width:100%;height:195px;overflow:hidden">
-							<select size="6" style="height:100%;width:100%;"></select>
-						</div>
+				<div class="col-23 pull-left">
+					<b class="popup-label">审批</b><span id="rc_count"></span>
+					<div id="rc" class="selected" style="width:100%;height:179px;overflow:hidden">
+						<ul></ul>
+					</div>
+					<b class="popup-label">协商</b><span id="cc_count"></span>
+					<div id="cc" class="selected" style="width:100%;height:179px;overflow:hidden">
+						<ul></ul>
 					</div>
 				</div>
 			</div>
@@ -78,23 +71,65 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
+		function add_address(name) {
+			$("input:checked[name='addr_id']").each(function() {
+				$text = $(this).next().text();
+				$val = $(this).val();
+				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+					$li.find('span').text($text);
+					$li.attr('data', $val);
+					$li.appendTo("#" + name + ".selected ul");
+					recount();
+				};
+			});
+			$("#addr_list input:checked").prop('checked', false);
+		}
+
+
+		$(document).on("click", ".selected a.fa-times", function() {
+			$(this).parent().remove();
+			recount();
+		});
+
+		// 双击添加到收件人 因后添加的数据 所以需要用live函数
+		$(document).on("dblclick", "#addr_list label", function() {
+			$text = $(this).text();
+			$val = $(this).find("input").val();
+			if ($("#rc.selected li[data='" + $val + "']").length == 0) {
+				$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+				$li.find('span').text($text);
+				$li.attr('data', $val);
+				$li.appendTo("#rc.selected ul");
+				recount();
+			};
+		});
+
+		function recount() {
+			$("#rc_count").text("(" + $("#rc.selected li").length + ")");
+			$("#cc_count").text("(" + $("#cc.selected li").length + ")");
+			$("#bcc_count").text("(" + $("#bcc.selected li").length + ")");
+		}
+
 		function save() {
 			$("#confirm_wrap,#consult_wrap,#refer_wrap", parent.document).hide();
 			$("#confirm_wrap .address_list,#consult_wrap .address_list,#refer_wrap .address_list", parent.document).html("");
 
-			$("#rc select option").each(function(i) {
-				emp_no = $(this).val();
+			$("#rc.selected li").each(function(i) {
+				emp_no = $(this).attr('data');
 				name = jQuery.trim($(this).text());
+				name = name.replace(/<.*>/, '');
 				html_string = conv_inputbox_item(name, emp_no);
 				$("#confirm_wrap .address_list", parent.document).append(html_string);
 			});
-			$("#cc select option").each(function(i) {
-				emp_no = $(this).val();
+			$("#cc.selected li").each(function(i) {
+				emp_no = $(this).attr('data');
 				name = jQuery.trim($(this).text());
+				name = name.replace(/<.*>/, '');
 				html_string = conv_inputbox_item(name, emp_no);
 				$("#consult_wrap .address_list", parent.document).append(html_string);
 			});
- 
+
 			$("#confirm_wrap span a", parent.document).remove();
 			$("#confirm_wrap .address_list span", parent.document).append("<b><i class=\"fa fa-arrow-right\"></i></b>");
 			$("#confirm_wrap .address_list span b:last", parent.document).html("<i class=\"fa\"></i>");
@@ -118,11 +153,10 @@
 				var email = result.data[s].email;
 				var name = result.data[s].name;
 				var name = name + "/" + position_name + "&lt;" + email + "&gt;";
-				var html_string = conv_address_item(name,emp_no);
+				var html_string = conv_address_item(name, emp_no);
 				$("#addr_list").append(html_string);
 			}
 		}
-
 
 		$(document).ready(function() {
 			$("#rb_{$type}").prop('checked', true);
@@ -148,7 +182,7 @@
 				//禁止连接生效
 			});
 
-			$("#dept .tree_menu  a").click(function() {
+			$("#dept .tree_menu a").click(function() {
 				$("#dept .tree_menu a").each(function() {
 					$(this).attr("class", "");
 				});
@@ -183,26 +217,6 @@
 				return false;
 				//禁止连接生效
 			});
-
-			$("#addr_list a").on("dblclick", function() {
-				$text = $(this).text();
-				$val = $(this).parents("label").find("input").val();
-				if ($("#rc select option[value='" + $val + "']").val() == undefined) {
-					$("<option></option>").val($val).text($text).appendTo("#rc select");
-					$("#rc_count").text("(" + $("#rc select option").length + ")");
-				};
-			});
-
-			$("#rc  select").on("dblclick", function() {
-				$(this).find("option:selected").remove();
-				$("#rc_count").text("(" + $("#rc select option").length + ")");
-			});
-
-			$("#cc  select").on("dblclick", function() {
-				$(this).find("option:selected").remove();
-				$("#cc_count").text("(" + $("#cc select option").length + ")");
-			});
-						
 		});
 		//最终确认
 
@@ -226,8 +240,13 @@
 				}
 				$text = $dept_grade_name + "-" + $position_name;
 				$val = "dgp_" + $dept_grade_id + "_" + $position_id;
-				$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
-				$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
+				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+					$li.find('span').text($text);
+					$li.attr('data', $val);
+					$li.appendTo("#" + name + ".selected ul");
+					recount();
+				};
 				break;
 			case "dp":
 				$dept_id = $("#dept a.active").attr("node");
@@ -246,8 +265,13 @@
 				}
 				$text = $dept_name + "-" + $position_name;
 				$val = "dp_" + $dept_id + "_" + $position_id;
-				$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
-				$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
+				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+					$li.find('span').text($text);
+					$li.attr('data', $val);
+					$li.appendTo("#" + name + ".selected ul");
+					recount();
+				};
 				break;
 			case "dept":
 				$dept_id = $("#dept a.active").attr("node");
@@ -259,18 +283,26 @@
 				}
 				$text = $dept_name;
 				$val = "dept_" + $dept_id;
-				$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
-				$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
+				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+					$li.find('span').text($text);
+					$li.attr('data', $val);
+					$li.appendTo("#" + name + ".selected ul");
+					recount();
+				};
 				break;
 
 			case "emp":
 				$("input:checked[name='addr_id']").each(function() {
-					$(this).prop('checked',false);
+					$(this).prop('checked', false);
 					$text = $(this).parents("label").text();
 					$val = "emp_" + $(this).val();
-					if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
-						$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
-						$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
+					if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+						$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+						$li.find('span').text($text);
+						$li.attr('data', $val);
+						$li.appendTo("#" + name + ".selected ul");
+						recount();
 					};
 				});
 				break;

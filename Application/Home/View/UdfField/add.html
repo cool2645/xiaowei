@@ -1,14 +1,22 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
 	<input type="hidden" name="ajax" id="ajax" value="1">
-
-	{:W('PageHeader/popup',array('name'=>'添加'))}
-	<div class="row">
-		<div class="col-sm-12">
-			<form method='post' id="form_data" class="well form-horizontal">
+	<input type="hidden" name="ajax" id="ajax" value="1">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
+			<div class="pull-left">
+				<h1>添加</h1>
+			</div>
+			<div class="pull-right">
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+			</div>
+		</div>
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<form method='post' id="form_data" class="form-horizontal">
 				<input type="hidden" name="controller" id="controller" value="{$controller}">
 				<input type="hidden" name="row_type" id="row_type" value="{$row_type}">
-				
+
 				<input type="hidden" id="opmode" name="opmode" value="add">
 				<input type="hidden" name="ajax" id="ajax" value="1">
 
@@ -86,7 +94,6 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
-
 		function save() {
 			if (check_form("form_data")) {
 				var vars = $("#form_data").serialize();
@@ -96,7 +103,7 @@
 							parent.location.reload(true);
 							myclose();
 						});
-					}else{
+					} else {
 						ui_error(data.info);
 					}
 				});
@@ -104,6 +111,5 @@
 
 		}
 
-		
 	</script>
 </block>

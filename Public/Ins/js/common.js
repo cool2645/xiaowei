@@ -66,36 +66,50 @@ function schedule_bg(j) {
 }
 
 function ui_info(msg) {
+	var position;
+	if (is_mobile()) {
+		position = "toast-top-full-width";
+	} else {
+		position = "toast-bottom-right";
+	}
 	toastr.options = {
 		"closeButton" : true,
-		"debug" : true,
-		"positionClass" : "toast-bottom-right"
+		"positionClass" : position
 	};
 	toastr.info(msg);
 }
 
 function ui_error(msg) {
+	var position;
+	if (is_mobile()) {
+		position = "toast-top-full-width";
+	} else {
+		position = "toast-bottom-right";
+	}
 	toastr.options = {
 		"closeButton" : true,
-		"debug" : true,
-		"positionClass" : "toast-bottom-right"
+		"positionClass" : position
 	};
 	toastr.error('', msg);
 }
 
 function push_info($msg) {
-	//$msg = eval('(' + $msg + ')');
+	var position;
 	if ($msg.action.length) {
 		$title = '<h3>[' + $msg.type + '] [' + $msg.action + ']</h3>';
 	} else {
 		$title = '<h3>[' + $msg.type + ']</h3>';
 	}
-
 	$content = '<b>' + $msg.title + '</b><br>' + $msg.content;
+
+	if (is_mobile()) {
+		position = "toast-top-full-width";
+	} else {
+		position = "toast-bottom-right";
+	}
 	toastr.options = {
 		"closeButton" : true,
-		"debug" : true,
-		"positionClass" : "toast-bottom-right"
+		"positionClass" : position
 	};
 	toastr.info($content, $title);
 }
@@ -398,7 +412,7 @@ function winopen(url, w, h) {
 	var _body = $("body").eq(0);
 	if ($("#dialog").length == 0) {
 		if (!is_mobile()) {
-			_body.append("<div id=\"dialog\" ><iframe class=\"myFrame\" src='" + url + "' style='width:" + w + "px;height:100%' scrolling='auto' ></iframe></div>");
+			_body.append("<div id=\"dialog\" ><iframe class=\"myFrame\" src='" + url + "' style='width:" + w + "px;height:100%' scrolling='no' ></iframe></div>");
 			$("#dialog").css({
 				"width" : w,
 				"height" : h,
@@ -410,7 +424,7 @@ function winopen(url, w, h) {
 			});
 		} else {
 			$("div.shade").css("width", _body.width());
-			_body.append("<div id=\"dialog\" ><iframe class=\"myFrame\" src='" + url + "' style='width:100%;height:100%' scrolling='auto' ></iframe></div>");
+			_body.append("<div id=\"dialog\" ><iframe class=\"myFrame\" src='" + url + "' style='width:100%;height:100%' scrolling='no' ></iframe></div>");
 			$("#dialog").css({
 				"width" : _body.width(),
 				"height" : h,
@@ -511,29 +525,29 @@ function validate(data, datatype) {
 		data2 = tmp[1];
 	}
 	switch (datatype) {
-		case "require":
-			if (data == "") {
-				return false;
-			} else {
-				return true;
-			}
-			break;
-		case "email":
-			var reg = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
-			return reg.test(data);
-			break;
-		case "number":
-			var reg = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
-			return reg.test(data);
-			break;
-		case "html":
-			var reg = /<...>/;
-			return reg.test(data);
-			break;
-		case "eqt":
-			data2 = $("#" + data2).val();
-			return data >= data2;
-			break;
+	case "require":
+		if (data == "") {
+			return false;
+		} else {
+			return true;
+		}
+		break;
+	case "email":
+		var reg = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+		return reg.test(data);
+		break;
+	case "number":
+		var reg = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
+		return reg.test(data);
+		break;
+	case "html":
+		var reg = /<...>/;
+		return reg.test(data);
+		break;
+	case "eqt":
+		data2 = $("#" + data2).val();
+		return data >= data2;
+		break;
 	}
 }
 

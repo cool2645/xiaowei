@@ -1428,18 +1428,31 @@ function send_push($data, $user_list, $time = null, $type = 'text') {
 }
 
 function send_ws($data, $user_list) {
-	$client = stream_socket_client('tcp://127.0.0.1:7273');
-	if (!$client) {
-		//exit("can not connect");
-		return;
-	}
-	// 模拟超级用户，以文本协议发送数据，注意文本协议末尾有换行符（发送的数据中最好有能识别超级用户的字段），这样在Event.php中的onMessage方法中便能收到这个数据，然后做相应的处理
-	$msg['type'] = "say";
-	$msg['to_client_id'] = "all";
-	$msg['to_client_name'] = $user_list;
-	$msg['content'] = $data;
-	$msg['room_id'] = "1";
-	fwrite($client, json_encode($msg) . "\n");
+	// $client = stream_socket_client('tcp://127.0.0.1:7273');
+	// if (!$client) {
+		// //exit("can not connect");
+		// return;
+	// }
+	// // 模拟超级用户，以文本协议发送数据，注意文本协议末尾有换行符（发送的数据中最好有能识别超级用户的字段），这样在Event.php中的onMessage方法中便能收到这个数据，然后做相应的处理
+	// $msg['type'] = "say";
+	// $msg['to_client_id'] = "all";
+	// $msg['to_client_name'] = $user_list;
+	// $msg['content'] = $data;
+	// $msg['room_id'] = "1";
+	// fwrite($client, json_encode($msg) . "\n");
+
+	// 推送的url地址，上线时改成自己的服务器地址
+	$push_api_url = "http://127.0.0.1:2121/";
+	$post_data = array("type" => "publish", "to" => implode(',', $user_list));
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $push_api_url);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+	$return = curl_exec($ch);
+	curl_close($ch);
+	//@var_export($return);
 }
 
 function send_weixin($data, $user_list) {

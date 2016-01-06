@@ -1,96 +1,37 @@
-<!DOCTYPE  html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 	<head>
-		<title>Comet demo</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script src='__PUBLIC__/js/prototype.js'></script>
-	</head>
-	<body>
-
-		<div id="content"></div>
-
-		<p>
-			<form action="" method="get" onsubmit="comet.doRequest($('word').value);$('word').value='';return false;">
-				<input type="text" name="word" id="word" value="" />
-				<input type="submit" name="submit" value="Send" />
-			</form>
-		</p>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title></title>
+		<script src="__INS__/js/plugins/socket.io/socket.io.js"></script>
+		<script src="__INS__/js/jquery-2.1.1.js"></script>
 
 		<script type="text/javascript">
-			var Comet = Class.create();
-			Comet.prototype = {
-
-				timestamp : 0,
-				url : "{:U('server')}",
-				noerror : true,
-
-				initialize : function() {
-				},
-
-				connect : function() {
-					this.ajax = new Ajax.Request(this.url, {
-						method : 'get',
-						parameters : {
-							'timestamp' : this.timestamp
-						},
-						onSuccess : function(transport) {
-							// handle the server response
-							var response = transport.responseText.evalJSON();
-							this.comet.timestamp = response['timestamp'];
-							this.comet.handleResponse(response);
-							this.comet.noerror = true;
-						},
-						onComplete : function(transport) {
-							// send a new ajax request when this request is finished
-							if (!this.comet.noerror)
-								// if a connection problem occurs, try to reconnect each 5 seconds
-								setTimeout(function() {
-									comet.connect()
-								}, 5000);
-							else {
-								setTimeout(function() {
-									comet.connect()
-								}, 5000);
-							}
-							console.log("y");
-							//this.comet.connect();
-							this.comet.noerror = false;
-						}
-					});
-					this.ajax.comet = this;
-				},
-
-				disconnect : function() {
-				},
-
-				handleResponse : function(response) {
-					window.parent.ui_info(response['info']);
-					$('content').innerHTML += '<div>' + response['msg'] + '</div>';
-				},
-
-				doRequest : function(request) {
-					new Ajax.Request(this.url, {
-						method : 'get',
-						parameters : {
-							'msg' : request
-						}
-					});
-				}
-			};
-
-			function is_weixn() {
-				var ua = navigator.userAgent.toLowerCase();
-				if (ua.match(/MicroMessenger/i) == "micromessenger") {
-					return true;
-				} else {
-					return false;
-				}
+			function get_push() {
+				$.getJSON("{:U('push/server')}", function(result) {
+					if (result.status) {
+						$content = eval('(' + result.data.data + ')');
+						window.parent.push_info($content);
+					}
+					if (result.status > 0) {
+						get_push();
+					}
+				});
 			}
 
-			var comet = new Comet();
-			if (!is_weixn()) {
-				comet.connect();
-			}
+			$(document).ready(function() {
+				get_push();
+				// 连接服务端
+				var socket = io('http://' + document.domain + ':2120');
+				// 连接后登录
+				socket.on('connect', function() {
+					socket.emit('login', '{:get_user_id()}');
+				});
+				// 后端推送来消息时
+				socket.on('new_msg', function(msg) {
+					get_push();
+				});
+			});
 		</script>
-	</body>
+	</head>
+	<body></body>
 </html>

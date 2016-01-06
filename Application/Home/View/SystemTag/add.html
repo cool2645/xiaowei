@@ -1,9 +1,18 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	{:W('PageHeader/popup',array('name'=>'添加'))}
-	<div class="row">
-		<div class="col-xs-12">
-			<form id="form_data" name="form_data" method="post" class="form-horizontal well">
+	<input type="hidden" name="ajax" id="ajax" value="1">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
+			<div class="pull-left">
+				<h1>添加</h1>
+			</div>
+			<div class="pull-right">
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+			</div>
+		</div>
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<form id="form_data" name="form_data" method="post" class="form-horizontal">
 				<input type="hidden" name="id" id="id">
 				<input type="hidden" name="pid" id="pid" value="0">
 				<input type="hidden" name="ajax" id="ajax" value="0">
@@ -101,8 +110,9 @@
 		}
 
 		function select_pid() {
-			winopen("{:U('system_tag/winpop?controller='.CONTROLLER_NAME)}", 730, 400);
+			winopen("{:U('system_tag/winpop?controller='.CONTROLLER_NAME)}", 560, 470);
 		}
+
 
 		$(document).ready(function() {
 			$(".sub_left_menu .tree_menu  a").click(function() {

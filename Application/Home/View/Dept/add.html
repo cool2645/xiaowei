@@ -1,13 +1,19 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
 	<input type="hidden" name="ajax" id="ajax" value="1">
-	
-	{:W('PageHeader/popup',array('name'=>'添加部门','search'=>'N'))}
-	<!-- 列表显示区域  -->
-	<div class="row">
-		<div class="col-xs-12 sub_content">
-			<form id="form_data" name="form_data" method="post" class="well form-horizontal clearfix">
-				<input type="hidden" name="opmode" id="opmode" value="add">				
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
+			<div class="pull-left">
+				<h1>添加部门</h1>
+			</div>
+			<div class="pull-right">
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+			</div>
+		</div>
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<form id="form_data" name="form_data" method="post" class="form-horizontal clearfix">
+				<input type="hidden" name="opmode" id="opmode" value="add">
 				<div class="form-group col-xs-12">
 					<label class="col-xs-3 control-label" for="name">名称*：</label>
 					<div class="col-xs-9">
@@ -51,7 +57,7 @@
 				<div class="form-group col-xs-12">
 					<label class="col-xs-3 control-label" for="is_del">状态*：</label>
 					<div class="col-xs-9">
-						<select   name="is_del" id="is_del" class="form-control">
+						<select  name="is_del" id="is_del" class="form-control">
 							<option  value="0">启用</option>
 							<option value="1">禁用</option>
 						</select>
@@ -72,7 +78,7 @@
 							parent.location.reload(true);
 							myclose();
 						});
-					}else{
+					} else {
 						ui_error(data.info);
 					}
 				});
@@ -80,7 +86,7 @@
 		}
 
 		function select_pid() {
-			winopen("{:U('winpop')}", 730, 500);
+			winopen("{:U('winpop')}", 560, 470);
 		}
 
 		$(document).ready(function() {

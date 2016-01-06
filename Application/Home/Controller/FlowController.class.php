@@ -392,7 +392,7 @@ class FlowController extends HomeController {
 		if (empty($vo)) {
 			$this -> error("系统错误");
 		}
-
+	 
 		$this -> assign("emp_no", $vo['emp_no']);
 		$this -> assign("user_name", $vo['user_name']);
 		$this -> assign('vo', $vo);

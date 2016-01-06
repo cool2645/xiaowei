@@ -37,7 +37,7 @@ h5 {
 }
 .myFrame
 {
-	 box-shadow: 0 1em 1em 0 rgba(0, 0, 0, 1);
+	 box-shadow: 3px 3px 3px 0 #555;
 	 border:0px;
 }
 .nav.navbar-right > li > a {

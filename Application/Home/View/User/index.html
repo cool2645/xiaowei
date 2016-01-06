@@ -182,7 +182,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			winopen("{:U('add')}", 704, 500);
+			winopen("{:U('add')}", 560, 470);
 		};
 		function del_pwd() {
 			if ($("input[name='user_id[]']:checked").length == 0) {
@@ -224,7 +224,7 @@
 				ui_error("请选择用户");
 				return false;
 			}
-			winopen("{:U('password')}?id=" + $("#id").val(), 704, 400);
+			winopen("{:U('password')}?id=" + $("#id").val(), 560, 470);
 		}
 
 		function import_user() {
@@ -233,11 +233,11 @@
 		}
 
 		function select_dept() {
-			winopen("{:U('dept/winpop2')}", 730, 500);
+			winopen("{:U('dept/winpop2')}", 560, 470);
 		}
 
 		function weixin_sync() {
-			winopen("{:U('weixin_sync')}", 730, 500);
+			winopen("{:U('weixin_sync')}",560, 470);
 		}
 
 		function select_avatar() {
@@ -245,7 +245,7 @@
 				ui_error("请选择用户");
 				return false;
 			}
-			winopen("{:U('popup/avatar')}?id=" + $("#id").val(), 704, 500);
+			winopen("{:U('popup/avatar')}?id=" + $("#id").val(), 560, 470);
 		}
 
 		function select_signature() {
@@ -253,7 +253,7 @@
 				ui_error("请选择用户");
 				return false;
 			}
-			winopen("{:U('popup/signature')}?id=" + $("#id").val(), 704, 500);
+			winopen("{:U('popup/signature')}?id=" + $("#id").val(), 560, 470);
 		}
 
 		function btn_search() {

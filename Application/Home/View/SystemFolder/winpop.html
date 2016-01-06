@@ -1,25 +1,28 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	{:W('PageHeader/simple',array('name'=>'请选择父节点','search'=>'N'))}
-	<div class="operate panel panel-default">
-		<div class="panel-heading clearfix">
+	<input type="hidden" name="val" id="val">
+	<input type="hidden" name="name" id="name">
+	<input type="hidden" name="ajax" id="ajax" value="1">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
 			<div class="pull-left">
-				<a  onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<h1>请选择父节点</h1>
 			</div>
 			<div class="pull-right">
-				<a  onclick="myclose();" class="btn btn-sm btn-primary">关闭</a>
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
 			</div>
 		</div>
-		<div class="popup_tree_menu panel-body">
-			<ul class="tree_menu">
-				<li>
-					<a node="0"><i class="icon"></i> <span>根节点</span> </a>
-					{$menu}
-				</li>
-			</ul>
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<div class="popup_tree_menu">
+				<ul class="tree_menu">
+					<li>
+						<a node="0"><i class="icon"></i> <span>根节点</span> </a>
+						{$menu}
+					</li>
+				</ul>
+			</div>
 		</div>
-		<input type="hidden" name="val" id="val">
-		<input type="hidden" name="name" id="name">
 	</div>
 </block>
 <block name="js">

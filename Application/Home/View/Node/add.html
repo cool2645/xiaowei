@@ -1,9 +1,18 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	{:W('PageHeader/popup',array('name'=>'添加菜单','search'=>'N'))}
-	<div class="row">
-		<div class="col-sm-12 sub_content">
-			<form id="form_data" name="form_data" method="post" class="well form-horizontal clearfix">
+	<input type="hidden" name="ajax" id="ajax" value="1">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
+			<div class="pull-left">
+				<h1>添加菜单</h1>
+			</div>
+			<div class="pull-right">
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+			</div>
+		</div>
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<form id="form_data" name="form_data" method="post" class="form-horizontal clearfix">
 				<input type="hidden" name="ajax" id="ajax" value="1">
 				<input type="hidden" name="opmode" id="opmode" value="add">
 				<select name="node_list" id="node_list" class="hidden">
@@ -71,9 +80,9 @@
 <block name="js">
 	<script type="text/javascript">
 		function select_pid() {
-			winopen("{:U('winpop')}", 704, 500);
+			winopen("{:U('winpop')}", 560, 470);
 		}
-	
+
 		function save() {
 			if (check_form("form_data")) {
 				var vars = $("#form_data").serialize();

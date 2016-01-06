@@ -32,44 +32,114 @@
 .bold {
 	font-weight: bold;
 }
-.Popup {
-	background: #ffffff;
+.popup {
+	background: #f5f5f5;
+	margin: 0px;
+	padding: 0px;
+}
+
+.popup-fixed {
+	width: 560px;
+}
+.popup-container .popup-label {
+	line-height: 24px;
+}
+
+.popup-body .popup_tree_menu div {
+	overflow-x: hidden;
+	overflow-y: scroll;
+	margin-bottom: 5px;
+	background: #fff;
+	border: 1px solid #ccc;
+}
+.popup-body #rc, .popup-body #cc, .popup-body #bcc {
+	background: #fff;
+	border: 1px solid #ccc;
+}
+.popup-body .selected ul {
 	padding-left: 0px;
-	padding-right: 0px;
-	padding-top: 15px;
+	overflow-y: scroll;
+	height: 100%;
+}
+.popup-body .selected li {
+	padding-left: 10px;
+	height: 28px;
+	line-height: 28px;
+	list-style: none;
+	border-bottom: 1px dotted #ccc;
+}
+.popup-body .selected li a {
+	line-height: 28px;
+	margin-right: 6px;
+}
+.popup-body .selected .fa-times {
+	color: red;
+	font-size: 14px;
+	float: right;
+}
+.popup-container .popup_tree_menu li a {
+	height: 28px;
+	line-height: 28px;
+}
+
+.popup-container .popup_tree_menu li a.active {
+	height: 28px;
+	line-height: 28px;
+}
+.popup-container .popup_tree_menu li a:hover {
+	height: 28px;
+	line-height: 28px;
+}
+.popup-header {
+	background:#fff;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 55px;
+	border-bottom: 1px solid #ccc;
+}
+.popup-header h1 {
+	padding-top: 0px;
 	margin-top: 0px;
-	width: 700px;
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 33px;
 }
 
-.Popup .panel {
-	margin-bottom: 0px;
+.popup-header label {
+	line-height: 33px;
+}
+.popup-body {
+	background: #f5f5f5;
+	padding-top: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 15px;
 }
 
-.Popup .popup_tree_menu div {
+.popup-body .mid a {
+	margin-bottom: 10px;
+}
+
+.popup-body #addr_list, .popup-body #position {
 	overflow-x: hidden;
 	overflow-y: scroll;
-	margin-bottom: 15px;
 	border: 1px solid #ccc;
+	background: #fff;
 }
 
-.Popup #addr_list, .Popup #position {
-	overflow-x: hidden;
-	overflow-y: scroll;
-	border: 1px solid #ccc;
-}
-
-.Popup span.lbl {
+.popup-body span.lbl {
 	padding-right: 10px;
 }
-.Popup #addr_list label {
+.popup-body #addr_list label {
 	padding-left: 6px;
 	font-weight: normal;
 	display: block;
 	height: 28px;
 	margin-bottom: 0px;
 }
-.Popup #addr_list label .lbl {
-	padding-left: 6px;
+.popup-body #addr_list label .lbl {
+	padding-left: 4px;
 }
 
 ul.tree_menu {
@@ -1151,15 +1221,15 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 	cursor: pointer;
 	padding-left: 3px;
 	padding-right: 3px;
-	width:16px;
+	width: 16px;
 }
 
 .address_list_box .address_list i.fa-times {
 	cursor: pointer;
-	color:#ED5565;
+	color: #ED5565;
 	padding-left: 3px;
 	padding-right: 3px;
-	width:16px;
+	width: 16px;
 }
 .inputbox .letter {
 	border: 0;
@@ -1966,14 +2036,14 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 }
 .slider_box {
 	height: 17px;
-	width: 250px;
+	width: 210px;
 }
 .slider_box .left {
 	float: left;
 }
 
 .slider_box .noUi-target {
-	width: 160px;
+	width: 110px;
 	float: left;
 	margin-left: 20px;
 	margin-right: 20px;
@@ -1986,16 +2056,10 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 #push {
 	display: none;
 }
-.popup {
-	padding-left: 15px;
-	padding-right: 15px;
-	margin-top: 15px;
-	width: 700px;
-}
 
 @media only screen and (max-width: 768px) {
-	.hidden_xs{
-		display:none;
+	.hidden_xs {
+		display: none;
 	}
 	#page-wrapper {
 		padding: 0px;

@@ -1,38 +1,51 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	{:W('PageHeader/popup',array('name'=>'添加业务权限','search'=>'N'))}
-	<div class="row">
-		<div class="col-sm-12 last sub_content ">
-			<form id="form_data" name="form_data" method="post" action="">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
+			<div class="pull-left">
+				<h1>添加业务权限</h1>
+			</div>
+			<div class="pull-right">
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+			</div>
+		</div>
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<form id="form_data" name="form_data" method="post" action="" class="clearfix">
 				<input type="hidden" name="id" id="id">
 				<input type="hidden" name="ajax" id="ajax" value="1">
 				<input type="hidden" name="opmode" id="opmode" value="add">
-				<table class="table table-bordered">
-					<tr>
-						<th>名称*</th>
-						<td>
+
+				<div class="form-group col-xs-12">
+					<label class="col-xs-3 control-label" for="name">名称*：</label>
+					<div class="col-xs-9">
 						<input class="form-control col-20" type="text" id="name" name="name"  check="require" msg="请输入名称">
-						</td>
-					</tr>
-					<tr>
-						<th>排序</th>
-						<td>
-						<input class="form-control col-10" type="text" id="sort" name="sort">
-						</td>
-					</tr>
-					<tr>
-						<th>状态</th>
-						<td>
-						<select class="form-control col-10"  name="is_del" id="is_del">
+					</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-xs-3 control-label" for="sort">排序：</label>
+					<div class="col-xs-9">
+						<input class="form-control"  type="text" id="sort" name="sort" >
+					</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-xs-3 control-label" for="is_del">状态：</label>
+					<div class="col-xs-9">
+						<select  class="form-control" name="is_del" id="is_del">
 							<option  value="0">启用</option>
 							<option value="1">禁用</option>
-						</select></td>
-					</tr>
-					<tr>
-						<th>备注</th>
-						<td><textarea id="remark" class="form-control" name="remark" rows="" cols=""></textarea></td>
-					</tr>
-				</table>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-xs-12">
+					<label class="col-xs-3 control-label" for="remark">备注：</label>
+					<div class="col-xs-9">
+						<textarea id="remark" class="form-control" name="remark" rows="" cols=""></textarea>												
+						</td>
+
+
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
@@ -54,6 +67,5 @@
 				});
 			}
 		}
-
 	</script>
 </block>

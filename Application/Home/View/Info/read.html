@@ -99,7 +99,7 @@
 		}
 
 		function attach_down(obj) {
-			winopen("{:U('down')}?attach_id=" + $(obj).attr("file_id") + "&id/" + $("#id").val(), 730, 300);
+			winopen("{:U('down')}?attach_id=" + $(obj).attr("file_id") + "&id/" + $("#id").val(),560, 470);
 		}
 
 		function edit() {
@@ -120,7 +120,7 @@
 		}
 
 		function sign_info() {
-			winopen("{:U('sign_info',array('id'=>$vo['id']))}", 700, 370);
+			winopen("{:U('sign_info',array('id'=>$vo['id']))}",560, 470);
 		}
 
 		//增加签收

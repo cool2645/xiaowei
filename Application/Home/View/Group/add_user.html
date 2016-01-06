@@ -1,32 +1,27 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	<style>
-		.sub_left_menu {
-			height: 500px;
-			overflow-y: scroll;
-		}
-	</style>
-	{:W('PageHeader/popup',array('name'=>'添加成员','search'=>'S'))}
-	<div class="operate panel panel-default">
-		<div class="panel-body">
-			<div class="col-sm-4 search_box">
-				<form name="form_search" id="form_search" method="post" class="pull-right">
-					<div class="input-group col-20">
-						<input  class="form-control" type="text" name="keyword" id="keyword"/>
-						<div class="input-group-btn">
-							<a class="btn btn-sm btn-info" onclick="submit_search();"><i class="fa fa-search" ></i></a>
-						</div>
-					</div>
-				</form>
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
+			<div class="pull-left">
+				<h1>添加成员</h1>
 			</div>
+			<div class="pull-right">
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+			</div>
+			<form name="form_search" id="form_search" method="post" class="pull-right" style="padding-right:10px;">
+				<div class="input-group col-15">
+					<input class="form-control" type="text" name="keyword" id="keyword">
+					<div class="input-group-btn">
+						<a class="btn btn-sm btn-info" onclick="submit_search();"><i class="fa fa-search"></i></a>
+					</div>
+				</div>
+			</form>
 		</div>
-	</div>
-	<!-- 列表显示区域  -->
-	<div class="row">
-		<form id="form_data" name="form_data" method="post" >
-			<input type="hidden" name="opmode" id="opmode" value="add">
-			<input type="hidden" name="group_id" id="group_id" value="{$group_id}">
-			<div class="col-xs-12">
+		<div class="popup-body" style="height: 420px;overflow-y: auto;">
+			<form id="form_data" name="form_data" method="post" >
+				<input type="hidden" name="opmode" id="opmode" value="add">
+				<input type="hidden" name="group_id" id="group_id" value="{$group_id}">
 				<table class="table table-bordered">
 					<thead>
 						<tr>
@@ -93,8 +88,8 @@
 						</volist>
 					</tbody>
 				</table>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
 </block>
 <block name="js">

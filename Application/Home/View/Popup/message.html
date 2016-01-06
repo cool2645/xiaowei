@@ -1,16 +1,11 @@
 <extend name="Layout/ins_popup" />
 <block name="content">
-	<div class="panel panel-default ">
-		<div class="panel-heading clearfix">
+	<div class="popup-fixed">
+		<div class="popup-header clearfix">
 			<div class="pull-left">
 				<label>
 					<input class="ace"  type="radio" id="rb_dept" name="type" value="dept" >
 					<span class="lbl">部门</span> </label>
-
-				<label class="hidden">
-					<input  class="ace"  type="radio" id="rb_rank" name="type" value="rank">
-					<span class="lbl">职级</span> </label>
-
 				<label>
 					<input  class="ace"  type="radio" id="rb_position" name="type" value="position">
 					<span class="lbl">职位</span> </label>
@@ -20,68 +15,121 @@
 			</div>
 			<div class="pull-right">
 				<a  onclick="select_all()" class="btn btn-sm btn-primary">全选</a>
-				<a  onclick="save();" class="btn btn-sm btn-primary">确定</a>
-				<a  onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
+				<a onclick="save();" class="btn btn-sm btn-primary">确定</a>
+				<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
 			</div>
 		</div>
-		<div class="panel-body">
-			<div class="col-28 pull-left">
-				<div class="">
-					<b>地址簿</b>
-				</div>
+		<div class="popup-body clearfix">
+			<div class="col-23 pull-left">
+				<b class="popup-label">地址簿</b>
 				<div class="popup_tree_menu" >
-					<div id="dept" class="hidden" style="height:200px;">
+					<div id="dept" class="hidden" style="height:170px;">
 						{$list_dept}
 					</div>
-					<div id="position" class="hidden" style="height:200px;">
+					<div id="position" class="hidden" style="height:170px;">
 						{$list_position}
 					</div>
-					<div id="group" class="hidden"  style="height:200px;">
+					<div id="group" class="hidden"  style="height:170px;">
 						{$list_group}
 					</div>
 				</div>
+				<b class="popup-label">&nbsp;</b>
 				<div>
-					<div id="addr_list" style="width:100%;height:210px;"></div>
+					<div id="addr_list" style="width:100%;height:170px;"></div>
 				</div>
 			</div>
-			<div class="col-34 pull-right">
-				<div>
-					<b style="padding-left:60px;">接收人</b><span id="rc_count"></span>
+			<div class="col-30 pull-left">
+				<div class="col-7 pull-left text-center mid" style="margin-top: 24px;">
+					<a onclick="add_address('rc');" class="btn btn-sm btn-primary"><i class="fa fa-angle-double-right"></i></a>
+					<a onclick="save();" class="hidden-lg btn btn-sm btn-primary">确定</a>
+					<a onclick="myclose();" class="btn btn-sm btn-default">关闭</a>
 				</div>
-				<div class="clearfix" style="margin-bottom: 15px;">
-					<label class="col-4 pull-left text-right" ><a onclick="add_address('rc');" class="btn btn-sm btn-primary"> <i class="fa fa-angle-double-right"></i> </a> </label>
-					<div class="col-28 pull-right">
-						<div id="rc" style="width:100%;height:424px;overflow:hidden">
-							<select size="6" style="height:100%;width:100%;"></select>
-						</div>
+				<div class="col-23 pull-left">
+					<b class="popup-label">接收人</b><span id="rc_count"></span>
+					<div id="rc" class="selected" style="width:100%;height:369px;overflow:hidden">
+						<ul></ul>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </block>
 <block name="js">
 	<script type="text/javascript">
+		function add_address(name) {
+			$("input:checked[name='addr_id']").each(function() {
+				$text = $(this).next().text();
+				$val = $(this).val();
+				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+					$li.find('span').text($text);
+					$li.attr('data', $val);
+					$li.appendTo("#" + name + ".selected ul");
+					recount();
+				};
+			});
+			$("#addr_list input:checked").prop('checked', false);
+		}
+
+
+		$(document).on("click", ".selected a.fa-times", function() {
+			$(this).parent().remove();
+			recount();
+		});
+
+		// 双击添加到收件人 因后添加的数据 所以需要用live函数
+		$(document).on("dblclick", "#addr_list label", function() {
+			$text = $(this).text();
+			$val = $(this).find("input").val();
+			if ($("#rc.selected li[data='" + $val + "']").length == 0) {
+				$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+				$li.find('span').text($text);
+				$li.attr('data', $val);
+				$li.appendTo("#rc.selected ul");
+				recount();
+			};
+		});
+
+		function recount() {
+			$("#rc_count").text("(" + $("#rc.selected li").length + ")");
+			$("#cc_count").text("(" + $("#cc.selected li").length + ")");
+			$("#bcc_count").text("(" + $("#bcc.selected li").length + ")");
+		}
+
 		function save() {
-			$("#rc select option").each(function(i) {
-				user_id = $(this).val();
-				name = jQuery.trim($(this).text()).replace(/<.*>/, '');
-				html = conv_inputbox_item(name, user_id);
+			$("#rc.selected li").each(function(i) {
+				emp_no = $(this).attr('data');
+				name = jQuery.trim($(this).text());
+				name = name.replace(/<.*>/, '');
+				html_string = conv_inputbox_item(name, emp_no);
+				$("#actor_wrap .address_list", parent.document).append(html_string);
+			});
+			myclose();
+		}
+
+		function save() {
+			$("#rc.selected li").each(function(i) {
+				emp_no = $(this).attr('data');
+				name = jQuery.trim($(this).text());
+				name = name.replace(/<.*>/, '');
+				html = conv_inputbox_item(name, emp_no);
 				$("#recever .address_list", parent.document).append(html);
 			});
 			myclose();
 		}
 
-		function select_all() {
-			name = 'rc';
+		function select_all() {			
 			$("input[name='addr_id']").each(function() {
 				$(this).prop('checked', false);
 				$text = $(this).parents("label").find("span").text();
 				$val = $(this).val();
-				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
-					$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
-					$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
+				name = 'rc';
+				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
+					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
+					$li.find('span').text($text);
+					$li.attr('data', $val);
+					$li.appendTo("#" + name + ".selected ul");
+					recount();
 				};
 			});
 		}
@@ -122,34 +170,7 @@
 				return false;
 				//禁止连接生效
 			});
-
-			$(document).on("dblclick", "#addr_list label", function() {
-				$text = $(this).text();
-				$val = $(this).find("input").val();
-				if ($("#rc select option[value='" + $val + "']").val() == undefined) {
-					$("<option></option>").val($val).text($text).appendTo("#rc select");
-					$("#rc_count").text("(" + $("#rc select option").length + ")");
-				};
-			});
-
-			$("#rc  select").on("dblclick", function() {
-				$(this).find("option:selected").remove();
-				$("#rc_count").text("(" + $("#rc select option").length + ")");
-			});
-
 		});
 		//最终确认
-
-		function add_address(name) {
-			$("input:checked[name='addr_id']").each(function() {
-				$(this).prop('checked', false);
-				$text = $(this).parents("label").find("span").text();
-				$val = $(this).val();
-				if ($("#" + name + " select option[value='" + $val + "']").val() == undefined) {
-					$("<option></option>").val($val).text($text).appendTo("#" + name + " select");
-					$("#" + name + "_count").text("(" + $("#" + name + " select option").length + ")");
-				};
-			});
-		};
 	</script>
 </block>

@@ -66,7 +66,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			winopen("{:U('add')}",740,500);
+			winopen("{:U('add')}",560, 470);
 		};
 
 		function del() {
@@ -93,7 +93,6 @@
 			$("#opmode").val("edit");
 		}
 
-
 		$(document).ready(function() {
 			set_return_url();
 			$(".sub_left_menu tbody tr").click(function() {
@@ -103,7 +102,7 @@
 					showdata(data);
 				});
 				return false;
-			})
+			});
 		});
 	</script>
 </block>

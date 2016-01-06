@@ -91,7 +91,7 @@
 <block name="js">
 	<script type="text/javascript">
 		function popup_actor() {
-			winopen("{:U('popup/actor')}", 704, 570);
+			winopen("{:U('popup/actor')}", 560, 470);
 		}
 
 		function save() {
@@ -101,7 +101,6 @@
 			});
 			sendForm("form_data", "{:U('save')}");
 		}
-
 
 		$(document).on("click", ".inputbox .address_list a.del", function() {
 			$(this).parent().parent().remove();

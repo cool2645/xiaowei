@@ -87,8 +87,9 @@
 <block name="js">
 	<script type="text/javascript">
 		function add() {
-			winopen("{:U('add')}", 740, 530);
+			winopen("{:U('add')}",560, 470);
 		}
+		
 		function del() {
 			var vars = $("#form_data").serialize();
 			ui_confirm('确定要删除吗?', function() {
