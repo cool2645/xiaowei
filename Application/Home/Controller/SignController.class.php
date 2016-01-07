@@ -138,7 +138,6 @@ class SignController extends HomeController {
 	public function _report_export($model, $map) {
 		$list = $model -> where($map) -> select();
 		$r = $model -> where($map) -> count();
-
 		if ($r <= 1000) {
 			//导入thinkphp第三方类库
 			Vendor('Excel.PHPExcel');
@@ -149,7 +148,7 @@ class SignController extends HomeController {
 			// Add some data
 			$i = 1;
 
-			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "部门") -> setCellValue("B$i", "姓名") -> setCellValue("C$i", "职位") -> setCellValue("D$i", "类型") -> setCellValue("E$i", "时间") -> setCellValue("F$i", "经度") -> setCellValue("G$i", "纬度") -> setCellValue("H$i", "IP") -> setCellValue("I$i", "地理位置");
+			$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", "部门") -> setCellValue("B$i", "姓名") -> setCellValue("C$i", "职位") -> setCellValue("D$i", "类型") -> setCellValue("E$i", "时间") -> setCellValue("F$i", "经度") -> setCellValue("G$i", "纬度") -> setCellValue("H$i", "IP") -> setCellValue("I$i", "地理位置")-> setCellValue("J$i", "备注");
 
 			foreach ($list as $val) {
 				$i++;
@@ -163,8 +162,9 @@ class SignController extends HomeController {
 				$longitude = $val['longitude'];
 				$ip = $val['ip'];
 				$location = $val['location'];
+				$content = $val['content'];
 
-				$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $dept_name) -> setCellValue("B$i", $name) -> setCellValue("C$i", $position_name) -> setCellValue("D$i", $type) -> setCellValue("E$i", $sign_date) -> setCellValue("F$i", $latitude) -> setCellValue("G$i", $longitude) -> setCellValue("H$i", $ip) -> setCellValue("I$i", $location);
+				$objPHPExcel -> setActiveSheetIndex(0) -> setCellValue("A$i", $dept_name) -> setCellValue("B$i", $name) -> setCellValue("C$i", $position_name) -> setCellValue("D$i", $type) -> setCellValue("E$i", $sign_date) -> setCellValue("F$i", $latitude) -> setCellValue("G$i", $longitude) -> setCellValue("H$i", $ip) -> setCellValue("I$i", $location)-> setCellValue("J$i", $content);
 			}
 
 			// Rename worksheet
@@ -190,13 +190,14 @@ class SignController extends HomeController {
 			header('Cache-Control: max-age=0');
 
 			$fp = fopen('php://output', 'a');
-			$title = array('部门', '姓名', '职位', '类型', '时间', '经度', '纬度', 'IP', '地理位置');
+			$title = array('部门', '姓名', '职位', '类型', '时间', '经度', '纬度', 'IP', '地理位置', '备注');
 			foreach ($title as $i => $v) {
 				// CSV的Excel支持GBK编码，一定要转换，否则乱码
 				$title[$i] = iconv('utf-8', 'gbk', $v);
 			}
 			fputcsv($fp, $title);
 			$cnt = 0;
+			
 			foreach ($list as $val) {
 				$cnt++;
 				if (100000 == $cnt) {//刷新一下输出buffer，防止由于数据过多造成问题
@@ -214,8 +215,10 @@ class SignController extends HomeController {
 				$longitude = $val['longitude'];
 				$ip = $val['ip'];
 				$location = $val['location'];
+				$content = $val['content'];
+				
 
-				$row = array($dept_name, $name, $position_name, $type, $sign_date, $latitude, $longitude, $ip, $consult_name, $location);
+				$row = array($dept_name, $name, $position_name, $type, $sign_date, $latitude, $longitude, $ip, $location, $content);
 
 				foreach ($row as $i => $v) {
 					$row[$i] = iconv('utf-8', 'gbk', $v);

@@ -334,14 +334,15 @@ var Inputbox = {
 /*赋值*/
 
 function set_val(name, val) {
-	if (val == "") {
-		return;
-	}
-	if ($("#" + name + " option").length > 0) {
-		$("#" + name + " [value=" + val + "]").attr('selected', 'selected');
-		return;
-	}
 
+	if ($("#" + name + " option").length > 0) {
+		if (val == "") {
+			$("#" + name + " option:first").attr('selected', 'selected');
+		} else {
+			$("#" + name + " [value=" + val + "]").attr('selected', 'selected');
+		}
+		return;
+	}
 	if (($("#" + name).attr("type")) === "checkbox") {
 		if (val == 1) {
 			$("#" + name).attr("checked", true);

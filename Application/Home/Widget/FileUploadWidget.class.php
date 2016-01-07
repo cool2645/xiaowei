@@ -51,8 +51,8 @@ class FileUploadWidget extends Controller {
 			$file_list = $model -> where($where) -> select();
 			$data['file_list'] = $file_list;
 			$this -> assign($data);
+			$this -> display('Widget:FileUpload/view');
 		}
-		$this -> display('Widget:FileUpload/view');
 	}
 
 	public function link($add_file) {
