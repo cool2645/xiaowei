@@ -108,7 +108,7 @@
 		}
 
 		function save() {
-			$("#confirm_wrap,#consult_wrap,#refer_wrap", parent.document).hide();
+			$("#confirm_wrap,#consult_wrap", parent.document).html('');
 
 			$("#rc.selected li").each(function(i) {
 				emp_no = $(this).attr('data');

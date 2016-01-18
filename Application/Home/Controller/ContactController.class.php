@@ -7,7 +7,7 @@
  Author:  jinzhu.yin<smeoa@qq.com>
 
  Support: https://git.oschina.net/smeoa/xiaowei
---------------------------------------------------------------*/
+ --------------------------------------------------------------*/
 
 namespace Home\Controller;
 
@@ -51,6 +51,7 @@ class ContactController extends HomeController {
 	function export() {
 		$model = M("Contact");
 		$where['user_id'] = array('eq', get_user_id());
+		$where['is_del'] = array('eq', 0);
 		$list = $model -> where($where) -> select();
 
 		//导入thinkphp第三方类库

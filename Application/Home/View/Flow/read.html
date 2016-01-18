@@ -110,8 +110,8 @@
 					</p>
 				</div>
 			</div>
-			<volist name="field_list" id="vo">
-				{:W('UserDefineField/edit',array($vo))}
+			<volist name="field_list" id="field_vo">
+				{:W('UserDefineField/edit',array($field_vo))}
 			</volist>
 			<eq name="flow_type.is_show" value="1">
 				<div class="form-group">

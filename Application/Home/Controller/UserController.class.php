@@ -146,7 +146,6 @@ class UserController extends HomeController {
 					$weixin -> update_user($emp_no, $name, $mobile_tel, $is_del);
 				}
 			}
-
 			$this -> assign('jumpUrl', get_return_url());
 			$this -> success('编辑成功!');
 		} else {
@@ -169,8 +168,18 @@ class UserController extends HomeController {
 			$emp_no = $val['emp_no'];
 			$name = $val['name'];
 			$mobile_tel = trim($val['mobile_tel'], '+-');
+			$error_code =         json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+ //
+				//
+				// $error_code =       json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+				//
+				// $error_code =           json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+				//
+				// $error_code =           json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+				//
+				// $error_code =              json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
+			
 
-			$error_code =              json_decode($weixin -> add_user($emp_no, $name, $mobile_tel)) -> errcode;
 			$list[$key]['error_code'] = $error_code;
 			$list[$key]['desc'] = $error_code_desc[$error_code];
 			$list[$key]['emp_no'] = $key;
@@ -256,7 +265,7 @@ class UserController extends HomeController {
 			$weixin = new \Weixin();
 			$restr = $weixin -> del_user($emp_no);
 		}
-
+		//R('Ldap/del', array($emp_no));
 		$this -> _destory($user_id);
 	}
 

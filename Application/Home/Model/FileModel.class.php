@@ -11,10 +11,10 @@ namespace Home\Model;
 use Think\Model;
 use Think\Upload;
 
-/**
- * 文件模型
- * 负责文件的下载和上传
- */
+	/**
+	 * 文件模型
+	 * 负责文件的下载和上传
+	 */
 
 class FileModel extends Model {
 	/**
@@ -43,11 +43,12 @@ class FileModel extends Model {
 		$setting['removeTrash'] = array($this, 'removeTrash');
 		$setting['savePath'] = strtolower(CONTROLLER_NAME) . "/";
 		$setting['exts'] = array_filter(explode(",", get_system_config('upload_file_ext')), 'upload_filter');
-
-		$Upload = new Upload($setting, $driver, $config);
-		
+		if(empty($setting['exts'])){
+			$setting['exts']=C('UPLOAD_FILE_EXT');
+		}
+		$Upload = new Upload($setting, $driver, $config);		
 		$info = $Upload -> upload($files);
-
+		
 		/* 设置文件保存位置 */
 		$this -> _auto[] = array('location', 'ftp' === strtolower($driver) ? 1 : 0, self::MODEL_INSERT);
 		if ($info) {//文件上传成功，记录文件信息

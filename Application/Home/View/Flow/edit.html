@@ -161,14 +161,24 @@
 			});
 		}
 
-
 		$(document).ready(function() {
-			$("#confirm span").on("dblclick", function() {
-				$("#confirm span").last().find("b").remove();
+			<php>if($flow_type['is_lock']==0){</php>
+			$('.address_list').on('mouseenter', 'span', function() {
+				$(this).find('i').remove();
+				$(this).append('<i class="fa fa-times"></i>');	 
 			});
-			$("#consult span").on("dblclick", function() {
-				$("#consult span").last().find("b").remove();
+			$('.address_list').on('mouseleave', 'span', function() {
+				$i = $(this).find('i');
+				$i.removeClass('fa-times');
+				$i.addClass('fa-arrow-right');
+				$(".address_list span:last i").attr('class', 'fa');
 			});
+
+			$('.address_list').on('click', 'i', function() {
+				$(this).parents('span').remove();
+				$(".address_list span:last i").attr('class', 'fa');
+			});
+			<php>}</php>
 		});
 	</script>
 

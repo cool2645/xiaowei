@@ -100,8 +100,7 @@ class  FlowModel extends CommonModel {
 
 	function _before_update(&$data, $options) {
 		$flow_type = M("FlowType") -> find($data['type']);
-
-		if (($flow_type['is_lock'])&&($data['step']>=20)) {
+		if (($flow_type['is_lock'])&&($data['step']>20)) {
 			unset($data['confirm']);
 			unset($data['consult']);
 			unset($data['refer']);

@@ -31,7 +31,7 @@
 	    ), 
 	    
 	    //下载模型上传配置（文件上传类配置）
-		'UPLOAD_FILE_EXT'=>'ppt,pptx,xls,xlsx,jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,xml,pdf', //允许上传的文件后缀
+		'UPLOAD_FILE_EXT'=>'ppt,pptx,xls,xlsx,jpg,gif,png,jpeg,zip,rar,tar,gz,7z,doc,docx,txt,pdf', //允许上传的文件后缀
 		'SYSTEM_CONFIG'=>'基本设置,安全设置,微信设置,记账-收入,记账-支出,'
 	 );
     return $array;

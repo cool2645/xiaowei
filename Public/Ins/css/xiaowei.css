@@ -679,10 +679,10 @@ ul.tree_menu i {
 .col-40 {
 	width: 400px;
 }
-.input-date {
+.input-date,.input-date-readonly {
 	width: 110px;
 }
-.input-date-time {
+.input-date-time,.input-date-time-readonly {
 	width: 150px;
 }
 #top_menu .nav {
