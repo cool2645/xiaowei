@@ -43,7 +43,7 @@ class PushController extends HomeController {
 
 	function get_data($user_id) {
 		$where['user_id'] = array('eq',$user_id);
-		$where['create_time'] = array('elt', time() - 1);
+		$where['time'] = array('elt', time() - 1);
 		$model = M("Push");
 		$data = $model -> where($where) -> find();
 		if ($data) {
@@ -54,7 +54,7 @@ class PushController extends HomeController {
 
 	function get_count($user_id) {
 		$where['user_id'] = array('eq',$user_id);
-		$where['create_time'] = array('elt', time() - 1);
+		$where['time'] = array('elt', time() - 1);
 		return M("Push")->where($where)->count();;
 	}
 }

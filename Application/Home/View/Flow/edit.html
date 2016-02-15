@@ -41,7 +41,8 @@
 			<label class="col-sm-4 control-label" >文件编号*：</label>
 			<div class="col-sm-8">
 				<p class="form-control-static">
-					{$flow_type.doc_no_format}
+					{vo.doc_no}
+					<!-- {$flow_type.doc_no_format}   2016.1.28 origin 修改编辑审批单号查看问题  -->
 				</p>
 			</div>
 		</div>
@@ -99,9 +100,11 @@
 				</p>
 			</div>
 		</div>
+		
 		<volist name="field_list" id="field_vo">
 			{:W('UserDefineField/edit',array($field_vo))}
 		</volist>
+		
 		<neq name="flow_type.is_edit" value="2">
 			<div class="form-group">
 				<div class="col-xs-12">
@@ -109,6 +112,7 @@
 				</div>
 			</div>
 		</neq>
+		
 		<div class="form-group">
 			<label class="col-sm-2 control-label" >附件：</label>
 			<div class="col-sm-10">

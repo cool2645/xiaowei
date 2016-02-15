@@ -161,7 +161,7 @@
 
 		function add_address(name) {
 			$position_id = $("#position a.active").attr("node");
-			$position_name = $("#position a.active span").text();
+			$position_name = $("#position a.active span").text().trim();
 
 			$text = $position_name;
 			$val = "position_" + $position_id;

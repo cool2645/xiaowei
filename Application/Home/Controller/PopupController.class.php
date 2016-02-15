@@ -219,11 +219,7 @@ class PopupController extends HomeController {
 	}
 
 	function task() {
-		if (is_weixin()) {
-			$this -> mobile();
-		} else {
-			$this -> actor();
-		}
+		$this -> actor();		
 	}
 
 	function work_order() {

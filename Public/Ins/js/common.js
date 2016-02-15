@@ -712,6 +712,55 @@ var udf_field = {
 					}
 				}
 				if (udf_field.data !== undefined) {
+					$field_id = $obj.attr("id").replace("udf_field_", "");
+					$udf_data=udf_field.data[$field_id];
+					if($udf_data.indexOf('|')){
+						$udf_data=$udf_data.split('|');
+						for(s in $udf_data){
+							$("[name='udf_field_id]")
+						}
+					}
+					$obj.val($udf_data);
+				}
+				$obj.change();
+			};
+
+			$main.change(function() {
+				$current = $main.val();
+				fill_option($sub, $current);
+			});
+
+			json = eval("("+$data+")");//转换为json对象 
+			fill_option($main, $pid);
+		});
+	},
+};
+
+
+var udf_field2 = {
+	init : function(udf_data) {
+		udf_field.data = udf_data;
+		udf_field.init_link_select();
+	},
+	init_link_select : function() {
+		$(".link_select").each(function() {
+			$data = $(this).attr('data');
+			$pid = $(this).attr('pid');
+
+			var json;
+			var $main = $(this).find(".main");
+			var $sub = $(this).find(".sub");
+			var fill_option = function($obj, $pid) {
+				$($obj).html("<option>请选择</option>");
+				for (s in json) {
+					if (json[s].pid == $pid) {
+						$option = $("<option></option>");
+						$option.text(json[s].name);
+						$option.val(json[s].id);
+						$($obj).append($option);
+					}
+				}
+				if (udf_field.data !== undefined) {
 					$val = $obj.attr("id").replace("udf_field_", "");
 					$obj.val(udf_field.data[$val]);
 				}

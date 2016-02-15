@@ -1549,7 +1549,7 @@ function get_emp_pic($id) {
 
 function task_status($status) {
 	if ($status == 0) {
-		return "未处理";
+		return "待处理";
 	}
 	if ($status == 10) {
 		return "进行中";

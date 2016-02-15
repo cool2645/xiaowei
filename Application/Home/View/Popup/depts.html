@@ -82,7 +82,7 @@
 
 		function add_address(name) {
 			$dept_id = $("#dept a.active").attr("node");
-			$dept_name = $("#dept a.active span").text();
+			$dept_name = $("#dept a.active span").text().trim();
 
 			if ($dept_id == undefined) {
 				ui_error("请选择部门");

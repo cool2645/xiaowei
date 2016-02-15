@@ -2,7 +2,7 @@
 	<select class="hidden form-control" id="udf_field_{$id}" name="udf_field_{$id}" >
 		{:fill_option($data,$val)};
 	</select>	
-	<select class="form-control" disabled="disabled" id="disabled_udf_field_{$id}" name="udf_field_{$id}" <notempty name="validate">check="{$validate}" msg="{$msg}"</notempty>>
+	<select class="form-control" disabled="disabled" id="disabled_udf_field_{$id}" name="disabled_udf_field_{$id}">
 		{:fill_option($data,$val)};
 	</select>
 	<else/>

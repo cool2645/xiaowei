@@ -69,7 +69,7 @@
 	<script type="text/javascript">
 		function add_address(name) {
 			$("input:checked[name='addr_id']").each(function() {
-				$text = $(this).next().text();
+				$text = $(this).next().text().trim();
 				$val = $(this).val();
 				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
 					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
@@ -82,7 +82,6 @@
 			$("#addr_list input:checked").prop('checked', false);
 		}
 
-
 		$(document).on("click", ".selected a.fa-times", function() {
 			$(this).parent().remove();
 			recount();
@@ -90,7 +89,7 @@
 
 		// 双击添加到收件人 因后添加的数据 所以需要用live函数
 		$(document).on("dblclick", "#addr_list label", function() {
-			$text = $(this).text();
+			$text = $(this).text().trim();
 			$val = $(this).find("input").val();
 			if ($("#rc.selected li[data='" + $val + "']").length == 0) {
 				$li = $('<li><span></span><a class="fa fa-times"></a></li>');

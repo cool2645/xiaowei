@@ -71,21 +71,6 @@
 </block>
 <block name="js">
 	<script type="text/javascript">
-		function add_address(name) {
-			$("input:checked[name='addr_id']").each(function() {
-				$text = $(this).next().text();
-				$val = $(this).val();
-				if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
-					$li = $('<li><span></span><a class="fa fa-times"></a></li>');
-					$li.find('span').text($text);
-					$li.attr('data', $val);
-					$li.appendTo("#" + name + ".selected ul");
-					recount();
-				};
-			});
-			$("#addr_list input:checked").prop('checked', false);
-		}
-
 
 		$(document).on("click", ".selected a.fa-times", function() {
 			$(this).parent().remove();
@@ -152,7 +137,7 @@
 				var emp_no = result.data[s].emp_no;
 				var email = result.data[s].email;
 				var name = result.data[s].name;
-				var name = name + "/" + position_name + "&lt;" + email + "&gt;";
+				var name = name + "/" + position_name;
 				var html_string = conv_address_item(name, emp_no);
 				$("#addr_list").append(html_string);
 			}
@@ -295,7 +280,7 @@
 			case "emp":
 				$("input:checked[name='addr_id']").each(function() {
 					$(this).prop('checked', false);
-					$text = $(this).parents("label").text();
+					$text = $(this).parents("label").text().trim();
 					$val = "emp_" + $(this).val();
 					if ($("#" + name + ".selected li[data='" + $val + "']").length == 0) {
 						$li = $('<li><span></span><a class="fa fa-times"></a></li>');

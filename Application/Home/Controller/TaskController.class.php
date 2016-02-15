@@ -251,7 +251,7 @@ class TaskController extends HomeController {
 			M("Task") -> where("id=$task_id") -> setField('executor', get_user_name() . "|" . get_user_id());
 			M("Task") -> where("id=$task_id") -> setField('status', 10);
 
-			$data['task_id'] = I(task_id);
+			$data['task_id'] = I('task_id');
 			$data['executor'] = get_user_id();
 			$data['executor_name'] = get_user_name();
 			$data['transactor'] = get_user_id();
@@ -329,12 +329,12 @@ class TaskController extends HomeController {
 			}
 		}
 
-		if ($status = 21) {
+		if ($status == 21) {
 			$task_id = I('task_id');
 			$forword_executor = I('forword_executor');
 			D('Task') -> forword($task_id, $forword_executor);
 		}
-		if ($status = 22) {
+		if ($status == 22) {
 
 		}
 		if ($list !== false) {

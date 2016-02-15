@@ -41,6 +41,13 @@
 .popup-fixed {
 	width: 560px;
 }
+
+.editor-readonly{
+	background: #eee;
+	height:auto;
+	border:1px solid #ccc;
+	clear: both;
+}
 .popup-container .popup-label {
 	line-height: 24px;
 }
@@ -67,6 +74,20 @@
 	line-height: 28px;
 	list-style: none;
 	border-bottom: 1px dotted #ccc;
+	overflow: hidden;
+}
+.popup-body .selected li span{
+	width:180px;
+	display:block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-icab-text-overflow: ellipsis;
+	-khtml-text-overflow: ellipsis;
+	-moz-text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+	float:left;
 }
 .popup-body .selected li a {
 	line-height: 28px;
@@ -74,8 +95,13 @@
 }
 .popup-body .selected .fa-times {
 	color: red;
+	padding-left:5px;
+	padding-right:5px;
+	margin-right:0px;
 	font-size: 14px;
-	float: right;
+	height: 27px;
+	line-height: 27px;	
+	float:right;
 }
 .popup-container .popup_tree_menu li a {
 	height: 28px;
@@ -2058,6 +2084,10 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li, ol, dt, dl, input, textarea {
 }
 
 @media only screen and (max-width: 768px) {
+	.form-group.col-sm-6{
+		padding-left:0px;
+		padding-right:0px;
+	}
 	.hidden_xs {
 		display: none;
 	}
